@@ -1,4 +1,4 @@
-package dao;
+package dao.utilises;
 
 import model.MedDoctor;
 import model.Patient;

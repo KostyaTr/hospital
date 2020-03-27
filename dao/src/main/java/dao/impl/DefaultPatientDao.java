@@ -1,6 +1,6 @@
 package dao.impl;
 
-import dao.DaoUtilises;
+import dao.utilises.DaoUtilises;
 import model.Patient;
 import dao.PatientDao;
 
