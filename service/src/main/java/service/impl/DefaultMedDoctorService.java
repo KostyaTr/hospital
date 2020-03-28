@@ -36,7 +36,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public void healed(String patientName) {
-        patientDao.healed(patientName);
+    public void curePatient(String patientName) {
+        patientDao.removePatient(patientName);
     }
 }

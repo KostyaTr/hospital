@@ -9,7 +9,5 @@ import java.util.List;
 public interface UserService {
     List<MedDoctor> getDoctors();
 
-    void addPatient(Patient patient);
-
-    List<User> getUsers();
+    void makeAppointment(Patient patient);
 }

@@ -39,7 +39,7 @@ public class LoginServlet extends HttpServlet {
         }
         rq.getSession().setAttribute("authUser", user);
         try {
-            rs.sendRedirect(rq.getContextPath() +"/student");
+            rs.sendRedirect(rq.getContextPath() +"/login");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

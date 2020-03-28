@@ -11,5 +11,5 @@ public interface PatientDao {
 
     void addPatient(Patient patient);
 
-    void healed(String patientName);
+    void removePatient(String patientName);
 }

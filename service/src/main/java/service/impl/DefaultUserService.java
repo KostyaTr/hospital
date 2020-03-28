@@ -36,12 +36,7 @@ public class DefaultUserService implements UserService {
 
 
     @Override
-    public void addPatient(Patient patient) {
+    public void makeAppointment(Patient patient) {
         patientDao.addPatient(patient);
-    }
-
-    @Override
-    public List<User> getUsers() {
-        return userDao.getUsers();
     }
 }
