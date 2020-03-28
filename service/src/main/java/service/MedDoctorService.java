@@ -9,5 +9,5 @@ public interface MedDoctorService {
 
     List<Patient> getPatients();
 
-    void curePatient(String patientName); // доработать
+    void curePatient(String patientName);
 }

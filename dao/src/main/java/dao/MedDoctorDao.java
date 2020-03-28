@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MedDoctorDao {
     List<MedDoctor> getDoctors();
+
+    MedDoctor getDoctorByLogin(String login);
 }

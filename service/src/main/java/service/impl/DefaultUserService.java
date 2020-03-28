@@ -38,4 +38,9 @@ public class DefaultUserService implements UserService {
     public void makeAppointment(Patient patient) {
         patientDao.addPatient(patient);
     }
+
+    @Override
+    public List<Patient> getAppointments(String login) {
+        return patientDao.getPatientsByLogin(login);
+    }
 }

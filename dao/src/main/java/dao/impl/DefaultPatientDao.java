@@ -61,4 +61,15 @@ public class DefaultPatientDao implements PatientDao {
             }
         }
     }
+
+    @Override
+    public List<Patient> getPatientsByLogin(String login) {
+        List<Patient> patientsByLogin = new ArrayList<>();
+        for (Patient patient : patients) {
+            if (patient.getLogin().equals(login)){
+                patientsByLogin.add(patient);
+            }
+        }
+        return patientsByLogin;
+    }
 }

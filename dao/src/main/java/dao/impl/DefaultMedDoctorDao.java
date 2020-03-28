@@ -1,5 +1,6 @@
 package dao.impl;
 
+import dao.utilises.DaoUtilises;
 import model.MedDoctor;
 import dao.MedDoctorDao;
 
@@ -11,12 +12,22 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
 
     public DefaultMedDoctorDao() {
         this.doctors = new ArrayList<>();
-        this.doctors.add(new MedDoctor("Selma", "Karney",
+        this.doctors.add(new MedDoctor("Virologist","Selma", "Karney",
                 "Virologist", "198-10-77", "SelmKarney@google.com"));
-        this.doctors.add(new MedDoctor( "Octavius", "Celestas","Surgeon",
+        this.doctors.add(new MedDoctor( "Surgeon","Octavius", "Celestas","Surgeon",
                 "728-25-47", "OctaCelesta@google.com"));
-        this.doctors.add(new MedDoctor("Michael", "Kurd", "Therapist",
+        this.doctors.add(new MedDoctor("Therapist","Michael", "Kurd", "Therapist",
                 "293-79-45", "KurMich@google.com"));
+    }
+
+    @Override
+    public MedDoctor getDoctorByLogin(String login) {
+        for (MedDoctor doctor : doctors) {
+            if (login.equals(doctor.getLogin())){
+                return doctor;
+            }
+        }
+        return null;
     }
 
     private static volatile MedDoctorDao instance;
@@ -38,5 +49,4 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
     public List<MedDoctor> getDoctors() {
         return doctors;
     }
-
 }

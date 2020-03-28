@@ -7,10 +7,23 @@
 
 <br/>
 
+<h1>Welcome back, <c:out value="${name}"/> </h1>
+
+<br/>
+
 <h3>Available doctors</h3>
 <ul>
     <c:forEach items="${doctors}" var="item">
-        <li><c:out value="${item}"/></li>
+        <li><c:out value="${item.firstName} ${item.lastName} speciality: ${speciality}"/></li>
+    </c:forEach>
+</ul>
+
+<br/>
+
+<h3>Your appointments</h3>
+<ul>
+    <c:forEach items="${appointments}" var="item">
+        <li><c:out value="${item.appointedDoctor} at ${item.visitingTime}"/></li>
     </c:forEach>
 </ul>
 
@@ -24,6 +37,7 @@
     <label for="visitingTime">Время визита</label>
     <input id="visitingTime" type="text" name="visitingTime">
     Пример: Tuesday, 16, 15:00
+    <br/>
 
     <input type="submit" value="Confirm">
 </form>

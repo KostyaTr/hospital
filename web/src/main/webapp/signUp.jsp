@@ -22,7 +22,7 @@
     <input id="password" type="password" name="password">
 
     <label for="passwordRepeat">Repeat your password</label>
-    <input id="passwordRepeat" type="password" name="passwordRepeat">
+    <input id="passwordRepeat" type="password" name="passwordRepeat"><br/>
 
     <input type="submit">
 </form>

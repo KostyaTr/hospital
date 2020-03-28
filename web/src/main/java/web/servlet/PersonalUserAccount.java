@@ -23,8 +23,14 @@ public class PersonalUserAccount extends HttpServlet {
     private UserDao userDao = DefaultUserDao.getInstance();
     private UserService userService = DefaultUserService.getInstance();
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+        User user = userDao.getUserByLogin(authUser.getLogin());
+
+        req.setAttribute("appointments", userService.getAppointments(authUser.getLogin()));
+        req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
         req.setAttribute("doctors", userService.getDoctors());
         req.setAttribute("role", "User");
         WebUtils.forwardToJsp("personalAccount", req, resp);
@@ -39,5 +45,11 @@ public class PersonalUserAccount extends HttpServlet {
         User user = userDao.getUserByLogin(authUser.getLogin());
 
         userService.makeAppointment(WebUtils.userToPatient(user, appointedDoctor, visitingTime));
+
+        try {
+            resp.sendRedirect(req.getContextPath() +"/personalUser");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

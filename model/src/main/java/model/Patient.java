@@ -1,6 +1,5 @@
 package model;
 
-import java.util.Calendar;
 
 public class Patient extends User {
     private String appointedDoctor;
