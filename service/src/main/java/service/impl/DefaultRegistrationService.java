@@ -36,4 +36,19 @@ public class DefaultRegistrationService implements RegistrationService {
     public void saveAuthUser(AuthUser user) {
         authUserDao.saveAuthUser(user);
     }
+
+    @Override
+    public boolean loginCheck(String login) {
+        for ( User user:userDao.getUsers()) {
+            if (login.equals(user.getLogin())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean passwordCheck(String password, String passwordRepeat) {
+        return !password.equals(passwordRepeat);
+    }
 }

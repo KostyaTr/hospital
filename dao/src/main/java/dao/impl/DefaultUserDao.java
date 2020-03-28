@@ -49,4 +49,14 @@ public class DefaultUserDao implements UserDao{
     public void saveUser(User user) {
         users.add(user);
     }
+
+    @Override
+    public User getUserByLogin(String login) {
+        for (User user : users) {
+            if (login.equals(user.getLogin())){
+                return user;
+            }
+        }
+        return null;
+    }
 }

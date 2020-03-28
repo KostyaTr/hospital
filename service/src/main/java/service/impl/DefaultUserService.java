@@ -10,7 +10,6 @@ import service.UserService;
 import java.util.List;
 
 public class DefaultUserService implements UserService {
-    private UserDao userDao = DefaultUserDao.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
     private PatientDao patientDao = DefaultPatientDao.getInstance();
 

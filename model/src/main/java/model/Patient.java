@@ -4,11 +4,11 @@ import java.util.Calendar;
 
 public class Patient extends User {
     private String appointedDoctor;
-    private Calendar visitingTime;
+    private String visitingTime;
 
     public Patient(String login, String firstName, String lastName,
                    String phoneNumber, String email, String appointedDoctor,
-                   Calendar visitingTime) {
+                   String visitingTime) {
 
         super(login, firstName, lastName, phoneNumber, email);
         this.appointedDoctor = appointedDoctor;
@@ -19,7 +19,7 @@ public class Patient extends User {
         return appointedDoctor;
     }
 
-    public Calendar getVisitingTime() {
+    public String getVisitingTime() {
         return visitingTime;
     }
 }

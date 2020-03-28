@@ -8,4 +8,6 @@ public interface UserDao {
     List<User> getUsers();
 
     void saveUser(User user);
+
+    User getUserByLogin(String login);
 }

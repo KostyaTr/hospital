@@ -5,20 +5,15 @@ import model.Patient;
 import dao.PatientDao;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class DefaultPatientDao implements PatientDao {
     private List<Patient> patients;
 
     public DefaultPatientDao() {
-        Calendar calendar = new GregorianCalendar(2020, Calendar.MAY , 10);
-        calendar.set(Calendar.HOUR, 10);
-        calendar.set(Calendar.MINUTE, 15);
         this.patients = new ArrayList<>();
         this.patients.add(new Patient("User", "Paul", "McCarbine",
-                "951-28-36", "PaulMc@google.com", "Selma Karney", calendar));
+                "951-28-36", "PaulMc@google.com", "Selma Karney", "Tuesday, 16, 15:00"));
     }
 
     private static volatile PatientDao instance;
