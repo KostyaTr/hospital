@@ -1,13 +1,17 @@
+package serviceTest;
+
 import model.AuthUser;
-import org.junit.Test;
 import service.AuthorizationService;
 import service.impl.DefaultAuthorizationService;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultAuthorizationServiceTest {
 
+    @DisplayName("authorization Test")
     @Test
     public void authorizationTest() {
        AuthorizationService authorizationService = DefaultAuthorizationService.getInstance();
