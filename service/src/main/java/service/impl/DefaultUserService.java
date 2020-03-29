@@ -2,7 +2,6 @@ package service.impl;
 
 import dao.impl.DefaultMedDoctorDao;
 import dao.impl.DefaultPatientDao;
-import dao.impl.DefaultUserDao;
 import model.*;
 import dao.*;
 import service.UserService;

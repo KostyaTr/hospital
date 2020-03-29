@@ -39,7 +39,11 @@ public class DefaultPatientDao implements PatientDao {
                 patients.add(patient);
             }
         }
-        return patients;
+        if (patients.size() != 0){
+            return patients;
+        } else {
+            return null;
+        }
     }
 
     @Override
