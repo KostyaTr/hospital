@@ -1,9 +1,6 @@
 package web;
 
-import model.AuthUser;
-import model.Patient;
-import model.Role;
-import model.User;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public abstract class WebUtils {
     private WebUtils() {
@@ -39,5 +37,14 @@ public abstract class WebUtils {
     public static Patient userToPatient(User user, String appointedDoctor, String visitingTime){
         return new Patient(user.getLogin(), user.getFirstName(), user.getLastName(),
                 user.getEmail(), user.getEmail(), appointedDoctor, visitingTime);
+    }
+
+    public static boolean makeAppointmentCheck(String doctorName, List<MedDoctor> doctors){
+        for (MedDoctor doctor : doctors) {
+            if ((doctor.getFirstName() + " " + doctor.getLastName()).equals(doctorName)){
+                return true;
+            }
+        }
+        return false;
     }
 }
