@@ -49,4 +49,9 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
     public List<MedDoctor> getDoctors() {
         return doctors;
     }
+
+    @Override
+    public boolean removeDoctor(MedDoctor medDoctor) {
+        return false;
+    }
 }

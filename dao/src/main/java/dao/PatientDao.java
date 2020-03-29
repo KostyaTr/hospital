@@ -11,7 +11,7 @@ public interface PatientDao {
 
     void addPatient(Patient patient);
 
-    void removePatient(String patientName);
+    boolean removePatient(String patientName);
 
     List<Patient> getPatientsByLogin(String login);
 }
