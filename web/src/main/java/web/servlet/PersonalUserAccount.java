@@ -37,12 +37,18 @@ public class PersonalUserAccount extends HttpServlet {
         String appointedDoctor = req.getParameter("doctorName");
         String visitingTime = req.getParameter("visitingTime");
 
+        AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+        User user = userDao.getUserByLogin(authUser.getLogin());
+
         if (WebUtils.makeAppointmentCheck(appointedDoctor, userService.getDoctors())){
-            AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
-            User user = userDao.getUserByLogin(authUser.getLogin());
             userService.makeAppointment(WebUtils.userToPatient(user, appointedDoctor, visitingTime));
         } else {
+            req.setAttribute("appointments", userService.getAppointments(authUser.getLogin()));
+            req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
+            req.setAttribute("doctors", userService.getDoctors());
             req.setAttribute("incorrectInput", "incorrect doctor name");
+            req.setAttribute("role", "User");
+            WebUtils.forwardToJsp("personalAccount", req, resp);
         }
 
         try {

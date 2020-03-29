@@ -37,6 +37,9 @@ public class GuestPageServlet extends HttpServlet {
                     email, appointedDoctor, visitingTime));
         } else {
             req.setAttribute("incorrectInput", "incorrect doctor name");
+            req.setAttribute("doctors", userService.getDoctors());
+            req.setAttribute("role", "Guest");
+            WebUtils.forwardToJsp("personalAccount", req, resp);
         }
         try {
             resp.sendRedirect(req.getContextPath() +"/guestPage");
