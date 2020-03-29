@@ -1,6 +1,5 @@
 package dao.impl;
 
-import dao.utilises.DaoUtilises;
 import model.MedDoctor;
 import dao.MedDoctorDao;
 
@@ -52,6 +51,12 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
 
     @Override
     public boolean removeDoctor(MedDoctor medDoctor) {
+        for (int i = 0; i < this.doctors.size(); i++) {
+            if (medDoctor.getLogin().equals(this.doctors.get(i).getLogin())) {
+                doctors.remove(i);
+                return true;
+            }
+        }
         return false;
     }
 }

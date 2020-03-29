@@ -5,8 +5,6 @@ import model.Patient;
 
 import java.util.List;
 
-public interface HeadPhysicianService {
-    void fireDoctor(MedDoctor medDoctor);
-
-    List<Patient> getPatients();
+public interface HeadPhysicianService extends MedDoctorService {
+    boolean fireDoctor(MedDoctor medDoctor);
 }
