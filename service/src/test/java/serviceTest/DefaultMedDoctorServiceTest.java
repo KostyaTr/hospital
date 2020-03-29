@@ -57,14 +57,11 @@ public class DefaultMedDoctorServiceTest {
 
         userService.makeAppointment(patient);
 
-        int initSize = medDoctorService.getPatients().size();
         String patientName = "no such patient";
         String patientName2 = "Col McCarbine";
 
-        medDoctorService.curePatient(patientName);
-        assertEquals(initSize, medDoctorService.getPatients().size());
+        assertFalse(medDoctorService.curePatient(patientName));
 
-        medDoctorService.curePatient(patientName2);
-        assertEquals(initSize - 1, medDoctorService.getPatients().size());
+        assertTrue(medDoctorService.curePatient(patientName2));
     }
 }
