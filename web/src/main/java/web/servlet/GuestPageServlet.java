@@ -32,9 +32,12 @@ public class GuestPageServlet extends HttpServlet {
         String visitingTime = req.getParameter("visitingTime");
         String login = firstName + "_" + lastName;
 
-        userService.makeAppointment(new Patient(login, firstName, lastName, phoneNumber,
-                email, appointedDoctor, visitingTime));
-
+        if (WebUtils.makeAppointmentCheck(appointedDoctor, userService.getDoctors())){
+            userService.makeAppointment(new Patient(login, firstName, lastName, phoneNumber,
+                    email, appointedDoctor, visitingTime));
+        } else {
+            req.setAttribute("incorrectInput", "incorrect doctor name");
+        }
         try {
             resp.sendRedirect(req.getContextPath() +"/guestPage");
         } catch (IOException e) {

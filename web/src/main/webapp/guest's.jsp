@@ -34,3 +34,14 @@
     <br/>
     <input type="submit" value="Confirm">
 </form>
+
+<br/>
+<p style="color: red">${incorrectInput}</p>
+
+<br/>
+
+<form action="${pageContext.request.contextPath}/login" method="get">
+    <input type="submit" value="Back to login">
+</form>
+
+

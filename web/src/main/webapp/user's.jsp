@@ -41,3 +41,6 @@
 
     <input type="submit" value="Confirm">
 </form>
+
+<br/>
+<p style="color: red">${incorrectInput}</p>
