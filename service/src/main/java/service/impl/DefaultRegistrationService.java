@@ -49,6 +49,6 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     public boolean passwordCheck(String password, String passwordRepeat) {
-        return !password.equals(passwordRepeat);
+        return password.equals(passwordRepeat);
     }
 }

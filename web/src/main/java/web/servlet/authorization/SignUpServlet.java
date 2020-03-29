@@ -36,7 +36,7 @@ public class SignUpServlet extends HttpServlet {
             req.setAttribute("loginError", "login already taken");
             WebUtils.forwardToJsp("signUp", req, resp);
         }
-        if (registrationService.passwordCheck(password, passwordRepeat)){
+        if (!registrationService.passwordCheck(password, passwordRepeat)){
             req.setAttribute("passwordError", "passwords don't match");
             WebUtils.forwardToJsp("signUp", req, resp);
         }
