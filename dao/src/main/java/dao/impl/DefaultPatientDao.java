@@ -56,14 +56,15 @@ public class DefaultPatientDao implements PatientDao {
         patients.add(patient);
     }
 
-    @SuppressWarnings("SuspiciousListRemoveInLoop")
     @Override
-    public void removePatient(String patientName) {
+    public boolean removePatient(String patientName) {
         for (int i = 0; i < this.patients.size(); i++) {
             if (patientName.equals(DaoUtilises.patientName(patients.get(i)))) {
                 patients.remove(i);
+                return true;
             }
         }
+        return false;
     }
 
     @Override

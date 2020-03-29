@@ -36,7 +36,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public void curePatient(String patientName) {
-        patientDao.removePatient(patientName);
+    public boolean curePatient(String patientName) {
+        return patientDao.removePatient(patientName);
     }
 }
