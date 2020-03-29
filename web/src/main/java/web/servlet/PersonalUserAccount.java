@@ -1,17 +1,13 @@
 package web.servlet;
 
-import dao.PatientDao;
 import dao.UserDao;
-import dao.impl.DefaultPatientDao;
 import dao.impl.DefaultUserDao;
 import model.AuthUser;
-import model.Patient;
 import model.User;
 import service.UserService;
 import service.impl.DefaultUserService;
 import web.WebUtils;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
