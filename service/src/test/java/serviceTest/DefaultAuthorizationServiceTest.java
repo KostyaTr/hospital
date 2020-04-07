@@ -1,8 +1,8 @@
 package serviceTest;
 
-import model.AuthUser;
-import service.AuthorizationService;
-import service.impl.DefaultAuthorizationService;
+import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.service.AuthorizationService;
+import com.github.KostyaTr.hospital.service.impl.DefaultAuthorizationService;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

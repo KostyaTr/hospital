@@ -1,18 +1,18 @@
 package serviceTest;
 
-import dao.AuthUserDao;
-import dao.UserDao;
-import dao.impl.DefaultAuthUserDao;
-import dao.impl.DefaultUserDao;
-import model.AuthUser;
-import model.Role;
-import model.User;
+import com.github.KostyaTr.hospital.dao.AuthUserDao;
+import com.github.KostyaTr.hospital.dao.UserDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
+import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Role;
+import com.github.KostyaTr.hospital.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import service.RegistrationService;
-import service.impl.DefaultRegistrationService;
+import com.github.KostyaTr.hospital.service.RegistrationService;
+import com.github.KostyaTr.hospital.service.impl.DefaultRegistrationService;
 
 public class DefaultRegistrationServiceTest {
 

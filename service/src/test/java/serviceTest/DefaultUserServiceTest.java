@@ -1,15 +1,15 @@
 package serviceTest;
 
-import model.MedDoctor;
-import model.Patient;
+import com.github.KostyaTr.hospital.model.MedDoctor;
+import com.github.KostyaTr.hospital.model.Patient;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import service.UserService;
-import service.impl.DefaultUserService;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.github.KostyaTr.hospital.service.UserService;
+import com.github.KostyaTr.hospital.service.impl.DefaultUserService;
 
 import java.util.List;
 
