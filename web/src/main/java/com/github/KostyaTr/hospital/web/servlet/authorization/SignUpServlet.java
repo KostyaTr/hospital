@@ -1,11 +1,11 @@
 package com.github.KostyaTr.hospital.web.servlet.authorization;
 
 import com.github.KostyaTr.hospital.web.WebUtils;
-import model.AuthUser;
-import model.Role;
-import model.User;
-import service.RegistrationService;
-import service.impl.DefaultRegistrationService;
+import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Role;
+import com.github.KostyaTr.hospital.model.User;
+import com.github.KostyaTr.hospital.service.RegistrationService;
+import com.github.KostyaTr.hospital.service.impl.DefaultRegistrationService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.web;
 
-import model.*;
+import com.github.KostyaTr.hospital.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

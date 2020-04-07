@@ -1,8 +1,8 @@
 package com.github.KostyaTr.hospital.web.filter;
 
 import com.github.KostyaTr.hospital.web.WebUtils;
-import model.AuthUser;
-import model.Role;
+import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Role;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

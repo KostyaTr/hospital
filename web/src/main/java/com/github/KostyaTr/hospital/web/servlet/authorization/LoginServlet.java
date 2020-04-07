@@ -1,9 +1,9 @@
 package com.github.KostyaTr.hospital.web.servlet.authorization;
 
 import com.github.KostyaTr.hospital.web.WebUtils;
-import model.AuthUser;
-import service.AuthorizationService;
-import service.impl.DefaultAuthorizationService;
+import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.service.AuthorizationService;
+import com.github.KostyaTr.hospital.service.impl.DefaultAuthorizationService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

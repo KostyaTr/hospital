@@ -1,9 +1,9 @@
 package com.github.KostyaTr.hospital.web.servlet;
 
 import com.github.KostyaTr.hospital.web.WebUtils;
-import model.Patient;
-import service.UserService;
-import service.impl.DefaultUserService;
+import com.github.KostyaTr.hospital.model.Patient;
+import com.github.KostyaTr.hospital.service.UserService;
+import com.github.KostyaTr.hospital.service.impl.DefaultUserService;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
