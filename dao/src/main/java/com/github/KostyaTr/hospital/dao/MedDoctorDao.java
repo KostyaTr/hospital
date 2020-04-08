@@ -7,7 +7,11 @@ import java.util.List;
 public interface MedDoctorDao {
     List<MedDoctor> getDoctors();
 
-    MedDoctor getDoctorByLogin(String login);
+    MedDoctor getDoctorByUserId(Long userId);
 
-    boolean removeDoctor(MedDoctor medDoctor);
+    boolean removeDoctorById(Long doctorId);
+
+    MedDoctor getHeadPhysicianByDepartment(Long deptId);
+
+    List<MedDoctor>  getHeadPhysicians();
 }
