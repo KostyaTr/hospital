@@ -10,16 +10,16 @@ public class Inpatient {
     private String email;
     private Long cardNum;
     private String doctorName;
+    private String department;
     private Long chamberNum;
     private String diagnose;
     private String treatmentCourse;
     private String operationService;
     private Date enrollmentDate;
 
-    public Inpatient(Long inpatientId, String firstName, String lastName,
-                     String phoneNumber, String email, Long cardNum, String doctorName,
-                     Long chamberNum, String diagnose, String treatmentCourse,
-                     String operationService, Date enrollmentDate) {
+    public Inpatient(Long inpatientId, String firstName, String lastName, String phoneNumber,
+                     String email, Long cardNum, String doctorName, String department, Long chamberNum,
+                     String diagnose, String treatmentCourse, String operationService, Date enrollmentDate) {
 
         this.inpatientId = inpatientId;
         this.firstName = firstName;
@@ -28,15 +28,12 @@ public class Inpatient {
         this.email = email;
         this.cardNum = cardNum;
         this.doctorName = doctorName;
+        this.department = department;
         this.chamberNum = chamberNum;
         this.diagnose = diagnose;
         this.treatmentCourse = treatmentCourse;
         this.operationService = operationService;
         this.enrollmentDate = enrollmentDate;
-    }
-
-    public Long getCardNum() {
-        return cardNum;
     }
 
     public Long getInpatientId() {
@@ -59,8 +56,16 @@ public class Inpatient {
         return email;
     }
 
+    public Long getCardNum() {
+        return cardNum;
+    }
+
     public String getDoctorName() {
         return doctorName;
+    }
+
+    public String getDepartment() {
+        return department;
     }
 
     public Long getChamberNum() {
