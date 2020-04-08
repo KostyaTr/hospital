@@ -1,25 +1,25 @@
 package com.github.KostyaTr.hospital.model;
 
 public class User {
-    private String login;
+    private Long userId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String email;
 
 
-    public User(String login, String firstName,
+    public User(Long userId, String firstName,
                 String lastName, String phoneNumber, String email) {
 
-        this.login = login;
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
 
-    public String getLogin() {
-        return login;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getFirstName() {

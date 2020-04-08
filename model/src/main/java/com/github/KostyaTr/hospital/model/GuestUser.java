@@ -1,20 +1,30 @@
 package com.github.KostyaTr.hospital.model;
 
 public class GuestUser {
-    private final String login = "Guest";
-    private final String password = "null";
-    private final Role role = Role.Guest;
+    private Long guestId;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String email;
 
 
-    public String getPassword() {
-        return password;
+    public Long getGuestId() {
+        return guestId;
     }
 
-    public String getLogin() {
-        return login;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public Role getRole() {
-        return role;
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
     }
 }
