@@ -1,26 +1,29 @@
 package com.github.KostyaTr.hospital.model;
 
 public class MedDoctor {
-    private String login;
+    private Long doctorId;
     private String firstName;
     private String lastName;
-    private String speciality;
     private String phoneNumber;
-    private String email;
+    private String speciality;
+    private Long deptNum;
+    private boolean headOfDept;
 
-    public MedDoctor(String login, String firstName, String lastName,
-                     String speciality, String phoneNumber, String email) {
+    public MedDoctor(Long doctorId, String firstName, String lastName,
+                     String phoneNumber, String speciality,
+                     Long deptNum, boolean headOfDept) {
 
-        this.login = login;
+        this.doctorId = doctorId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.speciality = speciality;
         this.phoneNumber = phoneNumber;
-        this.email = email;
+        this.speciality = speciality;
+        this.deptNum = deptNum;
+        this.headOfDept = headOfDept;
     }
 
-    public String getLogin() {
-        return login;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
     public String getFirstName() {
@@ -31,15 +34,19 @@ public class MedDoctor {
         return lastName;
     }
 
-    public String getSpeciality() {
-        return speciality;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public String getEmail() {
-        return email;
+    public String getSpeciality() {
+        return speciality;
+    }
+
+    public Long getDeptNum() {
+        return deptNum;
+    }
+
+    public boolean isHeadOfDept() {
+        return headOfDept;
     }
 }
