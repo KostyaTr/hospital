@@ -122,22 +122,47 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()){
-            final List<MedDoctor> medDoctors = new ArrayList<>();
-            while (resultSet.next()){
-                final MedDoctor medDoctor = new MedDoctor(
-                        resultSet.getLong("id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getString("phone_number"),
-                        resultSet.getString("email"),
-                        resultSet.getString("specialities"),
-                        resultSet.getString("department_name"),
-                        resultSet.getBoolean("head_of_dept"));
-                medDoctors.add(medDoctor);
-            }
-            return medDoctors;
+            return getMedDoctors(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<MedDoctor> getDoctorsBySpecialityId(Long specialityId) {
+        final String sql = "select doctor.id, first_name, last_name, phone_number, email, group_concat(speciality_name, '') as specialities,   department_name, head_of_dept from doctor \n" +
+                "join user on doctor.user_id = user.id\n" +
+                "join doctor_speciality on doctor.id = doctor_speciality.doctor_id\n" +
+                "join speciality on speciality.id = doctor_speciality.speciality_id\n" +
+                "join department on dept_id = department.id\n" +
+                "where speciality.id = ?\n" +
+                "group by doctor.id;";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, specialityId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                return getMedDoctors(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<MedDoctor> getMedDoctors(ResultSet resultSet) throws SQLException {
+        final List<MedDoctor> medDoctors = new ArrayList<>();
+        while (resultSet.next()){
+            final MedDoctor medDoctor = new MedDoctor(
+                    resultSet.getLong("id"),
+                    resultSet.getString("first_name"),
+                    resultSet.getString("last_name"),
+                    resultSet.getString("phone_number"),
+                    resultSet.getString("email"),
+                    resultSet.getString("specialities"),
+                    resultSet.getString("department_name"),
+                    resultSet.getBoolean("head_of_dept"));
+            medDoctors.add(medDoctor);
+        }
+        return medDoctors;
     }
 }

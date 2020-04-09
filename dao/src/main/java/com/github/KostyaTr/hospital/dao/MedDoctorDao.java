@@ -14,4 +14,6 @@ public interface MedDoctorDao {
     MedDoctor getHeadPhysicianByDepartment(Long deptId);
 
     List<MedDoctor>  getHeadPhysicians();
+
+    List<MedDoctor> getDoctorsBySpecialityId(Long specialityId);
 }
