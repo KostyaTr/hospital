@@ -2,7 +2,6 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.DoctorSpecialityDao;
-import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
