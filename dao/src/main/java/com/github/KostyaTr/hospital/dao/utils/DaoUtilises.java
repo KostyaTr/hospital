@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.dao.utilises;
+package com.github.KostyaTr.hospital.dao.utils;
 
 import com.github.KostyaTr.hospital.model.Patient;
 
