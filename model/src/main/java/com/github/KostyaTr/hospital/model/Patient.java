@@ -10,14 +10,14 @@ public class Patient {
     private String phoneNumber;
     private String email;
     private Long cardNum;
-    private String doctorName;
     private Long couponNum;
-    private String medicalService;
     private Date visitDate;
+    private String doctorName;
+    private String medicalService;
 
-    public Patient(Long patientId, String firstName, String lastName,
-                   String phoneNumber, String email, Long cardNum, String doctorName,
-                   Long couponNum, String medicalService, Date visitDate) {
+    public Patient(Long patientId, String firstName, String lastName, String phoneNumber,
+                   String email, Long cardNum, Long couponNum,
+                   Date visitDate, String doctorName, String medicalService) {
 
         this.patientId = patientId;
         this.firstName = firstName;
@@ -25,10 +25,10 @@ public class Patient {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.cardNum = cardNum;
-        this.doctorName = doctorName;
         this.couponNum = couponNum;
-        this.medicalService = medicalService;
         this.visitDate = visitDate;
+        this.doctorName = doctorName;
+        this.medicalService = medicalService;
     }
 
     public Long getCardNum() {
