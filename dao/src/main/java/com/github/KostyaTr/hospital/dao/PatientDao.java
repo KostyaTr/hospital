@@ -1,17 +1,20 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.model.Appointment;
 import com.github.KostyaTr.hospital.model.Patient;
 
 import java.util.List;
 
 public interface PatientDao {
-    List<Patient> getPatientsByDoctor(String doctorName);
+    List<Patient> getPatientsByDoctorId(Long doctorId);
+
+    List<Patient> getPatientsByDepartmentId(Long deptId);
 
     List<Patient> getPatients();
 
-    void addPatient(Patient patient);
+    Long addPatient(Appointment appointment);
 
-    boolean removePatient(String patientName);
+    boolean removePatientById(Long patientId);
 
-    List<Patient> getPatientsByLogin(String login);
+    Patient getPatientById(Long patientId);
 }
