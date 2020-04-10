@@ -5,5 +5,5 @@ import com.github.KostyaTr.hospital.model.Card;
 public interface CardDao {
     Card getCardByUserId(Long userId);
 
-    boolean addCard(Card card);
+    Long addCard(Card card);
 }

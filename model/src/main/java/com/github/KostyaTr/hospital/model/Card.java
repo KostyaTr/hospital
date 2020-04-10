@@ -6,13 +6,17 @@ public class Card {
     private Long cardId;
     private Long userId;
     private String history;
+    private String address;
     private Date birthday;
     private boolean insurance;
 
-    public Card(Long cardId, Long userId, String history, Date birthday, boolean insurance) {
+    public Card(Long cardId, Long userId, String history,
+                String address, Date birthday, boolean insurance) {
+
         this.cardId = cardId;
         this.userId = userId;
         this.history = history;
+        this.address = address;
         this.birthday = birthday;
         this.insurance = insurance;
     }
@@ -27,6 +31,10 @@ public class Card {
 
     public String getHistory() {
         return history;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public Date getBirthday() {
