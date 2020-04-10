@@ -1,7 +1,6 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
-import com.github.KostyaTr.hospital.model.Appointment;
 import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.dao.PatientDao;
 
@@ -40,16 +39,16 @@ public class DefaultPatientDao implements PatientDao {
     }
 
     @Override
-    public Long addPatient(Appointment appointment) {
+    public Long addPatient(Patient patient) {
         final String sql = "insert into patient(user_id, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?)";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, appointment.getUserId());
-            preparedStatement.setLong(2, appointment.getDoctorId());
-            preparedStatement.setLong(3, appointment.getCoupon_num());
-            preparedStatement.setLong(4, appointment.getMedicalServiceId());
-            preparedStatement.setTimestamp(5, (Timestamp) appointment.getVisitDate());
+            preparedStatement.setLong(1, patient.getUserId());
+            preparedStatement.setLong(2, patient.getDoctorId());
+            preparedStatement.setLong(3, patient.getCouponNum());
+            preparedStatement.setLong(4, patient.getMedicalServiceId());
+            preparedStatement.setTimestamp(5, (Timestamp) patient.getVisitDate());
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
@@ -88,7 +87,7 @@ public class DefaultPatientDao implements PatientDao {
                             resultSet.getLong("user_id"),
                             resultSet.getLong("doctor_id"),
                             resultSet.getLong("coupon_num"),
-                            resultSet.getString("medical_service_id"),
+                            resultSet.getLong("medical_service_id"),
                             resultSet.getTimestamp("visit_date"));
                 } else {
                     return null;
@@ -113,7 +112,7 @@ public class DefaultPatientDao implements PatientDao {
                     resultSet.getLong("user_id"),
                     resultSet.getLong("doctor_id"),
                     resultSet.getLong("coupon_num"),
-                    resultSet.getString("medical_service_id"),
+                    resultSet.getLong("medical_service_id"),
                     resultSet.getTimestamp("visit_date"));
             patients.add(patient);
         }

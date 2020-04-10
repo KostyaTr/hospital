@@ -8,11 +8,11 @@ public class Patient {
     private Long userId;
     private Long doctorId;
     private Long couponNum;
-    private String medicalServiceId;
+    private Long medicalServiceId;
     private Date visitDate;
 
     public Patient(Long patientId, Long userId, Long doctorId,
-                   Long couponNum, String medicalServiceId, Date visitDate) {
+                   Long couponNum, Long medicalServiceId, Date visitDate) {
 
         this.patientId = patientId;
         this.userId = userId;
@@ -38,7 +38,7 @@ public class Patient {
         return couponNum;
     }
 
-    public String getMedicalServiceId() {
+    public Long getMedicalServiceId() {
         return medicalServiceId;
     }
 
