@@ -8,24 +8,36 @@ public class GuestPatient {
     private String lastName;
     private String phoneNumber;
     private String email;
+    private Long doctorId;
     private Long couponNum;
+    private String medicalServiceId;
     private Date visitDate;
-    private String doctorName;
-    private String medicalService;
 
-    public GuestPatient(Long patientId, String firstName, String lastName, String phoneNumber,
-                        String email, Long couponNum, Date visitDate, String doctorName,
-                        String medicalService) {
+    public GuestPatient(Long patientId, String firstName, String lastName,
+                        String phoneNumber, String email, Long doctorId, Long couponNum,
+                        String medicalServiceId, Date visitDate) {
 
         this.patientId = patientId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.doctorId = doctorId;
         this.couponNum = couponNum;
+        this.medicalServiceId = medicalServiceId;
         this.visitDate = visitDate;
-        this.doctorName = doctorName;
-        this.medicalService = medicalService;
+    }
+
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public Long getCouponNum() {
+        return couponNum;
+    }
+
+    public String getMedicalServiceId() {
+        return medicalServiceId;
     }
 
     public Long getPatientId() {
@@ -46,18 +58,6 @@ public class GuestPatient {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public Long getCouponNum() {
-        return couponNum;
-    }
-
-    public String getMedicalService() {
-        return medicalService;
     }
 
     public Date getVisitDate() {

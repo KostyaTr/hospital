@@ -2,54 +2,27 @@ package com.github.KostyaTr.hospital.model;
 
 public class MedDoctor {
     private Long doctorId;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
-    private String speciality;
-    private String department;
+    private Long userId;
+    private Long deptNum;
     private boolean headOfDept;
 
-    public MedDoctor(Long doctorId, String firstName, String lastName,
-                     String phoneNumber, String email, String speciality,
-                     String department, boolean headOfDept) {
-
+    public MedDoctor(Long doctorId, Long userId, Long deptNum, boolean headOfDept) {
         this.doctorId = doctorId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.speciality = speciality;
-        this.department = department;
+        this.userId = userId;
+        this.deptNum = deptNum;
         this.headOfDept = headOfDept;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public Long getDoctorId() {
         return doctorId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getSpeciality() {
-        return speciality;
-    }
-
-    public String getDepartment() {
-        return department;
+    public Long getDeptNum() {
+        return deptNum;
     }
 
     public boolean isHeadOfDept() {

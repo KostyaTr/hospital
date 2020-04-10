@@ -4,35 +4,25 @@ import java.util.Date;
 
 public class Inpatient {
     private Long inpatientId;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
-    private Long cardNum;
-    private String doctorName;
-    private String department;
-    private Long chamberNum;
+    private Long userId;
+    private Long doctorId;
+    private Long deptChamberId;
     private String diagnose;
-    private String treatmentCourse;
-    private String operationService;
+    private Long treatmentCourseId;
+    private Long operationServiceId;
     private Date enrollmentDate;
 
-    public Inpatient(Long inpatientId, String firstName, String lastName, String phoneNumber,
-                     String email, Long cardNum, String doctorName, String department, Long chamberNum,
-                     String diagnose, String treatmentCourse, String operationService, Date enrollmentDate) {
+    public Inpatient(Long inpatientId, Long userId, Long doctorId,
+                     Long deptChamberId, String diagnose, Long treatmentCourseId,
+                     Long operationServiceId, Date enrollmentDate) {
 
         this.inpatientId = inpatientId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.cardNum = cardNum;
-        this.doctorName = doctorName;
-        this.department = department;
-        this.chamberNum = chamberNum;
+        this.userId = userId;
+        this.doctorId = doctorId;
+        this.deptChamberId = deptChamberId;
         this.diagnose = diagnose;
-        this.treatmentCourse = treatmentCourse;
-        this.operationService = operationService;
+        this.treatmentCourseId = treatmentCourseId;
+        this.operationServiceId = operationServiceId;
         this.enrollmentDate = enrollmentDate;
     }
 
@@ -40,48 +30,28 @@ public class Inpatient {
         return inpatientId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Long getCardNum() {
-        return cardNum;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public Long getChamberNum() {
-        return chamberNum;
+    public Long getDeptChamberId() {
+        return deptChamberId;
     }
 
     public String getDiagnose() {
         return diagnose;
     }
 
-    public String getTreatmentCourse() {
-        return treatmentCourse;
+    public Long getTreatmentCourseId() {
+        return treatmentCourseId;
     }
 
-    public String getOperationService() {
-        return operationService;
+    public Long getOperationServiceId() {
+        return operationServiceId;
     }
 
     public Date getEnrollmentDate() {
