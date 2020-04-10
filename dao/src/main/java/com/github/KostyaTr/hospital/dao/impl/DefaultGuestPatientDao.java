@@ -2,7 +2,6 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.GuestPatientDao;
-import com.github.KostyaTr.hospital.model.Appointment;
 import com.github.KostyaTr.hospital.model.GuestPatient;
 
 import java.sql.*;
@@ -23,27 +22,14 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public List<GuestPatient> getPatientsByDoctorId(Long doctorId) {
-        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
-                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
-                "medical_service.service_name, guest_patient.visit_date\n" +
-                "from guest_patient\n" +
-                "join doctor on doctor.id = guest_patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
-                "where doctor.id = ?;";
+        final String sql = "select * from guest_patient where doctor_id = ?;";
 
         return getPatients(doctorId, sql);
     }
 
     @Override
     public List<GuestPatient> getPatients() {
-        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
-                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
-                "medical_service.service_name, guest_patient.visit_date\n" +
-                "from guest_patient\n" +
-                "join doctor on doctor.id = guest_patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on guest_patient.medical_service_id = medical_service.id;\n";
+        final String sql = "select * from guest_patient;";
 
 
         try (Connection connection = DataSource.getInstance().getConnection();
@@ -56,16 +42,19 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
     }
 
     @Override
-    public Long addPatient(Appointment appointment) {
-        final String sql = "insert into guest_patient(guest_id, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?)";
+    public Long addPatient(GuestPatient guestPatient) {
+        final String sql = "insert into guest_patient(guest_id, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?,?,?)";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, appointment.getUserId());
-            preparedStatement.setLong(2, appointment.getDoctorId());
-            preparedStatement.setLong(3, appointment.getCoupon_num());
-            preparedStatement.setLong(4, appointment.getMedicalServiceId());
-            preparedStatement.setTimestamp(5, (Timestamp) appointment.getVisitDate());
+            preparedStatement.setString(1, guestPatient.getFirstName());
+            preparedStatement.setString(2, guestPatient.getLastName());
+            preparedStatement.setString(3, guestPatient.getPhoneNumber());
+            preparedStatement.setString(4, guestPatient.getEmail());
+            preparedStatement.setLong(5, guestPatient.getDoctorId());
+            preparedStatement.setLong(6, guestPatient.getCouponNum());
+            preparedStatement.setLong(7, guestPatient.getMedicalServiceId());
+            preparedStatement.setTimestamp(8, (Timestamp) guestPatient.getVisitDate());
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
@@ -89,14 +78,7 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public GuestPatient getPatientById(Long patientId) {
-        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
-                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
-                "medical_service.service_name, guest_patient.visit_date\n" +
-                "from guest_patient\n" +
-                "join doctor on doctor.id = guest_patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
-                "where guest_patient.id = ?;";
+        final String sql = "select * from guest_patient where id = ?;";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -109,10 +91,10 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
                             resultSet.getString("last_name"),
                             resultSet.getString("phone_number"),
                             resultSet.getString("email"),
+                            resultSet.getLong("doctor_id"),
                             resultSet.getLong("coupon_num"),
-                            resultSet.getTimestamp("visit_date"),
-                            resultSet.getString("doctor_name"),
-                            resultSet.getString("service_name"));
+                            resultSet.getLong("medical_service_id"),
+                            resultSet.getTimestamp("visit_date"));
                 } else {
                     return null;
                 }
@@ -125,12 +107,9 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
     @Override
     public List<GuestPatient> getPatientsByDepartmentId(Long deptId) {
         final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
-                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
-                "medical_service.service_name, guest_patient.visit_date\n" +
+                "guest_patient.email, guest_patient.doctor_id, guest_patient.coupon_num, guest_patient.medical_service_id, guest_patient.visit_date\n" +
                 "from guest_patient\n" +
                 "join doctor on doctor.id = guest_patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
                 "where doctor.dept_id = ?;";
         return getPatients(deptId, sql);
     }
@@ -144,10 +123,10 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
                     resultSet.getString("last_name"),
                     resultSet.getString("phone_number"),
                     resultSet.getString("email"),
+                    resultSet.getLong("doctor_id"),
                     resultSet.getLong("coupon_num"),
-                    resultSet.getTimestamp("visit_date"),
-                    resultSet.getString("doctor_name"),
-                    resultSet.getString("service_name"));
+                    resultSet.getLong("medical_service_id"),
+                    resultSet.getTimestamp("visit_date"));
             patients.add(patient);
         }
         return patients;
