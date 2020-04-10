@@ -1,5 +1,7 @@
-package com.github.KostyaTr.hospital.dao;
+package com.github.KostyaTr.hospital.dao.impl;
 
+import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 
 import java.sql.*;
