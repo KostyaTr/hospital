@@ -5,66 +5,41 @@ import java.util.Date;
 
 public class Patient {
     private Long patientId;
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
-    private String email;
-    private Long cardNum;
+    private Long userId;
+    private Long doctorId;
     private Long couponNum;
+    private String medicalServiceId;
     private Date visitDate;
-    private String doctorName;
-    private String medicalService;
 
-    public Patient(Long patientId, String firstName, String lastName, String phoneNumber,
-                   String email, Long cardNum, Long couponNum,
-                   Date visitDate, String doctorName, String medicalService) {
+    public Patient(Long patientId, Long userId, Long doctorId,
+                   Long couponNum, String medicalServiceId, Date visitDate) {
 
         this.patientId = patientId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.cardNum = cardNum;
+        this.userId = userId;
+        this.doctorId = doctorId;
         this.couponNum = couponNum;
+        this.medicalServiceId = medicalServiceId;
         this.visitDate = visitDate;
-        this.doctorName = doctorName;
-        this.medicalService = medicalService;
-    }
-
-    public Long getCardNum() {
-        return cardNum;
     }
 
     public Long getPatientId() {
         return patientId;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getDoctorName() {
-        return doctorName;
+    public Long getDoctorId() {
+        return doctorId;
     }
 
     public Long getCouponNum() {
         return couponNum;
     }
 
-    public String getMedicalService() {
-        return medicalService;
+    public String getMedicalServiceId() {
+        return medicalServiceId;
     }
 
     public Date getVisitDate() {
