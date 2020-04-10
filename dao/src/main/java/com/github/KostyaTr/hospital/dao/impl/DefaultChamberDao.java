@@ -13,7 +13,6 @@ import java.util.List;
 public class DefaultChamberDao implements ChamberDao {
     private final int ONE_ROW_AFFECTED = 1;
 
-
     private static class SingletonHolder {
         static final ChamberDao HOLDER_INSTANCE = new DefaultChamberDao();
     }
