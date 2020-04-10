@@ -3,7 +3,6 @@ package com.github.KostyaTr.hospital.dao.impl;
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.InpatientDao;
 import com.github.KostyaTr.hospital.model.Inpatient;
-import com.github.KostyaTr.hospital.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
