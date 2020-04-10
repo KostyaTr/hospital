@@ -9,6 +9,4 @@ public interface DischargedPatientDao {
     Long addDischargedPatient(DischargedPatient dischargedPatient);
 
     List<DischargedPatient> getDischargedPatients();
-
-    DischargedPatient getDischargedPatientById(DischargedPatient dischargedPatientId);
 }
