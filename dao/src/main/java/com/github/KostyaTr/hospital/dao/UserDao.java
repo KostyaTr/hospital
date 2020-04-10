@@ -10,6 +10,4 @@ public interface UserDao {
     Long saveUser(User user);
 
     User getUserById(Long userId);
-
-    boolean removeUserById(Long userId);
 }

@@ -82,15 +82,4 @@ public class DefaultUserDao implements UserDao{
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public boolean removeUserById(Long userId) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("delete from user where id = ?")) {
-             preparedStatement.setLong(1, userId);
-             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
