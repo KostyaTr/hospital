@@ -23,30 +23,13 @@ public class DefaultPatientDao implements PatientDao {
 
     @Override
     public List<Patient> getPatientsByDoctorId(Long doctorId) {
-        final String sql = "select patient.id, user.first_name, user.last_name, user.phone_number, user.email, card.id as card_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name, patient.coupon_num,  medical_service.service_name, patient.visit_date from patient\n" +
-                "join user on user.id = patient.user_id\n" +
-                "join card on card.user_id = patient.user_id\n" +
-                "join doctor on doctor.id = patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on patient.medical_service_id = medical_service.id\n" +
-                "where doctor.id = ?;\n";
-
+        final String sql = "select * from patient where doctor_id = ?;";
         return getPatients(doctorId, sql);
     }
 
     @Override
     public List<Patient> getPatients() {
-        final String sql = "select patient.id, user.first_name, user.last_name, user.phone_number, user.email," +
-                " card.id as card_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name," +
-                " patient.coupon_num,  medical_service.service_name, patient.visit_date" +
-                " from patient\n" +
-                "join user on user.id = patient.user_id\n" +
-                "join card on card.user_id = patient.user_id\n" +
-                "join doctor on doctor.id = patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on patient.medical_service_id = medical_service.id;";
-
-
+        final String sql = "select * from patient;";
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()){
@@ -93,13 +76,7 @@ public class DefaultPatientDao implements PatientDao {
 
     @Override
     public Patient getPatientById(Long patientId) {
-        final String sql = "select patient.id, user.first_name, user.last_name, user.phone_number, user.email, card.id as card_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name, patient.coupon_num,  medical_service.service_name, patient.visit_date from patient\n" +
-                "join user on user.id = patient.user_id\n" +
-                "join card on card.user_id = patient.user_id\n" +
-                "join doctor on doctor.id = patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on patient.medical_service_id = medical_service.id\n" +
-                "where patient.id = ?;";
+        final String sql = "select * from patient where id = ?;";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -108,15 +85,11 @@ public class DefaultPatientDao implements PatientDao {
                 if (resultSet.next()){
                     return new Patient(
                             resultSet.getLong("id"),
-                            resultSet.getString("first_name"),
-                            resultSet.getString("last_name"),
-                            resultSet.getString("phone_number"),
-                            resultSet.getString("email"),
-                            resultSet.getLong("card_num"),
+                            resultSet.getLong("user_id"),
+                            resultSet.getLong("doctor_id"),
                             resultSet.getLong("coupon_num"),
-                            resultSet.getTimestamp("visit_date"),
-                            resultSet.getString("doctor_name"),
-                            resultSet.getString("service_name"));
+                            resultSet.getString("medical_service_id"),
+                            resultSet.getTimestamp("visit_date"));
                 } else {
                     return null;
                 }
@@ -128,13 +101,7 @@ public class DefaultPatientDao implements PatientDao {
 
     @Override
     public List<Patient> getPatientsByDepartmentId(Long deptId) {
-        final String sql = "select patient.id, user.first_name, user.last_name, user.phone_number, user.email, card.id as card_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name, patient.coupon_num,  medical_service.service_name, patient.visit_date from patient\n" +
-                "join user on user.id = patient.user_id\n" +
-                "join card on card.user_id = patient.user_id\n" +
-                "join doctor on doctor.id = patient.doctor_id\n" +
-                "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on patient.medical_service_id = medical_service.id\n" +
-                "where doctor.dept_id = ?;";
+        final String sql = "select * from patient where doctor.dept_id = ?;";
         return getPatients(deptId, sql);
     }
 
@@ -143,15 +110,11 @@ public class DefaultPatientDao implements PatientDao {
         while (resultSet.next()){
             final Patient patient = new Patient(
                     resultSet.getLong("id"),
-                    resultSet.getString("first_name"),
-                    resultSet.getString("last_name"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getString("email"),
-                    resultSet.getLong("card_num"),
+                    resultSet.getLong("user_id"),
+                    resultSet.getLong("doctor_id"),
                     resultSet.getLong("coupon_num"),
-                    resultSet.getTimestamp("visit_date"),
-                    resultSet.getString("doctor_name"),
-                    resultSet.getString("service_name"));
+                    resultSet.getString("medical_service_id"),
+                    resultSet.getTimestamp("visit_date"));
             patients.add(patient);
         }
         return patients;
