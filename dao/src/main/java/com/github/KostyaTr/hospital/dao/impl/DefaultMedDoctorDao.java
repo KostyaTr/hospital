@@ -94,6 +94,16 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
         return getMedDoctors(sql);
     }
 
+    @Override
+    public MedDoctor getDoctorByPatientId(Long patientId) {
+        return null;
+    }
+
+    @Override
+    public Long getDepartmentByDoctorId(Long doctorId) {
+        return null;
+    }
+
     private MedDoctor getMedDoctor(Long id, String sql) {
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
