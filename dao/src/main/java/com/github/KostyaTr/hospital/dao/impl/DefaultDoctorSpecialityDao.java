@@ -21,16 +21,16 @@ public class DefaultDoctorSpecialityDao implements DoctorSpecialityDao {
     }
 
     @Override
-    public List<Integer> getDoctorsSpecialities(Long doctorId) {
+    public List<Long> getDoctorsSpecialities(Long doctorId) {
        final String sql = "select speciality_id from doctor_speciality where doctor_id = ?";
 
        try (Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
            preparedStatement.setLong(1, doctorId);
            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-               List<Integer> specialities = new ArrayList<>();
+               List<Long> specialities = new ArrayList<>();
               while(resultSet.next()){
-                  specialities.add(resultSet.getInt("speciality_id"));
+                  specialities.add(resultSet.getLong("speciality_id"));
               }
               return specialities;
            }
