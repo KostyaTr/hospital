@@ -1,7 +1,10 @@
 package com.github.KostyaTr.hospital.service.impl;
 
+import com.github.KostyaTr.hospital.dao.CardDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultCardDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
+import com.github.KostyaTr.hospital.model.Card;
 import com.github.KostyaTr.hospital.service.RegistrationService;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.User;
@@ -11,40 +14,35 @@ import com.github.KostyaTr.hospital.dao.UserDao;
 public class DefaultRegistrationService implements RegistrationService {
     private UserDao userDao = DefaultUserDao.getInstance();
     private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
+    private CardDao cardDao = DefaultCardDao.getInstance();
 
-    private static volatile RegistrationService instance;
+    private static class SingletonHolder {
+        static final RegistrationService HOLDER_INSTANCE = new DefaultRegistrationService();
+    }
 
-    public static RegistrationService getInstance(){
-        RegistrationService localInstance = instance;
-        if (localInstance == null){
-            synchronized (RegistrationService.class){
-                localInstance = instance;
-                if (localInstance == null){
-                    localInstance = instance = new DefaultRegistrationService();
-                }
-            }
-        }
-        return localInstance;
+    public static RegistrationService getInstance() {
+        return DefaultRegistrationService.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+
+    @Override
+    public Long saveUser(User user) {
+        return userDao.saveUser(user);
     }
 
     @Override
-    public void saveUser(User user) {
-        userDao.saveUser(user);
+    public void saveAuthUser(AuthUser authUser) {
+        authUserDao.saveAuthUser(authUser);
     }
 
     @Override
-    public void saveAuthUser(AuthUser user) {
-        authUserDao.saveAuthUser(user);
+    public boolean saveCard(Card card) {
+        return cardDao.addCard(card);
     }
 
     @Override
     public boolean loginCheck(String login) {
-        for ( User user:userDao.getUsers()) {
-            if (login.equals(user.getLogin())){
-                return true;
-            }
-        }
-        return false;
+        return null == authUserDao.getByLogin(login); //true if login is not registered
     }
 
     @Override
