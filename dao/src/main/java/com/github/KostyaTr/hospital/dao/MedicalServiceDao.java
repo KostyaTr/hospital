@@ -1,11 +1,13 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.model.MedicalService;
+
 import java.util.List;
 
 public interface MedicalServiceDao {
-    List<String> getMedicalServices();
+    List<MedicalService> getMedicalServices();
 
-    Double getPriceOfMedicalServiceById(Long medicalServiceId);
+    MedicalService getMedicalServiceById(Long medicalServiceId);
 
-    Long getNeededSpecialityId(Long medicalServiceId);
+    Long addMedicalServiceId(MedicalService medicalService);
 }
