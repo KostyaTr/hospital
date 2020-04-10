@@ -35,4 +35,21 @@ public class DefaultDepartmentDao implements DepartmentDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String getDepartmentById(Long id) {
+        final String sql = "select department_name from department where id = ?;";
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setLong(1, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    return resultSet.getString("department_name");
+                }
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
