@@ -23,8 +23,10 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public List<GuestPatient> getPatientsByDoctorId(Long doctorId) {
-        final String sql = "select guest_patient.id, guest.first_name, guest.last_name, guest.phone_number, guest.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,  medical_service.service_name, guest_patient.visit_date from guest_patient\n" +
-                "join guest on guest.id = guest_patient.id\n" +
+        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
+                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
+                "medical_service.service_name, guest_patient.visit_date\n" +
+                "from guest_patient\n" +
                 "join doctor on doctor.id = guest_patient.doctor_id\n" +
                 "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
                 "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
@@ -35,11 +37,13 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public List<GuestPatient> getPatients() {
-        final String sql = "select guest_patient.id, guest.first_name, guest.last_name, guest.phone_number, guest.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,  medical_service.service_name, guest_patient.visit_date from guest_patient\n" +
-                "join guest on guest.id = guest_patient.id\n" +
+        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
+                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
+                "medical_service.service_name, guest_patient.visit_date\n" +
+                "from guest_patient\n" +
                 "join doctor on doctor.id = guest_patient.doctor_id\n" +
                 "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
-                "join medical_service on guest_patient.medical_service_id = medical_service.id;";
+                "join medical_service on guest_patient.medical_service_id = medical_service.id;\n";
 
 
         try (Connection connection = DataSource.getInstance().getConnection();
@@ -85,8 +89,10 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public GuestPatient getPatientById(Long patientId) {
-        final String sql = "select guest_patient.id, guest.first_name, guest.last_name, guest.phone_number, guest.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,  medical_service.service_name, guest_patient.visit_date from guest_patient\n" +
-                "join guest on guest.id = guest_patient.id\n" +
+        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
+                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
+                "medical_service.service_name, guest_patient.visit_date\n" +
+                "from guest_patient\n" +
                 "join doctor on doctor.id = guest_patient.doctor_id\n" +
                 "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
                 "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
@@ -118,8 +124,10 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public List<GuestPatient> getPatientsByDepartmentId(Long deptId) {
-        final String sql = "select guest_patient.id, guest.first_name, guest.last_name, guest.phone_number, guest.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,  medical_service.service_name, guest_patient.visit_date from guest_patient\n" +
-                "join guest on guest.id = guest_patient.id\n" +
+        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
+                "guest_patient.email, guest_patient.coupon_num, concat(doctor_user.first_name, \" \", doctor_user.last_name) as doctor_name,\n" +
+                "medical_service.service_name, guest_patient.visit_date\n" +
+                "from guest_patient\n" +
                 "join doctor on doctor.id = guest_patient.doctor_id\n" +
                 "join user as doctor_user on doctor.user_id = doctor_user.id\n" +
                 "join medical_service on guest_patient.medical_service_id = medical_service.id\n" +
