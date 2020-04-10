@@ -17,4 +17,6 @@ public interface InpatientDao {
     Inpatient getInpatientById(Long patientId);
 
     Long addInpatient(Inpatient inpatient);
+
+    boolean updateDiagnose(Long patientId, String diagnose);
 }
