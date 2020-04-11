@@ -33,6 +33,12 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
     }
 
     @Override
+    public MedDoctor getDoctorByUserId(Long userId) {
+        final String sql = "select * from doctor where user_id = ?;";
+        return getMedDoctor(userId, sql);
+    }
+
+    @Override
     public boolean removeDoctorById(Long doctorId) {
         final String sql = "delete from doctor where id = ?";
         try(Connection connection = DataSource.getInstance().getConnection();
