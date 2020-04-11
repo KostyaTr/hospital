@@ -1,15 +1,22 @@
 package com.github.KostyaTr.hospital.service;
 
-import com.github.KostyaTr.hospital.model.GuestPatient;
-import com.github.KostyaTr.hospital.model.MedDoctor;
-import com.github.KostyaTr.hospital.model.Patient;
+import com.github.KostyaTr.hospital.model.*;
 
 import java.util.List;
 
-public interface HeadPhysicianService extends MedDoctorService {
-    boolean fireDoctor(MedDoctor medDoctor);
+public interface
+HeadPhysicianService extends MedDoctorService {
+    boolean fireDoctor(Long doctorId);
 
     List<Patient> getPatientsByDeptId(Long deptId);
 
     List<GuestPatient> getGuestPatientByDeptId(Long deptId);
+
+    Long addMedicalService(MedicalService medicalService);
+
+    List<Inpatient> getInpatientsByDepId(Long deptId);
+
+    List<Inpatient> getUndiagnosedInpatientsByDep(Long deptId);
+
+    Long addDoctor(MedDoctor medDoctor);
 }

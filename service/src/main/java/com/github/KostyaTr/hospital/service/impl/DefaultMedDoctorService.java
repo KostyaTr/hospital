@@ -20,6 +20,8 @@ public class DefaultMedDoctorService implements MedDoctorService {
     private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
 
     private final String PATIENT_CURED = "cured";
+    private final int FREE_CHAMBER = 0;
+    private final int LOAD = 1;
 
 
     private static class SingletonHolder {
@@ -101,13 +103,15 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
     @Override
     public boolean updateStatus(Long patientId, String status) {
-        return false;
+        return inpatientDao.updateStatus(patientId, status);
     }
 
     @Override
     public boolean dischargeInpatient(Long patientId) {
         Inpatient inpatient = inpatientDao.getInpatientById(patientId);
         if(inpatient.getStatus().equals(PATIENT_CURED)){
+            chamberDao.updateChamberLoad(inpatient.getDeptChamberId(), -LOAD);
+            treatmentCourseDao.removeTreatmentCourseById(inpatient.getTreatmentCourseId());
             cardDao.updateCardHistory( inpatient.getUserId(), inpatient.getDiagnose());
             dischargedPatientDao.addDischargedPatient(new DischargedPatient(
                     null,
@@ -126,14 +130,25 @@ public class DefaultMedDoctorService implements MedDoctorService {
         return false;
     }
 
+    @Override
+    public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
+        return inpatientDao.getInpatientsByDoctorId(doctorId);
+    }
+
+    @Override
+    public List<Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId) {
+        return inpatientDao.getUndiagnosedInpatientsByDoctor(doctorId);
+    }
+
     private Long putPatientInHospital(Long patientId, String condition) {
         Patient patient = patientDao.getPatientById(patientId);
         if (!freeChambers(patient).isEmpty()){
+            chamberDao.updateChamberLoad((long) FREE_CHAMBER, LOAD);
             return inpatientDao.addInpatient( new Inpatient(
                     null,
                     patient.getUserId(),
                     patient.getDoctorId(),
-                    freeChambers(patient).get(0),
+                    freeChambers(patient).get(FREE_CHAMBER),
                     null,
                     null,
                     null,

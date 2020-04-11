@@ -9,6 +9,10 @@ public interface MedDoctorService {
 
     List<GuestPatient> getGuestPatientsByDoctorId(Long doctorId);
 
+    List<Inpatient> getInpatientsByDoctorId(Long doctorId);
+
+    List<Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId);
+
     boolean takeThePatient(Long patientId, String condition);
 
     boolean takeTheGuestPatient(Long guestPatientId);
