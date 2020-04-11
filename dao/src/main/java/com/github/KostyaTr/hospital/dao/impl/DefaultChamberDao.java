@@ -22,12 +22,12 @@ public class DefaultChamberDao implements ChamberDao {
     }
 
     @Override
-    public boolean updateChamberCapacity(Long id, int capacity) {
-        final String sql = "update chamber set chamber_capacity = ? where id = ?";
+    public boolean updateChamberLoad(Long id, int load) {
+        final String sql = "update chamber set chamber_load = chamber_load + ? where id = ?";
 
         try (Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, capacity);
+            preparedStatement.setInt(1, load);
             preparedStatement.setLong(2, id);
             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
         } catch (SQLException e) {
