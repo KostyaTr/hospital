@@ -16,4 +16,6 @@ public interface PatientDao {
     boolean removePatientById(Long patientId);
 
     Patient getPatientById(Long patientId);
+
+    List<Patient> getPatientsByUserId(Long userId);
 }

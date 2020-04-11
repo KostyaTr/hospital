@@ -27,6 +27,12 @@ public class DefaultPatientDao implements PatientDao {
     }
 
     @Override
+    public List<Patient> getPatientsByUserId(Long userId) {
+        final String sql = "select * from patient where user_id = ?;";
+        return getPatients(userId, sql);
+    }
+
+    @Override
     public List<Patient> getPatients() {
         final String sql = "select * from patient;";
         try (Connection connection = DataSource.getInstance().getConnection();
