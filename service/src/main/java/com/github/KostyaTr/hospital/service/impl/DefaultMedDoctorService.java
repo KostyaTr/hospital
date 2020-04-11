@@ -101,16 +101,24 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
     @Override
     public boolean updateStatus(Long patientId, String status) {
-        return inpatientDao.updateStatus(patientId, status);
+        return false;
     }
 
     @Override
     public boolean dischargeInpatient(Long patientId) {
-        if(inpatientDao.getInpatientById(patientId).getStatus().equals(PATIENT_CURED)){
+        Inpatient inpatient = inpatientDao.getInpatientById(patientId);
+        if(inpatient.getStatus().equals(PATIENT_CURED)){
+            cardDao.updateCardHistory( inpatient.getUserId(), inpatient.getDiagnose());
             dischargedPatientDao.addDischargedPatient(new DischargedPatient(
                     null,
-                    patientId,
+                    inpatient.getUserId(),
+                    inpatient.getDoctorId(),
+                    inpatient.getDeptChamberId(),
+                    inpatient.getDiagnose(),
+                    inpatient.getTreatmentCourseId(),
+                    inpatient.getOperationServiceId(),
                     PATIENT_CURED,
+                    inpatient.getEnrollmentDate(),
                     new Date()
             ));
            return inpatientDao.removeInpatientById(patientId);

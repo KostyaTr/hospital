@@ -27,5 +27,5 @@ public interface MedDoctorService {
 
     boolean updateStatus(Long patientId, String status);
 
-    boolean dischargeInpatient(Long patientId)
+    boolean dischargeInpatient(Long patientId);
 }
