@@ -12,11 +12,20 @@
     <label for="lastName">фамилия</label>
     <input id="lastName" type="text" name="lastName"><br/>
 
+    <label for="phone">phone</label>
+    <input id="phone" type="text" name="phone"><br/>
+
     <label for="email">email</label>
     <input id="email" type="text" name="email"><br/>
 
-    <label for="phone">phone</label>
-    <input id="phone" type="text" name="phone"><br/>
+
+    <label for="address">address</label>
+    <input id="address" type="text" name="address"><br/>
+
+    <label for="birthday">Birthday</label>
+    <input id="birthday" type="date" name="birthday">
+
+    <input type="checkbox" name="insurance" value="true"/>
 
     <label for="password">password</label>
     <input id="password" type="password" name="password">
@@ -27,6 +36,7 @@
     <input type="submit">
 </form>
 
+<p style="color: red">${inputError}</p>
 
 <p style="color: red">${loginError}</p>
 
