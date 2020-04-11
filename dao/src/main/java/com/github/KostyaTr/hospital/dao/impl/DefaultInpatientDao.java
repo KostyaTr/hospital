@@ -164,4 +164,18 @@ public class DefaultInpatientDao implements InpatientDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public boolean updateTreatmentCourse(Long patientId, Long treatmentCourseId) {
+        final String sql = "update inpatient set treatment_course_id = ? where id = ?";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, treatmentCourseId);
+            preparedStatement.setLong(2, patientId);
+            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

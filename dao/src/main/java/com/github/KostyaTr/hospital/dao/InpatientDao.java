@@ -19,4 +19,6 @@ public interface InpatientDao {
     Long addInpatient(Inpatient inpatient);
 
     boolean updateDiagnose(Long patientId, String diagnose);
+
+    boolean updateTreatmentCourse(Long patientId, Long treatmentCourseId);
 }
