@@ -6,9 +6,11 @@ import java.util.List;
 public interface InpatientDao {
     List<Inpatient> getInpatientsByDoctorId(Long doctorId);
 
-    List<Inpatient> getInpatientsByDepChamberId(Long DepChamberId);
+    List<Inpatient> getInpatientsByDepId(Long deptId);
 
-    List<Inpatient> getUndiagnosedInpatients();
+    List<Inpatient> getUndiagnosedInpatientsByDep(Long deptId);
+
+    List<Inpatient> getUndiagnosedInpatientsByDoctor(Long doctorId);
 
     List<Inpatient> getPatients();
 
