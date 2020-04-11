@@ -10,11 +10,12 @@ public class Inpatient {
     private String diagnose;
     private Long treatmentCourseId;
     private Long operationServiceId;
+    private String status;
     private Date enrollmentDate;
 
-    public Inpatient(Long inpatientId, Long userId, Long doctorId,
-                     Long deptChamberId, String diagnose, Long treatmentCourseId,
-                     Long operationServiceId, Date enrollmentDate) {
+    public Inpatient(Long inpatientId, Long userId, Long doctorId, Long deptChamberId,
+                     String diagnose, Long treatmentCourseId, Long operationServiceId,
+                     String status, Date enrollmentDate) {
 
         this.inpatientId = inpatientId;
         this.userId = userId;
@@ -23,6 +24,7 @@ public class Inpatient {
         this.diagnose = diagnose;
         this.treatmentCourseId = treatmentCourseId;
         this.operationServiceId = operationServiceId;
+        this.status = status;
         this.enrollmentDate = enrollmentDate;
     }
 
@@ -52,6 +54,10 @@ public class Inpatient {
 
     public Long getOperationServiceId() {
         return operationServiceId;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public Date getEnrollmentDate() {

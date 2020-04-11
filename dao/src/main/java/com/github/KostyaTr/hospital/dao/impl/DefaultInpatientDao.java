@@ -67,6 +67,7 @@ public class DefaultInpatientDao implements InpatientDao {
                     resultSet.getString("diagnose"),
                     resultSet.getLong("treatment_course_id"),
                     resultSet.getLong("operation_service_id"),
+                    resultSet.getString("patient_status"),
                     resultSet.getDate("enrollment_date"));
             inpatients.add(user);
         }
@@ -102,6 +103,7 @@ public class DefaultInpatientDao implements InpatientDao {
                             resultSet.getString("diagnose"),
                             resultSet.getLong("treatment_course_id"),
                             resultSet.getLong("operation_service_id"),
+                            resultSet.getString("patient_status"),
                             resultSet.getDate("enrollment_date"));
                 } else {
                     return null;
@@ -116,8 +118,8 @@ public class DefaultInpatientDao implements InpatientDao {
     public Long addInpatient(Inpatient inpatient) {
         final String sql = "insert into inpatient" +
                 "(user_id, doctor_id, dept_chamber_id, diagnose," +
-                " treatment_course_id, operation_service_id, enrollment_date) values" +
-                "(?,?,?,?,?,?,?)";
+                " treatment_course_id, operation_service_id, patient_status, enrollment_date) values" +
+                "(?,?,?,?,?,?,?,?)";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -127,7 +129,8 @@ public class DefaultInpatientDao implements InpatientDao {
             preparedStatement.setString(4, inpatient.getDiagnose());
             preparedStatement.setLong(5, inpatient.getTreatmentCourseId());
             preparedStatement.setLong(6, inpatient.getOperationServiceId());
-            preparedStatement.setDate(7, (Date) inpatient.getEnrollmentDate());
+            preparedStatement.setString(7, inpatient.getStatus());
+            preparedStatement.setDate(8, (Date) inpatient.getEnrollmentDate());
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
@@ -158,6 +161,20 @@ public class DefaultInpatientDao implements InpatientDao {
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, diagnose);
+            preparedStatement.setLong(2, patientId);
+            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updateStatus(Long patientId, String status) {
+        final String sql = "update inpatient set patient_status = ? where id = ?";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, status);
             preparedStatement.setLong(2, patientId);
             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
         } catch (SQLException e) {

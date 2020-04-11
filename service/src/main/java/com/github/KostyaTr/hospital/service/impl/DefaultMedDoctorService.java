@@ -2,13 +2,10 @@ package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.*;
 import com.github.KostyaTr.hospital.dao.impl.*;
-import com.github.KostyaTr.hospital.model.GuestPatient;
-import com.github.KostyaTr.hospital.model.Inpatient;
-import com.github.KostyaTr.hospital.model.Patient;
+import com.github.KostyaTr.hospital.model.*;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DefaultMedDoctorService implements MedDoctorService {
@@ -17,6 +14,12 @@ public class DefaultMedDoctorService implements MedDoctorService {
     private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
     private ChamberDao chamberDao = DefaultChamberDao.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
+    private CardDao cardDao = DefaultCardDao.getInstance();
+    private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
+    private TreatmentCourseDao treatmentCourseDao = DefaultTreatmentCourseDao.getInstance();
+    private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
+
+    private final String PATIENT_CURED = "cured";
 
 
     private static class SingletonHolder {
@@ -41,28 +44,102 @@ public class DefaultMedDoctorService implements MedDoctorService {
     @Override
     public boolean takeThePatient(Long patientId, String condition) {
         if (condition.equals("Bad")){
-            chamberDao.getEmptyChambersByDeptId(medDoctorDao.getDepartmentByDoctorId(medDoctorDao.getDoctorByPatientId(patientId).getDoctorId())).get(0);
-            // вынести в утилиты
-            // поле Inpatient model
-            Patient patient = patientDao.getPatientById(patientId);
-            chamberDao.putPatientInChamber(new Inpatient(null,
-                    patient.getFirstName(),
-                    patient.getLastName(),
-                    patient.getPhoneNumber(),
-                    patient.getEmail(),
-                    patient.getCardNum(),
-                    patient.getDoctorName(),
-                    "patient.departament",
-                    chamberDao.getEmptyChambersByDeptId(medDoctorDao.getDepartmentByDoctorId(medDoctorDao.getDoctorByPatientId(patientId).getDoctorId())).get(0),
-                    null, null, null, new Timestamp(System.currentTimeMillis())));
-            return true;
+            if(putPatientInHospital(patientId, condition) != null){
+                return patientDao.removePatientById(patientId);
+            }
         } else {
             return patientDao.removePatientById(patientId);
         }
+        return false;
+    }
+
+
+    @Override
+    public boolean updateDiagnose(Long patientId, String diagnose) {
+        return inpatientDao.updateDiagnose(patientId, diagnose);
     }
 
     @Override
-    public boolean takeTheGuestPatient(Long guestPatientId, String condition) {
+    public boolean prescribeTreatmentCourse(Long patientId, Long treatmentCourseId) {
+        if (inpatientDao.getInpatientById(patientId).getDiagnose() == null){
+            return false;
+        }
+        return inpatientDao.updateTreatmentCourse(patientId, treatmentCourseId);
+    }
+
+    @Override
+    public boolean takeTheGuestPatient(Long guestPatientId) {
+        return guestPatientDao.removePatientById(guestPatientId);
+    }
+
+    @Override
+    public Card getCardByPatientId(Long patientId) {
+        return cardDao.getCardByUserId(patientDao.getPatientById(patientId).getUserId());
+    }
+
+    @Override
+    public List<Medicine> getMedicine() {
+        return medicineDao.getMedicine();
+    }
+
+    @Override
+    public Long createTreatmentCourse(TreatmentCourse treatmentCourse) {
+        return treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(
+                null,
+                treatmentCourse.getMedicineId(),
+                treatmentCourse.getMedicineDose(),
+                treatmentCourse.getReceptionDesc(),
+                treatmentCourse.getTimesPerDay(),
+                treatmentCourse.getDurationInDays()
+                ));
+    }
+
+    @Override
+    public boolean updateTreatmentCourse(TreatmentCourse treatmentCourse) {
+        return treatmentCourseDao.updateTreatmentCourseById(treatmentCourse);
+    }
+
+    @Override
+    public boolean updateStatus(Long patientId, String status) {
+        return inpatientDao.updateStatus(patientId, status);
+    }
+
+    @Override
+    public boolean dischargeInpatient(Long patientId) {
+        if(inpatientDao.getInpatientById(patientId).getStatus().equals(PATIENT_CURED)){
+            dischargedPatientDao.addDischargedPatient(new DischargedPatient(
+                    null,
+                    patientId,
+                    PATIENT_CURED,
+                    new Date()
+            ));
+           return inpatientDao.removeInpatientById(patientId);
+        }
         return false;
+    }
+
+    private Long putPatientInHospital(Long patientId, String condition) {
+        Patient patient = patientDao.getPatientById(patientId);
+        if (!freeChambers(patient).isEmpty()){
+            return inpatientDao.addInpatient( new Inpatient(
+                    null,
+                    patient.getUserId(),
+                    patient.getDoctorId(),
+                    freeChambers(patient).get(0),
+                    null,
+                    null,
+                    null,
+                    condition,
+                    new Date()));
+        }
+        else {
+            return null;
+        }
+    }
+
+    private List<Long> freeChambers(Patient patient){
+        return chamberDao.getEmptyChambersByDeptId(
+                medDoctorDao.getDoctorById(
+                        patient.getDoctorId()).getDeptNum());
     }
 }

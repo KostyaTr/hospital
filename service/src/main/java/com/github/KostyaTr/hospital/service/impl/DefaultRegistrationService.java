@@ -31,12 +31,12 @@ public class DefaultRegistrationService implements RegistrationService {
     }
 
     @Override
-    public void saveAuthUser(AuthUser authUser) {
-        authUserDao.saveAuthUser(authUser);
+    public Long saveAuthUser(AuthUser authUser) {
+        return authUserDao.saveAuthUser(authUser);
     }
 
     @Override
-    public boolean saveCard(Card card) {
+    public Long saveCard(Card card) {
         return cardDao.addCard(card);
     }
 

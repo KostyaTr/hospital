@@ -7,9 +7,9 @@ import com.github.KostyaTr.hospital.model.User;
 public interface RegistrationService {
     Long saveUser(User user);
 
-    void saveAuthUser(AuthUser user);
+    Long saveAuthUser(AuthUser user);
 
-    boolean saveCard(Card card);
+    Long saveCard(Card card);
 
     boolean loginCheck(String login);
 
