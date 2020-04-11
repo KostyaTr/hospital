@@ -8,20 +8,14 @@ import com.github.KostyaTr.hospital.service.AuthorizationService;
 public class DefaultAuthorizationService implements AuthorizationService {
     private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
 
-    private static volatile AuthorizationService instance;
-
-    public static AuthorizationService getInstance(){
-        AuthorizationService localInstance = instance;
-        if (localInstance == null){
-            synchronized (AuthorizationService.class){
-                localInstance = instance;
-                if (localInstance == null){
-                    instance = localInstance = new DefaultAuthorizationService();
-                }
-            }
-        }
-        return localInstance;
+    private static class SingletonHolder {
+        static final AuthorizationService HOLDER_INSTANCE = new DefaultAuthorizationService();
     }
+
+    public static AuthorizationService getInstance() {
+        return DefaultAuthorizationService.SingletonHolder.HOLDER_INSTANCE;
+    }
+
 
     @Override
     public AuthUser login(String login, String password) {
