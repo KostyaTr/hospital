@@ -42,7 +42,7 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     public boolean loginCheck(String login) {
-        return null == authUserDao.getByLogin(login); //true if login is not registered
+        return authUserDao.getByLogin(login) == null; //true if login is not registered
     }
 
     @Override
