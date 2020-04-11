@@ -4,16 +4,29 @@ import java.util.Date;
 
 public class DischargedPatient {
     private Long dischargedPatientId;
-    private Long inpatientId;
-    private String patientStatus;
+    private Long userId;
+    private Long doctorId;
+    private Long deptChamberId;
+    private String diagnose;
+    private Long treatmentCourseId;
+    private Long operationServiceId;
+    private String status;
+    private Date enrollmentDate;
     private Date dischargeDate;
 
-    public DischargedPatient(Long dischargedPatientId, Long inpatientId,
-                             String patientStatus, Date dischargeDate) {
+    public DischargedPatient(Long dischargedPatientId, Long userId, Long doctorId, Long deptChamberId,
+                             String diagnose, Long treatmentCourseId, Long operationServiceId,
+                             String status, Date enrollmentDate, Date dischargeDate) {
 
         this.dischargedPatientId = dischargedPatientId;
-        this.inpatientId = inpatientId;
-        this.patientStatus = patientStatus;
+        this.userId = userId;
+        this.doctorId = doctorId;
+        this.deptChamberId = deptChamberId;
+        this.diagnose = diagnose;
+        this.treatmentCourseId = treatmentCourseId;
+        this.operationServiceId = operationServiceId;
+        this.status = status;
+        this.enrollmentDate = enrollmentDate;
         this.dischargeDate = dischargeDate;
     }
 
@@ -21,12 +34,36 @@ public class DischargedPatient {
         return dischargedPatientId;
     }
 
-    public Long getInpatientId() {
-        return inpatientId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public String getPatientStatus() {
-        return patientStatus;
+    public Long getDoctorId() {
+        return doctorId;
+    }
+
+    public Long getDeptChamberId() {
+        return deptChamberId;
+    }
+
+    public String getDiagnose() {
+        return diagnose;
+    }
+
+    public Long getTreatmentCourseId() {
+        return treatmentCourseId;
+    }
+
+    public Long getOperationServiceId() {
+        return operationServiceId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Date getEnrollmentDate() {
+        return enrollmentDate;
     }
 
     public Date getDischargeDate() {

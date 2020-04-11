@@ -21,12 +21,20 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
 
     @Override
     public Long addDischargedPatient(DischargedPatient dischargedPatient) {
-        final String sql = "insert into discharged_patient(inpatient_id, patient_status, discharge_date) values(?,?,?)";
+        final String sql = "insert into discharged_patient(user_id, doctor_id, dept_chamber_id, diagnose," +
+                " treatment_course_id, operation_service_id,  patient_status," +
+                " enrollment_date, discharge_date) values(?,?,?,?,?,?,?,?,?)";
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setLong(1, dischargedPatient.getInpatientId());
-            preparedStatement.setString(2, dischargedPatient.getPatientStatus());
-            preparedStatement.setDate(3, (Date) dischargedPatient.getDischargeDate());
+            preparedStatement.setLong(1, dischargedPatient.getUserId());
+            preparedStatement.setLong(2, dischargedPatient.getDoctorId());
+            preparedStatement.setLong(3, dischargedPatient.getDeptChamberId());
+            preparedStatement.setString(4, dischargedPatient.getDiagnose());
+            preparedStatement.setLong(5, dischargedPatient.getTreatmentCourseId());
+            preparedStatement.setLong(6, dischargedPatient.getOperationServiceId());
+            preparedStatement.setString(7, dischargedPatient.getStatus());
+            preparedStatement.setDate(8, (Date) dischargedPatient.getEnrollmentDate());
+            preparedStatement.setDate(9, (Date) dischargedPatient.getDischargeDate());
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
@@ -47,8 +55,14 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
             while (resultSet.next()){
                 final DischargedPatient dischargedPatient = new DischargedPatient(
                         resultSet.getLong("id"),
-                        resultSet.getLong("inpatient_id"),
+                        resultSet.getLong("user_id"),
+                        resultSet.getLong("doctor_id"),
+                        resultSet.getLong("dept_chamber_id"),
+                        resultSet.getString("diagnose"),
+                        resultSet.getLong("treatment_course_id"),
+                        resultSet.getLong("operation_service_id"),
                         resultSet.getString("patient_status"),
+                        resultSet.getDate("enrollment_date"),
                         resultSet.getDate("discharge_date"));
                 dischargedPatients.add(dischargedPatient);
             }
