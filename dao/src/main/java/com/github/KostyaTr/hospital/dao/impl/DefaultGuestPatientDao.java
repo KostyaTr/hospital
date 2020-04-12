@@ -44,7 +44,7 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public Long addPatient(GuestPatient guestPatient) {
-        final String sql = "insert into guest_patient(guest_id, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?,?,?)";
+        final String sql = "insert into guest_patient(first_name, last_name, phone_number, email, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?,?,?,?)";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -55,7 +55,7 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
             preparedStatement.setLong(5, guestPatient.getDoctorId());
             preparedStatement.setLong(6, guestPatient.getCouponNum());
             preparedStatement.setLong(7, guestPatient.getMedicalServiceId());
-            preparedStatement.setTimestamp(8, (Timestamp) guestPatient.getVisitDate());
+            preparedStatement.setTimestamp(8, new java.sql.Timestamp(guestPatient.getVisitDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();

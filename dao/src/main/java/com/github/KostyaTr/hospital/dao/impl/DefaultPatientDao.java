@@ -78,7 +78,7 @@ public class DefaultPatientDao implements PatientDao {
             preparedStatement.setLong(2, patient.getDoctorId());
             preparedStatement.setLong(3, patient.getCouponNum());
             preparedStatement.setLong(4, patient.getMedicalServiceId());
-            preparedStatement.setTimestamp(5, (Timestamp) patient.getVisitDate());
+            preparedStatement.setTimestamp(5, new java.sql.Timestamp(patient.getVisitDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
