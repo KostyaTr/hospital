@@ -16,4 +16,6 @@ public interface GuestPatientDao {
     boolean removePatientById(Long patientId);
 
     GuestPatient getPatientById(Long patientId);
+
+    Long getLatestCouponToDoctorByDay(Long doctorId, int day);
 }

@@ -18,4 +18,6 @@ public interface PatientDao {
     Patient getPatientById(Long patientId);
 
     List<Patient> getPatientsByUserId(Long userId);
+
+    Long getLatestCouponToDoctorByDay(Long doctorId, int day);
 }

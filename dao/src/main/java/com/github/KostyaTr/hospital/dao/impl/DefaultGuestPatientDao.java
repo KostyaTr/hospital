@@ -6,6 +6,7 @@ import com.github.KostyaTr.hospital.model.GuestPatient;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DefaultGuestPatientDao implements GuestPatientDao {
@@ -59,6 +60,29 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
                 return key.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Long getLatestCouponToDoctorByDay(Long doctorId, int day) {
+        final String sql = "select coupon_num from guest_patient\n" +
+                "where doctor_id = ? and day(visit_date) = ?\n" +
+                "order by coupon_num desc\n" +
+                "limit 1;";
+
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, doctorId);
+            preparedStatement.setInt(2, day);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return resultSet.getLong("coupon_num");
+                } else {
+                    return (long) 0;
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
