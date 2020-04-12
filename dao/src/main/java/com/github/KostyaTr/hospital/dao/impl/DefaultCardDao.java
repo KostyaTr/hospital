@@ -51,7 +51,7 @@ public class DefaultCardDao implements CardDao {
             preparedStatement.setLong(1, card.getUserId());
             preparedStatement.setString(2, card.getHistory());
             preparedStatement.setString(3, card.getAddress());
-            preparedStatement.setDate(4, (Date) card.getBirthday());
+            preparedStatement.setDate(4, new java.sql.Date(card.getBirthday().getTime()));
             preparedStatement.setBoolean(5, card.isInsurance());
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
