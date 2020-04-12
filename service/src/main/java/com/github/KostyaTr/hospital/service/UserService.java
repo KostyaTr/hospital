@@ -1,22 +1,27 @@
 package com.github.KostyaTr.hospital.service;
 
-import com.github.KostyaTr.hospital.model.MedDoctor;
-import com.github.KostyaTr.hospital.model.MedicalService;
-import com.github.KostyaTr.hospital.model.Medicine;
-import com.github.KostyaTr.hospital.model.Patient;
+import com.github.KostyaTr.hospital.model.*;
 
 import java.util.List;
 
 public interface UserService {
-    List<MedDoctor> getDoctors();
+    List<DoctorSpecialityDept> getDoctors();
 
     List<String> getDepartments();
 
     Long makeAppointment(Patient patient);
 
-    List<Patient> getAppointmentsByUserId(Long userId);
+    Long makeGuestAppointment(GuestPatient patient);
+
+    List<Appointment> getAppointmentsByUserId(Long userId);
 
     List<MedicalService> getMedicalServices();
 
     List<Medicine> getMedicine();
+
+    List<DoctorSpecialityDept> getDoctorsBySpeciality(Long specialityId);
+
+    DoctorSpecialityDept getDoctorById(Long doctorId);
+
+    List<DoctorSpecialityDept> getDoctorsByMedicalService(Long medicalServiceId);
 }

@@ -8,11 +8,13 @@ import com.github.KostyaTr.hospital.service.UserService;
 import java.util.List;
 
 public class DefaultUserService implements UserService {
-    private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
     private PatientDao patientDao = DefaultPatientDao.getInstance();
     private DepartmentDao departmentDao = DefaultDepartmentDao.getInstance();
     private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
+    private DoctorSpecialityDeptDao doctorSpecialityDeptDao = DefaultDoctorSpecialityDeptDao.getInstance();
+    private GuestPatientDao guestPatientDao = DefaultGuestPatientDao.getInstance();
+    private AppointmentDao appointmentDao = DefaultAppointmentDao.getInstance();
 
     private static class SingletonHolder {
         static final UserService HOLDER_INSTANCE = new DefaultUserService();
@@ -28,8 +30,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<MedDoctor> getDoctors() {
-        return medDoctorDao.getDoctors();
+    public List<DoctorSpecialityDept> getDoctors() {
+        return doctorSpecialityDeptDao.getDoctors();
     }
 
 
@@ -39,8 +41,13 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<Patient> getAppointmentsByUserId(Long userId) {
-        return patientDao.getPatientsByUserId(userId);
+    public Long makeGuestAppointment(GuestPatient guestPatient) {
+        return guestPatientDao.addPatient(guestPatient);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByUserId(Long userId) {
+        return appointmentDao.getAppointmentsByUserId(userId);
     }
 
     @Override
@@ -51,5 +58,19 @@ public class DefaultUserService implements UserService {
     @Override
     public List<Medicine> getMedicine() {
         return medicineDao.getMedicine();
+    }
+
+    @Override
+    public List<DoctorSpecialityDept> getDoctorsBySpeciality(Long specialityId) {
+        return doctorSpecialityDeptDao.getDoctorsBySpeciality(specialityId);
+    }
+
+    @Override
+    public DoctorSpecialityDept getDoctorById(Long doctorId) {
+        return doctorSpecialityDeptDao.getDoctorById(doctorId);
+    }
+
+    public List<DoctorSpecialityDept> getDoctorsByMedicalService(Long medicalServiceId) {
+        return getDoctorsBySpeciality(medicalServiceDao.getMedicalServiceById(medicalServiceId).getNeededSpecialityId());
     }
 }
