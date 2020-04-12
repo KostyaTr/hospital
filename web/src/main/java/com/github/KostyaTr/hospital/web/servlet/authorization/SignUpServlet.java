@@ -22,7 +22,17 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp){
-        WebUtils.forwardToJsp("signUp", req, resp);
+        Object authUser = req.getSession().getAttribute("authUser");
+        if (authUser == null) {
+            WebUtils.forwardToJsp("signUp", req, resp);
+        }
+        else {
+            try {
+                resp.sendRedirect(req.getContextPath() +"/" + WebUtils.personalAccount(req, resp));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -32,6 +42,7 @@ public class SignUpServlet extends HttpServlet {
         String lastName = req.getParameter("lastName");
         String phoneNumber = req.getParameter("phone");
         String email = req.getParameter("email");
+        String sex = req.getParameter("sex");
         String address = req.getParameter("address");
         String birthday = req.getParameter("birthday");
         boolean insurance = Boolean.parseBoolean( req.getParameter("insurance") );
@@ -39,34 +50,30 @@ public class SignUpServlet extends HttpServlet {
         String passwordRepeat = req.getParameter("passwordRepeat");
 
         if (firstName.equals("") || lastName.equals("") || phoneNumber.equals("") ||
-             email.equals("") || address.equals("")|| birthday.equals("")){
+             email.equals("") || sex.equals("") || address.equals("")|| birthday.equals("")){
             req.setAttribute("inputError", "some fields are empty");
             WebUtils.forwardToJsp("signUp", req, resp);
-        }
-
-        if (registrationService.loginCheck(login)){
+        } else if (!registrationService.loginCheck(login)){
             req.setAttribute("loginError", "login already taken");
             WebUtils.forwardToJsp("signUp", req, resp);
-        }
-
-        if (!registrationService.passwordCheck(password, passwordRepeat)){
+        } else if (!registrationService.passwordCheck(password, passwordRepeat)){
             req.setAttribute("passwordError", "passwords don't match");
             WebUtils.forwardToJsp("signUp", req, resp);
-        }
+        } else {
+            Long userId = registrationService.saveUser(new User(null, firstName, lastName, phoneNumber, email));
+            registrationService.saveAuthUser(new AuthUser(null, login, password, Role.AuthorizedUser, userId));
+            try {
+                registrationService.saveCard(new Card(null, userId, sex, address,
+                        new SimpleDateFormat("yyyy-MM-dd").parse(birthday), insurance));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-        Long userId = registrationService.saveUser(new User(null, firstName, lastName, phoneNumber, email));
-        registrationService.saveAuthUser(new AuthUser(null, login, password, Role.AuthorizedUser, userId));
-        try {
-            registrationService.saveCard(new Card(null, userId, "", address,
-                    new SimpleDateFormat("yyyy-MM-dd").parse(birthday), insurance));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            resp.sendRedirect(req.getContextPath() + "/login");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                resp.sendRedirect(req.getContextPath() + "/login");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

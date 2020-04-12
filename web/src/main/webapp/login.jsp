@@ -1,5 +1,43 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<head>
+    <title>Hospital</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333333;
+        }
+
+        li {
+            float: right;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #111111;
+        }
+    </style>
+</head>
+<body>
+
+<ul>
+    <li><a href="${pageContext.request.contextPath}/signUp">Sign Up</a></li>
+    <li><a href="${pageContext.request.contextPath}/medicalServices">Medical Services</a></li>
+    <li><a href="${pageContext.request.contextPath}/doctors">Doctors</a></li>
+    <li><a href="${pageContext.request.contextPath}/appointment">Make appointment</a></li>
+    <li><a href="${pageContext.request.contextPath}/frontPage">Front Page</a></li>
+</ul>
 
 <h3>Login</h3>
 <form action="${pageContext.request.contextPath}/login" method="post">
@@ -13,14 +51,5 @@
 
 <p style="color: red">${error}</p>
 
-<br/>
-
-<form action="${pageContext.request.contextPath}/guestPage" method="get">
-    <input type="submit" value="Continue as a guest" name="guest" />
-</form>
-
-<br/>
-
-<form action="${pageContext.request.contextPath}/signUp" method="get">
-    <input type="submit" value="Registration" name="registration" />
-</form>
+</body>
+</html>
