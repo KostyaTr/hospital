@@ -36,7 +36,6 @@
     <li><a href="${pageContext.request.contextPath}/medicalServices">Medical Services</a></li>
     <li><a href="${pageContext.request.contextPath}/doctors">Doctors</a></li>
     <li><a href="${pageContext.request.contextPath}/appointment">Make appointment</a></li>
-    <li><a href="${pageContext.request.contextPath}/frontPage">Front Page</a></li>
 </ul>
 
 <h3>Registration</h3>

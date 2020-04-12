@@ -40,6 +40,7 @@ public class LoginServlet extends HttpServlet {
             WebUtils.forwardToJsp("login", rq, rs);
         }
         rq.getSession().setAttribute("authUser", user);
+        rq.getSession().removeAttribute("user");
         try {
             rs.sendRedirect(rq.getContextPath() +"/" + WebUtils.personalAccount(rq, rs));
         } catch (IOException e) {
