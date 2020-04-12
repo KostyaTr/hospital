@@ -1,46 +1,61 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<form action="${pageContext.request.contextPath}/logout" method="get">
-     <input type="submit" value="logout"/>
-</form>
+<html>
+<head>
+    <title>Hospital</title>
+    <style>
+        .navigation ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333333;
+        }
+
+        .navigation li {
+            float: right;
+        }
+
+        .navigation li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            text-decoration: none;
+        }
+
+        .navigation li a:hover {
+            background-color: #111111;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navigation">
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+        <li><a href="${pageContext.request.contextPath}/medicalServices">Medical Services</a></li>
+        <li><a href="${pageContext.request.contextPath}/doctors">Doctors</a></li>
+        <li><a href="${pageContext.request.contextPath}/appointment">Make appointment</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalUser">Personal Account</a></li>
+    </ul>
+</nav>
+
+<h2>Welcome back, <c:out value="${name}"/> </h2>
 
 <br/>
-
-<h1>Welcome back, <c:out value="${name}"/> </h1>
-
-<br/>
-
-<h3>Available doctors</h3>
-<ul>
-    <c:forEach items="${doctors}" var="item">
-        <li><c:out value="${item.firstName} ${item.lastName} speciality: ${speciality}"/></li>
-    </c:forEach>
-</ul>
 
 <br/>
 
 <h3>Your appointments</h3>
-<ul>
+<ol>
     <c:forEach items="${appointments}" var="item">
-        <li><c:out value="${item.appointedDoctor} at ${item.visitingTime}"/></li>
+       <li>
+           <h3><c:out value="Number in line: ${item.couponNum} to ${item.doctorName} at ${item.visitDate}"/></h3>
+       </li>
     </c:forEach>
-</ul>
+</ol>
 
-<br/>
-
-<h3>Make an appointment</h3>
-<form action="${pageContext.request.contextPath}/personalUser" method="post">
-    <label for="doctorName">Имя доктора</label>
-    <input id="doctorName" type="text" name="doctorName"><br/>
-
-    <label for="visitingTime">Время визита</label>
-    <input id="visitingTime" type="text" name="visitingTime">
-    Пример: Tuesday, 16, 15:00
-    <br/>
-
-    <input type="submit" value="Confirm">
-</form>
-
-<br/>
-<p style="color: red">${incorrectInput}</p>
+</body>
+</html>

@@ -5,7 +5,7 @@
     <%@ include file="guest's.jsp" %>
 </c:if>
 
-<c:if test="${role == 'User'}">
+<c:if test="${authUser.role == 'AuthorizedUser'}">
     <%@ include file="user's.jsp" %>
 </c:if>
 
