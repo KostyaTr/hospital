@@ -6,8 +6,6 @@ import com.github.KostyaTr.hospital.dao.impl.DefaultGuestPatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.service.QueueService;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
