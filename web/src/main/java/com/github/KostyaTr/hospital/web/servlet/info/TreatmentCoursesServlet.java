@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.web.servlet.patient;
+package com.github.KostyaTr.hospital.web.servlet.info;
 
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;

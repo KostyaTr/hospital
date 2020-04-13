@@ -4,6 +4,8 @@ import com.github.KostyaTr.hospital.web.WebUtils;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.service.AuthorizationService;
 import com.github.KostyaTr.hospital.service.impl.DefaultAuthorizationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +15,7 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(LoginServlet.class);
     private AuthorizationService authorizationService = DefaultAuthorizationService.getInstance();
 
     @Override
@@ -38,13 +41,15 @@ public class LoginServlet extends HttpServlet {
         if (user == null) {
             rq.setAttribute("error", "login or password invalid");
             WebUtils.forwardToJsp("login", rq, rs);
-        }
-        rq.getSession().setAttribute("authUser", user);
-        rq.getSession().removeAttribute("user");
-        try {
-            rs.sendRedirect(rq.getContextPath() +"/" + WebUtils.personalAccount(rq, rs));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } else {
+            rq.getSession().setAttribute("authUser", user);
+            rq.getSession().removeAttribute("user");
+            log.info("user {} logged", user.getLogin());
+            try {
+                rs.sendRedirect(rq.getContextPath() +"/" + WebUtils.personalAccount(rq, rs));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

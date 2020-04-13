@@ -7,6 +7,8 @@ import com.github.KostyaTr.hospital.model.Role;
 import com.github.KostyaTr.hospital.model.User;
 import com.github.KostyaTr.hospital.service.RegistrationService;
 import com.github.KostyaTr.hospital.service.impl.DefaultRegistrationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,9 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(SignUpServlet.class);
     private RegistrationService registrationService = DefaultRegistrationService.getInstance();
 
     @Override
@@ -68,7 +72,7 @@ public class SignUpServlet extends HttpServlet {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-
+            log.info("user created:{} at {}", userId, LocalDateTime.now());
             try {
                 resp.sendRedirect(req.getContextPath() + "/login");
             } catch (IOException e) {

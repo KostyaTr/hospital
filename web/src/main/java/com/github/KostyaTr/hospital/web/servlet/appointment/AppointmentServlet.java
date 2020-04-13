@@ -13,6 +13,9 @@ import com.github.KostyaTr.hospital.service.UserService;
 import com.github.KostyaTr.hospital.service.impl.DefaultQueueService;
 import com.github.KostyaTr.hospital.service.impl.DefaultUserService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import com.github.KostyaTr.hospital.web.servlet.authorization.SignUpServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +28,7 @@ import java.util.Date;
 
 @WebServlet("/appointment")
 public class AppointmentServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(AppointmentServlet.class);
     private UserService userService = DefaultUserService.getInstance();
     private QueueService queueService = DefaultQueueService.getInstance();
     private UserDao userDao = DefaultUserDao.getInstance();
@@ -90,7 +94,7 @@ public class AppointmentServlet extends HttpServlet {
         req.getSession().removeAttribute("doctorId");
         if (req.getSession().getAttribute("authUser") == null) {
             User user = (User) req.getSession().getAttribute("user");
-            userService.makeGuestAppointment(new GuestPatient(
+            Long id = userService.makeGuestAppointment(new GuestPatient(
                     null,
                     user.getFirstName(),
                     user.getLastName(),
@@ -101,15 +105,18 @@ public class AppointmentServlet extends HttpServlet {
                     medicalServiceId,
                     visit));
             req.setAttribute("coupon", couponNum);
+            log.info("user {} made appointment", id);
             WebUtils.forwardToJsp("guest's", req, resp);
         } else {
+            AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
             userService.makeAppointment(new Patient(
                     null,
-                    ((AuthUser) req.getSession().getAttribute("authUser")).getUserId(),
+                    authUser.getUserId(),
                     doctorId,
                     couponNum,
                     medicalServiceId,
                     visit));
+            log.info("user {} made appointment", authUser.getLogin());
             try {
                 resp.sendRedirect(req.getContextPath() + "/" + WebUtils.personalAccount(req, resp));
             } catch (IOException e) {
