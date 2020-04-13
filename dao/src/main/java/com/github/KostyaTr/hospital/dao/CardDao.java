@@ -6,6 +6,4 @@ public interface CardDao {
     Card getCardByUserId(Long userId);
 
     Long addCard(Card card);
-
-    boolean updateCardHistory(Long patientId, String diagnose);
 }

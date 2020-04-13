@@ -41,12 +41,6 @@ public class DefaultChamberDao implements ChamberDao {
         return getChambers(sql, deptId);
     }
 
-    @Override
-    public List<Long> getEmptyVipChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = true and dept_id = ?;";
-        return getChambers(sql, deptId);
-    }
-
     private List<Long> getChambers(String sql, Long deptId) {
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

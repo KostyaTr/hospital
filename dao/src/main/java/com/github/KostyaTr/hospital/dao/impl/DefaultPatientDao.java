@@ -6,7 +6,6 @@ import com.github.KostyaTr.hospital.dao.PatientDao;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DefaultPatientDao implements PatientDao {
@@ -25,12 +24,6 @@ public class DefaultPatientDao implements PatientDao {
     public List<Patient> getPatientsByDoctorId(Long doctorId) {
         final String sql = "select * from patient where doctor_id = ?;";
         return getPatients(doctorId, sql);
-    }
-
-    @Override
-    public List<Patient> getPatientsByUserId(Long userId) {
-        final String sql = "select * from patient where user_id = ?;";
-        return getPatients(userId, sql);
     }
 
     @Override
@@ -89,9 +82,6 @@ public class DefaultPatientDao implements PatientDao {
         }
     }
 
-     /* String timeStr = "2020-06-30 19:10:00";
-        Timestamp timeCreated = Timestamp.valueOf(timeStr);*/
-
     @Override
     public boolean removePatientById(Long patientId) {
         try (Connection connection = DataSource.getInstance().getConnection();
@@ -126,15 +116,6 @@ public class DefaultPatientDao implements PatientDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public List<Patient> getPatientsByDepartmentId(Long deptId) {
-        final String sql = "select patient.id, patient.user_id, patient.doctor_id, patient.coupon_num, patient.medical_service_id, patient.visit_date\n" +
-                "from patient\n" +
-                "join doctor on doctor.id = patient.doctor_id\n" +
-                "where doctor.dept_id = ?;\n";
-        return getPatients(deptId, sql);
     }
 
     private List<Patient> getPatients(ResultSet resultSet) throws SQLException {

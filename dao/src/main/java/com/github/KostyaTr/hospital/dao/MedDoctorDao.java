@@ -9,13 +9,5 @@ public interface MedDoctorDao {
 
     MedDoctor getDoctorById(Long doctorId);
 
-    boolean removeDoctorById(Long doctorId);
-
-    MedDoctor getHeadPhysicianByDepartment(Long deptId);
-
-    List<MedDoctor>  getHeadPhysicians();
-
-    Long addDoctor(MedDoctor medDoctor);
-
     MedDoctor getDoctorByUserId(Long userId);
 }

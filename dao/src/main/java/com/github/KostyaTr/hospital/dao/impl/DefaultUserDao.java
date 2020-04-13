@@ -6,8 +6,6 @@ import com.github.KostyaTr.hospital.dao.UserDao;
 
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultUserDao implements UserDao{
     private final int ONE_ROW_AFFECTED = 1;
@@ -18,28 +16,6 @@ public class DefaultUserDao implements UserDao{
 
     public static UserDao getInstance() {
         return DefaultUserDao.SingletonHolder.HOLDER_INSTANCE;
-    }
-
-
-    @Override
-    public List<User> getUsers() {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("select * from user");
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            List<User> users = new ArrayList<>();
-            while (resultSet.next()){
-                final User user = new User(
-                        resultSet.getLong("id"),
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),
-                        resultSet.getString("phone_number"),
-                        resultSet.getString("email"));
-                users.add(user);
-            }
-            return users;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
