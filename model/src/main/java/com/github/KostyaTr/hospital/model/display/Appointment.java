@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.model;
+package com.github.KostyaTr.hospital.model.display;
 
 import java.util.Date;
 
