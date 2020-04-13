@@ -9,6 +9,4 @@ public interface DoctorSpecialityDeptDao {
     List<DoctorSpecialityDept> getDoctorsBySpeciality(Long specialityId);
 
     DoctorSpecialityDept getDoctorById(Long doctorId);
-
-    DoctorSpecialityDept getDoctorByUserId(Long userId);
 }
