@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface PatientDao {
     List<Patient> getPatientsByDoctorId(Long doctorId);
+
+    Patient getPatientById(Long patientId);
 }

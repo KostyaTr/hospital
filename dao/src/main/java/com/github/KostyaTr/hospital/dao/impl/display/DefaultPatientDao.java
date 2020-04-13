@@ -46,4 +46,30 @@ public class DefaultPatientDao implements PatientDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Patient getPatientById(Long patientId) {
+        final String sql = "select patient.id, concat(user.first_name, \" \", user.last_name) as patient_name, medical_service.service_name, patient.visit_date  from patient\n" +
+                "join user on user.id = patient.user_id\n" +
+                "join medical_service on patient.medical_service_id = medical_service.id\n" +
+                "where patient.id = ?;";
+
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, patientId);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return new Patient(
+                            resultSet.getLong("id"),
+                            resultSet.getString("patient_name"),
+                            resultSet.getString("service_name"),
+                            resultSet.getTimestamp("visit_date"));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
