@@ -37,13 +37,13 @@ public class DefaultChamberDao implements ChamberDao {
 
     @Override
     public List<Long> getEmptyChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity < chamber_load and vip = false;";
+        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false;";
         return getChambers(sql);
     }
 
     @Override
     public List<Long> getEmptyVipChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity < chamber_load and vip = true;";
+        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = true;";
         return getChambers(sql);
     }
 
