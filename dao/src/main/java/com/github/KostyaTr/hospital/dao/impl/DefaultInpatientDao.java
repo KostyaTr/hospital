@@ -130,11 +130,11 @@ public class DefaultInpatientDao implements InpatientDao {
             preparedStatement.setLong(1, inpatient.getUserId());
             preparedStatement.setLong(2, inpatient.getDoctorId());
             preparedStatement.setLong(3, inpatient.getDeptChamberId());
-            preparedStatement.setString(4, inpatient.getDiagnose());
-            preparedStatement.setLong(5, inpatient.getTreatmentCourseId());
-            preparedStatement.setLong(6, inpatient.getOperationServiceId());
+            preparedStatement.setString(4, null);
+            preparedStatement.setString(5, null);
+            preparedStatement.setString(6, null);
             preparedStatement.setString(7, inpatient.getStatus());
-            preparedStatement.setDate(8, (Date) inpatient.getEnrollmentDate());
+            preparedStatement.setDate(8, new java.sql.Date(inpatient.getEnrollmentDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();

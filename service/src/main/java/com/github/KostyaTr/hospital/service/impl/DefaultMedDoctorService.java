@@ -18,6 +18,10 @@ public class DefaultMedDoctorService implements MedDoctorService {
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
     private TreatmentCourseDao treatmentCourseDao = DefaultTreatmentCourseDao.getInstance();
     private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
+    private com.github.KostyaTr.hospital.dao.display.TreatmentCourseDao treatmentCourseDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultTreatmentCourseDao.getInstance();
+    private com.github.KostyaTr.hospital.dao.display.InpatientDao inpatientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao.getInstance();
+    private com.github.KostyaTr.hospital.dao.display.PatientDao patientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultPatientDao.getInstance();
+    private com.github.KostyaTr.hospital.dao.display.GuestPatientDao guestPatientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultGuestPatientDao.getInstance();
 
     private final String PATIENT_CURED = "cured";
     private final int FREE_CHAMBER = 0;
@@ -34,13 +38,13 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
 
     @Override
-    public List<Patient> getPatientsByDoctorId(Long doctorId) {
-        return patientDao.getPatientsByDoctorId(doctorId);
+    public List<com.github.KostyaTr.hospital.model.display.Patient> getPatientsByDoctorId(Long doctorId) {
+        return patientDaoDisp.getPatientsByDoctorId(doctorId);
     }
 
     @Override
-    public List<GuestPatient> getGuestPatientsByDoctorId(Long doctorId) {
-        return guestPatientDao.getPatientsByDoctorId(doctorId);
+    public List<com.github.KostyaTr.hospital.model.display.GuestPatient> getGuestPatientsByDoctorId(Long doctorId) {
+        return guestPatientDaoDisp.getPatientsByDoctorId(doctorId);
     }
 
     @Override
@@ -131,8 +135,8 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
-        return inpatientDao.getInpatientsByDoctorId(doctorId);
+    public List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId) {
+        return inpatientDaoDisp.getInpatientsByDoctorId(doctorId);
     }
 
     @Override
@@ -142,18 +146,14 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
     private Long putPatientInHospital(Long patientId, String condition) {
         Patient patient = patientDao.getPatientById(patientId);
-        if (!freeChambers(patient).isEmpty()){
-            chamberDao.updateChamberLoad((long) FREE_CHAMBER, LOAD);
-            return inpatientDao.addInpatient( new Inpatient(
-                    null,
-                    patient.getUserId(),
-                    patient.getDoctorId(),
-                    freeChambers(patient).get(FREE_CHAMBER),
-                    null,
-                    null,
-                    null,
-                    condition,
-                    new Date()));
+        final List<Long> chambers = freeChambers(patient);
+        if (!chambers.isEmpty()){
+            chamberDao.updateChamberLoad(chambers.get(FREE_CHAMBER), LOAD);
+            Long id = chambers.get(FREE_CHAMBER);
+            Inpatient inpatient = new Inpatient(
+                    null, patient.getUserId(), patient.getDoctorId(), id,
+                    null, null, null, condition, new Date());
+            return inpatientDao.addInpatient(inpatient);
         }
         else {
             return null;
@@ -162,7 +162,11 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
     private List<Long> freeChambers(Patient patient){
         return chamberDao.getEmptyChambersByDeptId(
-                medDoctorDao.getDoctorById(
-                        patient.getDoctorId()).getDeptNum());
+                medDoctorDao.getDoctorById(patient.getDoctorId()).getDeptNum());
+    }
+
+    @Override
+    public List<com.github.KostyaTr.hospital.model.display.TreatmentCourse> getTreatmentCourses() {
+        return treatmentCourseDaoDisp.getTreatmentCourses();
     }
 }

@@ -47,11 +47,19 @@
     <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/medicine">Medicine</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourses">Treatment Courses</a></li>
-    <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatients">Guest Patients</a></li>
-    <li><a href="${pageContext.request.contextPath}/personalDoctor/patients">Patients</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatient">Guest Patients</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
 </ul>
+
+<h3>Choose Patient</h3>
+<br/>
+<form action="${pageContext.request.contextPath}/personalDoctor/guestPatient" method="post">
+    <label for="patientId">Enter patient ¹</label>
+    <input type="number" id="patientId" name="patientId">
+    <input type="submit" value="Confirm">
+</form>
 
 <h3>Guest Patients</h3>
 <c:if test="${guestPatients != null}">
@@ -72,6 +80,8 @@
         </c:forEach>
     </table>
 </c:if>
+
+<p style="color: red">${error}</p>
 
 </body>
 </html>

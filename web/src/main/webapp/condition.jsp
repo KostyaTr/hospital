@@ -53,16 +53,15 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
 </ul>
 
-<h3>Choose Patient</h3>
 <br/>
-<form action="${pageContext.request.contextPath}/personalDoctor/patient" method="post">
-    <label for="patientId">Enter patient ¹</label>
-    <input type="number" id="patientId" name="patientId">
+<form action="${pageContext.request.contextPath}/personalDoctor/condition" method="post">
+    <label for="condition">Enter condition:</label>
+    <input type="text" id="condition" name="condition"><h4>Enter "Bad" condition to put the patient in hospital</h4>
     <input type="submit" value="Confirm">
 </form>
 
-<h3>Patients</h3>
-<c:if test="${patients != null}">
+<h3>Patient</h3>
+<c:if test="${patient != null}">
     <table border="1">
         <tr>
             <th>¹</th>
@@ -70,14 +69,14 @@
             <th>Medical Service</th>
             <th>Visit Date</th>
         </tr>
-        <c:forEach items="${patients}" var="patient">
-            <tr>
-                <td></td>
-                <td>${patient.patientName}</td>
-                <td>${patient.medicalService}</td>
-                <td>${patient.visitDate}</td>
-            </tr>
-        </c:forEach>
+
+        <tr>
+            <td></td>
+            <td>${patient.patientName}</td>
+            <td>${patient.medicalService}</td>
+            <td>${patient.visitDate}</td>
+        </tr>
+
     </table>
 </c:if>
 

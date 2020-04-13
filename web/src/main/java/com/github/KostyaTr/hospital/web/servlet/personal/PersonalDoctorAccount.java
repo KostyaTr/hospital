@@ -1,7 +1,10 @@
 package com.github.KostyaTr.hospital.web.servlet;
 
+import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.dao.display.DoctorSpecialityDeptDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.dao.impl.display.DefaultDoctorSpecialityDeptDao;
+import com.github.KostyaTr.hospital.model.User;
 import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 import com.github.KostyaTr.hospital.web.WebUtils;
 import com.github.KostyaTr.hospital.model.AuthUser;
@@ -15,17 +18,14 @@ import java.io.IOException;
 
 @WebServlet("/personalDoctor")
 public class PersonalDoctorAccount extends HttpServlet {
-    private DoctorSpecialityDeptDao doctorSpecialityDeptDao = DefaultDoctorSpecialityDeptDao.getInstance();
-
+    private UserDao userDao = DefaultUserDao.getInstance();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         final Long userId = authUser.getUserId();
-        final DoctorSpecialityDept doctorById = doctorSpecialityDeptDao.getDoctorByUserId(userId);
-        DoctorSpecialityDept doctor = doctorById;
-
-        req.setAttribute("name", doctor.getFirstName() + " "+ doctor.getLastName());
-        WebUtils.forwardToJsp("personalAccount", req, resp);
+        User user = userDao.getUserById(userId);
+        req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
+        WebUtils.forwardToJsp("doctor's", req, resp);
     }
 
     @Override

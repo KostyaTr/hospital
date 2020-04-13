@@ -5,11 +5,11 @@ import com.github.KostyaTr.hospital.model.*;
 import java.util.List;
 
 public interface MedDoctorService {
-    List<Patient> getPatientsByDoctorId(Long doctorId);
+    List<com.github.KostyaTr.hospital.model.display.Patient> getPatientsByDoctorId(Long doctorId);
 
-    List<GuestPatient> getGuestPatientsByDoctorId(Long doctorId);
+    List<com.github.KostyaTr.hospital.model.display.GuestPatient> getGuestPatientsByDoctorId(Long doctorId);
 
-    List<Inpatient> getInpatientsByDoctorId(Long doctorId);
+    List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId);
 
     List<Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId);
 
@@ -32,4 +32,6 @@ public interface MedDoctorService {
     boolean updateStatus(Long patientId, String status);
 
     boolean dischargeInpatient(Long patientId);
+
+    List<com.github.KostyaTr.hospital.model.display.TreatmentCourse> getTreatmentCourses();
 }
