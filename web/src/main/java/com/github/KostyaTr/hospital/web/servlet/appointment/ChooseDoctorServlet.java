@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.web.servlet.appointment;
 
-import com.github.KostyaTr.hospital.model.DoctorSpecialityDept;
+import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 import com.github.KostyaTr.hospital.service.UserService;
 import com.github.KostyaTr.hospital.service.impl.DefaultUserService;
 import com.github.KostyaTr.hospital.web.WebUtils;

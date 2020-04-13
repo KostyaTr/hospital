@@ -1,37 +1,50 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<form action="${pageContext.request.contextPath}/logout" method="get">
-    < <input type="submit" value="logout"/>
-</form>
+<html>
+<head>
+    <title>Hospital</title>
+    <style>
+        .navigation ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333333;
+        }
 
-<br/>
+        .navigation li {
+            float: right;
+        }
 
-<h1>Welcome back, <c:out value="${name}"/> </h1>
+        .navigation li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 16px;
+            text-decoration: none;
+        }
 
-<br/>
+        .navigation li a:hover {
+            background-color: #111111;
+        }
+    </style>
+</head>
+<body>
 
-<h3>All patients</h3>
-<ul>
-    <c:forEach items="${allPatients}" var="item">
-        <li><c:out value="${item.firstName}  ${item.lastName}, doctor: ${item.appointedDoctor}"/></li>
-    </c:forEach>
-</ul>
+<nav class="navigation">
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/medicine">Medicine</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourses">Treatment Courses</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatients">Guest Patients</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/patients">Patients</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
+    </ul>
+</nav>
 
-<br/>
+<h2>Welcome back, <c:out value="${name}"/> </h2>
 
-<h3>Your patients</h3>
-<ul>
-    <c:forEach items="${patients}" var="item">
-        <li><c:out value="${item.firstName}  ${item.lastName}"/></li>
-    </c:forEach>
-</ul>
-
-<br/>
-
-<form action="${pageContext.request.contextPath}/personalDoctor" method="post">
-    <label for="patientName">Имя пациента</label>
-    <input id="patientName" type="text" name="patientName"><br/>
-
-    <input type="submit" value="cure">
-</form>
+</body>
+</html>

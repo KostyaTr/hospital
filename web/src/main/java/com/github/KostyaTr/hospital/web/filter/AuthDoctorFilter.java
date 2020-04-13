@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter("/personalDoctor")
+@WebFilter("/personalDoctor/*")
 public class AuthDoctorFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
