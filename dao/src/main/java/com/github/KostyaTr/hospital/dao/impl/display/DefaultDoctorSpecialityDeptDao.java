@@ -1,8 +1,8 @@
-package com.github.KostyaTr.hospital.dao.impl;
+package com.github.KostyaTr.hospital.dao.impl.display;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
-import com.github.KostyaTr.hospital.dao.DoctorSpecialityDeptDao;
-import com.github.KostyaTr.hospital.model.DoctorSpecialityDept;
+import com.github.KostyaTr.hospital.dao.display.DoctorSpecialityDeptDao;
+import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,18 +39,21 @@ public class DefaultDoctorSpecialityDeptDao implements DoctorSpecialityDeptDao {
     }
 
     @Override
-    public DoctorSpecialityDept getDoctorById(Long doctorId) {
-        final String sql  = "select doctor.id, first_name, last_name, phone_number, email, group_concat(speciality_name, '') as specialities,   department_name from doctor \n" +
+    public DoctorSpecialityDept getDoctorByUserId(Long userId) {
+        final String sql = "select doctor.id, first_name, last_name, phone_number, email, group_concat(speciality_name, '') as specialities,   department_name from doctor \n" +
                 "join user on doctor.user_id = user.id\n" +
                 "join doctor_speciality on doctor.id = doctor_speciality.doctor_id\n" +
                 "join speciality on speciality.id = doctor_speciality.speciality_id\n" +
                 "join department on dept_id = department.id\n" +
-                "where  doctor.id  = ?\n" +
-                "group by doctor.id;\n";
+                "where doctor.user_id  = ?\n" +
+                "group by doctor.id;";
+        return getDoctorSpecialityDept(userId, sql);
+    }
 
+    private DoctorSpecialityDept getDoctorSpecialityDept(Long id, String sql) {
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setLong(1, doctorId);
+            preparedStatement.setLong(1, id);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()){
                     return new DoctorSpecialityDept(
@@ -68,6 +71,19 @@ public class DefaultDoctorSpecialityDeptDao implements DoctorSpecialityDeptDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public DoctorSpecialityDept getDoctorById(Long doctorId) {
+        final String sql  = "select doctor.id, first_name, last_name, phone_number, email, group_concat(speciality_name, '') as specialities,   department_name from doctor \n" +
+                "join user on doctor.user_id = user.id\n" +
+                "join doctor_speciality on doctor.id = doctor_speciality.doctor_id\n" +
+                "join speciality on speciality.id = doctor_speciality.speciality_id\n" +
+                "join department on dept_id = department.id\n" +
+                "where  doctor.id  = ?\n" +
+                "group by doctor.id;\n";
+
+        return getDoctorSpecialityDept(doctorId, sql);
     }
 
     @Override

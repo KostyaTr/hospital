@@ -1,8 +1,8 @@
-package com.github.KostyaTr.hospital.dao.impl;
+package com.github.KostyaTr.hospital.dao.impl.display;
 
-import com.github.KostyaTr.hospital.dao.AppointmentDao;
+import com.github.KostyaTr.hospital.dao.display.AppointmentDao;
 import com.github.KostyaTr.hospital.dao.DataSource;
-import com.github.KostyaTr.hospital.model.Appointment;
+import com.github.KostyaTr.hospital.model.display.Appointment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

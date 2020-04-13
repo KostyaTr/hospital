@@ -1,7 +1,7 @@
-package com.github.KostyaTr.hospital.dao;
+package com.github.KostyaTr.hospital.dao.display;
 
 import java.util.List;
-import com.github.KostyaTr.hospital.model.DoctorSpecialityDept;
+import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 
 public interface DoctorSpecialityDeptDao {
     List<DoctorSpecialityDept> getDoctors();
@@ -9,4 +9,6 @@ public interface DoctorSpecialityDeptDao {
     List<DoctorSpecialityDept> getDoctorsBySpeciality(Long specialityId);
 
     DoctorSpecialityDept getDoctorById(Long doctorId);
+
+    DoctorSpecialityDept getDoctorByUserId(Long userId);
 }
