@@ -1,6 +1,8 @@
 package com.github.KostyaTr.hospital.service;
 
 import com.github.KostyaTr.hospital.model.*;
+import com.github.KostyaTr.hospital.model.display.Appointment;
+import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 
 import java.util.List;
 

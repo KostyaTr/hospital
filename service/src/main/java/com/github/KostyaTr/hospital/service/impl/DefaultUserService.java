@@ -1,8 +1,14 @@
 package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.*;
+import com.github.KostyaTr.hospital.dao.display.AppointmentDao;
+import com.github.KostyaTr.hospital.dao.display.DoctorSpecialityDeptDao;
 import com.github.KostyaTr.hospital.dao.impl.*;
+import com.github.KostyaTr.hospital.dao.impl.display.DefaultAppointmentDao;
+import com.github.KostyaTr.hospital.dao.impl.display.DefaultDoctorSpecialityDeptDao;
 import com.github.KostyaTr.hospital.model.*;
+import com.github.KostyaTr.hospital.model.display.Appointment;
+import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 import com.github.KostyaTr.hospital.service.UserService;
 
 import java.util.List;
