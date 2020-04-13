@@ -37,25 +37,27 @@ public class DefaultChamberDao implements ChamberDao {
 
     @Override
     public List<Long> getEmptyChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false;";
-        return getChambers(sql);
+        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false and dept_id = ?;";
+        return getChambers(sql, deptId);
     }
 
     @Override
     public List<Long> getEmptyVipChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = true;";
-        return getChambers(sql);
+        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = true and dept_id = ?;";
+        return getChambers(sql, deptId);
     }
 
-    private List<Long> getChambers(String sql) {
+    private List<Long> getChambers(String sql, Long deptId) {
         try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            List<Long> chambers = new ArrayList<>();
-            while (resultSet.next()){
-                chambers.add(resultSet.getLong("id"));
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, deptId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                List<Long> chambers = new ArrayList<>();
+                while (resultSet.next()){
+                    chambers.add(resultSet.getLong("id"));
+                }
+                return chambers;
             }
-            return chambers;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
