@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.web.servlet;
+package com.github.KostyaTr.hospital.web.servlet.personal;
 
 import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
@@ -22,18 +22,5 @@ public class PersonalDoctorAccount extends HttpServlet {
         User user = userDao.getUserById(userId);
         req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
         WebUtils.forwardToJsp("doctor's", req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String patientName = req.getParameter("patientName");
-
-        medDoctorService.curePatient(patientName);
-
-        try {
-            resp.sendRedirect(req.getContextPath() +"/personalDoctor");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
