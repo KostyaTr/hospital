@@ -16,31 +16,6 @@ public class DefaultCardDao implements CardDao {
         return DefaultCardDao.SingletonHolder.HOLDER_INSTANCE;
     }
 
-
-    @Override
-    public Card getCardByUserId(Long userId) {
-        final String sql = "select * from card where user_id = ?";
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, userId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new Card(
-                            resultSet.getLong("id"),
-                            resultSet.getLong("user_id"),
-                            resultSet.getString("history"),
-                            resultSet.getString("address"),
-                            resultSet.getDate("date_of_birth"),
-                            resultSet.getBoolean("insurance"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public Long addCard(Card card) {
         final String sql = "insert into card(user_id, history, address, date_of_birth, insurance) values(?,?,?,?,?)";

@@ -8,7 +8,6 @@ import com.github.KostyaTr.hospital.dao.UserDao;
 import java.sql.*;
 
 public class DefaultUserDao implements UserDao{
-    private final int ONE_ROW_AFFECTED = 1;
 
     private static class SingletonHolder {
         static final UserDao HOLDER_INSTANCE = new DefaultUserDao();
