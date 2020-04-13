@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.web.servlet.info;
+package com.github.KostyaTr.hospital.web.servlet.patient;
 
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/personalDoctor/treatmentCourses")
+@WebServlet("/personalDoctor/treatmentCourse")
 public class TreatmentCoursesServlet extends HttpServlet {
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
 

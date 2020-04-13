@@ -1,14 +1,10 @@
 package com.github.KostyaTr.hospital.web.servlet;
 
 import com.github.KostyaTr.hospital.dao.UserDao;
-import com.github.KostyaTr.hospital.dao.display.DoctorSpecialityDeptDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultDoctorSpecialityDeptDao;
 import com.github.KostyaTr.hospital.model.User;
-import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
 import com.github.KostyaTr.hospital.web.WebUtils;
 import com.github.KostyaTr.hospital.model.AuthUser;
-import com.github.KostyaTr.hospital.model.MedDoctor;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

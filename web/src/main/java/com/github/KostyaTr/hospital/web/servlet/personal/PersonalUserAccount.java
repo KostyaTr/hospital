@@ -25,6 +25,6 @@ public class PersonalUserAccount extends HttpServlet {
         User user = userDao.getUserById(authUser.getUserId());
         req.setAttribute("appointments", userService.getAppointmentsByUserId(user.getUserId()));
         req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
-        WebUtils.forwardToJsp("personalAccount", req, resp);
+        WebUtils.forwardToJsp("user's", req, resp);
     }
 }

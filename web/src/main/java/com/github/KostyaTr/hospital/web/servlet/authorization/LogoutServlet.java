@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 public class LogoutServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
-        req.getSession().removeAttribute("authUser");
         req.getSession().invalidate();
         WebUtils.forwardToJsp("login", req, resp);
     }
