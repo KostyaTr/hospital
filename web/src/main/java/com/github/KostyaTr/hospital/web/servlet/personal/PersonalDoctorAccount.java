@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @WebServlet("/personalDoctor")
 public class PersonalDoctorAccount extends HttpServlet {
@@ -21,6 +20,6 @@ public class PersonalDoctorAccount extends HttpServlet {
         final Long userId = authUser.getUserId();
         User user = userDao.getUserById(userId);
         req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
-        WebUtils.forwardToJsp("doctor's", req, resp);
+        WebUtils.forwardToJsp("doctorAccount", req, resp);
     }
 }

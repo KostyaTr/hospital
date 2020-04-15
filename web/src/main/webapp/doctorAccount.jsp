@@ -46,7 +46,8 @@
 
 <h2>Welcome back, <c:out value="${name}"/> </h2>
 
-<h3><c:out value="${patient}"/> </h3>
+<h3><c:out value="${patient}"/></h3>
+<h3><c:out value="${treatmentCourse}"/></h3>
 
 </body>
 </html>
