@@ -43,6 +43,17 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
 </ul>
 
+<br/>
+<h3>Choose Treatment Course</h3>
+<form action="${pageContext.request.contextPath}/personalDoctor/treatmentCourse" method="post">
+    <label for="treatmentCourseId">Enter course №</label>
+    <input type="number" id="treatmentCourseId" name="treatmentCourseId">
+    <input type="submit" value="Confirm">
+</form>
+<br/>
+
+<a href="${pageContext.request.contextPath}/personalDoctor/createTreatmentCourse">Create New Treatment Course</a>
+<br/>
 <h3>Treatment Courses</h3>
 <c:if test="${treatmentCourse != null}">
     <table border="1">
@@ -66,6 +77,9 @@
         </c:forEach>
     </table>
 </c:if>
+<br/>
+
+<a href="${pageContext.request.contextPath}/personalDoctor/createTreatmentCourse">Create New Treatment Course</a>
 
 </body>
 </html>

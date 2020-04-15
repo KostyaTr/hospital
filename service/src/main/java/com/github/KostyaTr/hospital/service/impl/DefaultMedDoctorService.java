@@ -90,14 +90,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
     @Override
     public Long createTreatmentCourse(TreatmentCourse treatmentCourse) {
-        return treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(
-                null,
-                treatmentCourse.getMedicineId(),
-                treatmentCourse.getMedicineDose(),
-                treatmentCourse.getReceptionDesc(),
-                treatmentCourse.getTimesPerDay(),
-                treatmentCourse.getDurationInDays()
-                ));
+        return treatmentCourseDao.addTreatmentCourse(treatmentCourse);
     }
 
     @Override

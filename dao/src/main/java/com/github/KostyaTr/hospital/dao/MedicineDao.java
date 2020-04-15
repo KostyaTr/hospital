@@ -9,5 +9,7 @@ public interface MedicineDao {
 
     Long addMedicine(Medicine medicine);
 
+    Medicine getMedicineByName(String medicineName);
+
     boolean updateStockBalanceById(Integer stockBalance, Long medicineId);
 }

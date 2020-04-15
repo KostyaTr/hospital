@@ -43,6 +43,31 @@ public class DefaultMedicineDao implements MedicineDao {
     }
 
     @Override
+    public Medicine getMedicineByName(String medicineName) {
+        final String sql = "select * from medicine where medicine_name = ?";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, medicineName);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return new Medicine(
+                            resultSet.getLong("id"),
+                            resultSet.getString("medicine_name"),
+                            resultSet.getDouble("normal_dose"),
+                            resultSet.getDouble("critical_dose"),
+                            resultSet.getInt("package_amount"),
+                            resultSet.getDouble("price"),
+                            resultSet.getInt("stock_balance"));
+                }
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean updateStockBalanceById(Integer stockBalance, Long medicineId) {
         final String sql = "update medicine set stock_balance = ? where id = ?;";
 

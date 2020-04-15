@@ -53,7 +53,7 @@ public class GuestPatientServlet extends HttpServlet {
                 User user = userDao.getUserById(userId);
                 req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
                 req.setAttribute("patient", "Patient Taken");
-                WebUtils.forwardToJsp("doctor's", req, resp);
+                WebUtils.forwardToJsp("doctorAccount", req, resp);
             }
         }
     }
