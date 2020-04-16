@@ -46,14 +46,15 @@
 <ul>
     <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/medicine">Medicine</a></li>
-    <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourse">Treatment Courses</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourses">Treatment Courses</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatient">Guest Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
 
-<h3>Choose Patient</h3>
+<h3>Choose Patient To Take</h3>
 <br/>
 <form action="${pageContext.request.contextPath}/personalDoctor/patient" method="post">
     <label for="patientId">Enter patient ¹</label>

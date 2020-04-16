@@ -7,6 +7,7 @@ import com.github.KostyaTr.hospital.model.Card;
 import java.sql.*;
 
 public class DefaultCardDao implements CardDao {
+    private final int ONE_ROW_AFFECTED = 1;
 
     private static class SingletonHolder {
         static final CardDao HOLDER_INSTANCE = new DefaultCardDao();
@@ -14,6 +15,31 @@ public class DefaultCardDao implements CardDao {
 
     public static CardDao getInstance() {
         return DefaultCardDao.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+
+    @Override
+    public Card getCardByUserId(Long userId) {
+        final String sql = "select * from card where user_id = ?";
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, userId);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return new Card(
+                            resultSet.getLong("id"),
+                            resultSet.getLong("user_id"),
+                            resultSet.getString("history"),
+                            resultSet.getString("address"),
+                            resultSet.getDate("date_of_birth"),
+                            resultSet.getBoolean("insurance"));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -32,6 +58,22 @@ public class DefaultCardDao implements CardDao {
                 key.next();
                 return key.getLong(1);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean updateCardHistory(Long userId, String diagnose) {
+        final String newHistory = getCardByUserId(userId).getHistory() + "\n" +   new java.util.Date().toString() + " " + diagnose;
+        final String sql = "update card set history = ? where user_id = ?;";
+
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, newHistory);
+            preparedStatement.setLong(2, userId);
+            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

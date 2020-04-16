@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=cp1251" pageEncoding="Cp1251" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -54,35 +54,53 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
 
-<h3>Choose Patient To Take</h3>
 <br/>
-<form action="${pageContext.request.contextPath}/personalDoctor/guestPatient" method="post">
-    <label for="patientId">Enter patient ¹</label>
-    <input type="number" id="patientId" name="patientId">
-    <input type="submit" value="Confirm">
-</form>
-
-<h3>Guest Patients</h3>
-<c:if test="${guestPatients != null}">
+<c:if test="${inpatient != null}">
     <table border="1">
         <tr>
-            <th>¹</th>
+            <th>â„–</th>
             <th>Patient Name</th>
-            <th>Medical Service</th>
-            <th>Visit Date</th>
+            <th>Chamber Num</th>
+            <th>Diagnose</th>
+            <th>Medicine Name</th>
+            <th>Medicine Dose</th>
+            <th>Status</th>
+            <th>Enrollment Date</th>
         </tr>
-        <c:forEach items="${guestPatients}" var="guestPatient">
-            <tr>
-                <td></td>
-                <td>${guestPatient.patientName}</td>
-                <td>${guestPatient.medicalService}</td>
-                <td>${guestPatient.visitDate}</td>
-            </tr>
-        </c:forEach>
+        <tr>
+            <td></td>
+            <td>${inpatient.patientName}</td>
+            <td>${inpatient.chamberId}</td>
+            <c:if test="${inpatient.diagnose == null}">
+                <td>No diagnose</td>
+            </c:if>
+            <c:if test="${inpatient.diagnose != null}">
+                <td>${inpatient.diagnose}</td>
+            </c:if>
+            <c:if test="${inpatient.medicineName != null}">
+                <td>${inpatient.medicineName}</td>
+                <td>${inpatient.medicineDose}</td>
+            </c:if>
+            <c:if test="${inpatient.medicineName == null}">
+                <td>No medicine</td>
+                <td>No medicine</td>
+            </c:if>
+            <td>${inpatient.status}</td>
+            <td>${inpatient.enrollmentDate}</td>
+        </tr>
     </table>
 </c:if>
 
-<p style="color: red">${error}</p>
+<br/>
+<form action="${pageContext.request.contextPath}/personalDoctor/diagnose" method="post">
+    <label for="diagnose">Enter New Diagnose</label>
+    <input type="text" id="diagnose" name="diagnose">
+
+    <label for="prescribeTreatmentCourse">Do You Want To Prescribe Treatment Course?</label>
+    <input type="checkbox" name="prescribeTreatmentCourse" id="prescribeTreatmentCourse" value="true"><br/>
+    <input type="submit" value="Confirm">
+</form>
+<br/>
 
 </body>
 </html>

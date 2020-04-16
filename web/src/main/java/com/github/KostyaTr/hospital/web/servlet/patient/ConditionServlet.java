@@ -60,10 +60,11 @@ public class ConditionServlet extends HttpServlet {
                 } else {
                     req.setAttribute("patient", "Patient Taken");
                 }
+                req.getSession().removeAttribute("patientId");
                 final Long userId = authUser.getUserId();
                 User user = userDao.getUserById(userId);
                 req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
-                WebUtils.forwardToJsp("doctor's", req, resp);
+                WebUtils.forwardToJsp("doctorAccount", req, resp);
             }
         }
     }

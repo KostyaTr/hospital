@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=cp1251" pageEncoding="Cp1251" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -51,38 +51,40 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
-    <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
 
-<h3>Choose Patient To Take</h3>
 <br/>
-<form action="${pageContext.request.contextPath}/personalDoctor/guestPatient" method="post">
-    <label for="patientId">Enter patient ¹</label>
-    <input type="number" id="patientId" name="patientId">
-    <input type="submit" value="Confirm">
-</form>
-
-<h3>Guest Patients</h3>
-<c:if test="${guestPatients != null}">
+<h3>Discharged Inpatients</h3>
+<c:if test="${dischargeInpatients != null}">
     <table border="1">
         <tr>
-            <th>¹</th>
+            <th>â„–</th>
             <th>Patient Name</th>
-            <th>Medical Service</th>
-            <th>Visit Date</th>
+            <th>Doctor Name</th>
+            <th>Diagnose</th>
+            <th>Card History</th>
+            <th>Treatment Course</th>
+            <th>Patient Status</th>
+            <th>Enrollment Date</th>
+            <th>Discharge Date</th>
         </tr>
-        <c:forEach items="${guestPatients}" var="guestPatient">
+        <c:forEach items="${dischargeInpatients}" var="dischargeInpatient">
             <tr>
                 <td></td>
-                <td>${guestPatient.patientName}</td>
-                <td>${guestPatient.medicalService}</td>
-                <td>${guestPatient.visitDate}</td>
+                <td>${dischargeInpatient.patientName}</td>
+                <td>${dischargeInpatient.doctorName}</td>
+                <td>${dischargeInpatient.diagnose}</td>
+                <td>${dischargeInpatient.cardHistory}</td>
+                <td>${dischargeInpatient.treatmentCourse}</td>
+                <td>${dischargeInpatient.status}</td>
+                <td>${dischargeInpatient.enrollmentDate}</td>
+                <td>${dischargeInpatient.dischargeDate}</td>
             </tr>
         </c:forEach>
     </table>
 </c:if>
-
-<p style="color: red">${error}</p>
+<br/>
 
 </body>
 </html>

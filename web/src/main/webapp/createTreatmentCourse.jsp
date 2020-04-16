@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=cp1251" pageEncoding="Cp1251" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -6,15 +6,10 @@
 <head>
     <title>Hospital</title>
     <style>
-        table {
-            width: 50%;
-            counter-reset: row-num -1;
-        }
-        table  tr  {
-            counter-increment: row-num;
-        }
-        table tr td:first-child::before {
-            content: counter(row-num) ". ";
+        input[type="checkbox"]{
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
         }
         ul {
             list-style-type: none;
@@ -54,33 +49,42 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
 
-<h3>Choose Patient To Take</h3>
 <br/>
-<form action="${pageContext.request.contextPath}/personalDoctor/guestPatient" method="post">
-    <label for="patientId">Enter patient ¹</label>
-    <input type="number" id="patientId" name="patientId">
+<h3>Create Treatment Course</h3>
+<form action="${pageContext.request.contextPath}/personalDoctor/createTreatmentCourse" method="post">
+    <label for="medicineName">Medicine Name</label>
+    <select id="medicineName" name="medicineName">
+        <c:if test="${medicine != null}">
+            <c:forEach items="${medicine}" var="medicine">
+                <option>${medicine.medicineName}</option>
+            </c:forEach>
+        </c:if>
+    </select><br/>
+
+    <label for="drugDose">Enter Drug Dose</label>
+    <input id="drugDose" type="number" name="drugDose">
+    <c:if test="${overdose != null}">
+        <label style="color: red" for="drugDose">Critical Dose For That Drug Is: ${medicineDose}</label>
+    </c:if>
+    <br/>
+
+    <label for="timesPerDay">Times a Day</label>
+    <input type="number" id="timesPerDay" name="timesPerDay"><br/>
+
+    <label for="durationInDays">Duration in Days</label>
+    <input type="number" id="durationInDays" name="durationInDays"><br/>
+
+    <label for="receptionDescription">Reception Description</label>
+    <input type="text" id="receptionDescription" name="receptionDescription"><br/>
+
+
+    <c:if test="${overdose != null}">
+        <label style="color: red" for="overdose">${overdose}</label>
+        <input type="checkbox" name="overdose" id="overdose" value="true"><br/>
+    </c:if>
+
     <input type="submit" value="Confirm">
 </form>
-
-<h3>Guest Patients</h3>
-<c:if test="${guestPatients != null}">
-    <table border="1">
-        <tr>
-            <th>¹</th>
-            <th>Patient Name</th>
-            <th>Medical Service</th>
-            <th>Visit Date</th>
-        </tr>
-        <c:forEach items="${guestPatients}" var="guestPatient">
-            <tr>
-                <td></td>
-                <td>${guestPatient.patientName}</td>
-                <td>${guestPatient.medicalService}</td>
-                <td>${guestPatient.visitDate}</td>
-            </tr>
-        </c:forEach>
-    </table>
-</c:if>
 
 <p style="color: red">${error}</p>
 
