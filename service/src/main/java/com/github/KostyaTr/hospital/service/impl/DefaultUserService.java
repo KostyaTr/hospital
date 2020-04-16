@@ -18,7 +18,6 @@ import java.util.List;
 
 public class DefaultUserService implements UserService {
     private PatientDao patientDao = DefaultPatientDao.getInstance();
-    private DepartmentDao departmentDao = DefaultDepartmentDao.getInstance();
     private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
     private DoctorSpecialityDeptDao doctorSpecialityDeptDao = DefaultDoctorSpecialityDeptDao.getInstance();
