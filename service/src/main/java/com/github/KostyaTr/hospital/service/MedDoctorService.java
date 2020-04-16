@@ -1,6 +1,5 @@
 package com.github.KostyaTr.hospital.service;
 
-import com.github.KostyaTr.hospital.model.Card;
 import com.github.KostyaTr.hospital.model.Medicine;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 
