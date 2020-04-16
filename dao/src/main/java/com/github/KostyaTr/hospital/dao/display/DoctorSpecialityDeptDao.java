@@ -1,7 +1,8 @@
 package com.github.KostyaTr.hospital.dao.display;
 
-import java.util.List;
 import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
+
+import java.util.List;
 
 public interface DoctorSpecialityDeptDao {
     List<DoctorSpecialityDept> getDoctors();

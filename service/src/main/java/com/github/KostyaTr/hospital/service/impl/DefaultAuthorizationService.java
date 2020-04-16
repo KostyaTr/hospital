@@ -1,8 +1,8 @@
 package com.github.KostyaTr.hospital.service.impl;
 
+import com.github.KostyaTr.hospital.dao.AuthUserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
-import com.github.KostyaTr.hospital.dao.AuthUserDao;
 import com.github.KostyaTr.hospital.service.AuthorizationService;
 
 public class DefaultAuthorizationService implements AuthorizationService {

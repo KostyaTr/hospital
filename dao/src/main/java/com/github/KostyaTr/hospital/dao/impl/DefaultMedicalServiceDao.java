@@ -42,6 +42,27 @@ public class DefaultMedicalServiceDao implements MedicalServiceDao {
     }
 
     @Override
+    public Long addMedicalServiceId(MedicalService medicalService) {
+        final String sql = "insert into medicalService(service_name, needed_speciality_id, needed_equipment_id, service_cost)" +
+                " values(?,?,?,?)";
+
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, medicalService.getServiceName());
+            preparedStatement.setLong(2, medicalService.getNeededSpecialityId());
+            preparedStatement.setLong(3, medicalService.getNeededEquipmentId());
+            preparedStatement.setDouble(4, medicalService.getServiceCost());
+            preparedStatement.executeUpdate();
+            try(ResultSet key = preparedStatement.getGeneratedKeys()){
+                key.next();
+                return key.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public MedicalService getMedicalServiceById(Long medicalServiceId) {
         final String sql = "select * from medical_service where id = ?;";
 

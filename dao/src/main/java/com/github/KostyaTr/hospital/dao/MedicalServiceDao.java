@@ -8,4 +8,6 @@ public interface MedicalServiceDao {
     List<MedicalService> getMedicalServices();
 
     MedicalService getMedicalServiceById(Long medicalServiceId);
+
+    Long addMedicalServiceId(MedicalService medicalService);
 }

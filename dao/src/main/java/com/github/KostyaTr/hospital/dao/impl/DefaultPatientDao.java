@@ -1,8 +1,8 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
-import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.dao.PatientDao;
+import com.github.KostyaTr.hospital.model.Patient;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,6 +24,12 @@ public class DefaultPatientDao implements PatientDao {
     public List<Patient> getPatientsByDoctorId(Long doctorId) {
         final String sql = "select * from patient where doctor_id = ?;";
         return getPatients(doctorId, sql);
+    }
+
+    @Override
+    public List<Patient> getPatientsByUserId(Long userId) {
+        final String sql = "select * from patient where user_id = ?;";
+        return getPatients(userId, sql);
     }
 
     @Override
@@ -71,7 +77,7 @@ public class DefaultPatientDao implements PatientDao {
             preparedStatement.setLong(2, patient.getDoctorId());
             preparedStatement.setLong(3, patient.getCouponNum());
             preparedStatement.setLong(4, patient.getMedicalServiceId());
-            preparedStatement.setTimestamp(5, new java.sql.Timestamp(patient.getVisitDate().getTime()));
+            preparedStatement.setTimestamp(5, new Timestamp(patient.getVisitDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();
@@ -81,6 +87,9 @@ public class DefaultPatientDao implements PatientDao {
             throw new RuntimeException(e);
         }
     }
+
+     /* String timeStr = "2020-06-30 19:10:00";
+        Timestamp timeCreated = Timestamp.valueOf(timeStr);*/
 
     @Override
     public boolean removePatientById(Long patientId) {
@@ -116,6 +125,15 @@ public class DefaultPatientDao implements PatientDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Patient> getPatientsByDepartmentId(Long deptId) {
+        final String sql = "select patient.id, patient.user_id, patient.doctor_id, patient.coupon_num, patient.medical_service_id, patient.visit_date\n" +
+                "from patient\n" +
+                "join doctor on doctor.id = patient.doctor_id\n" +
+                "where doctor.dept_id = ?;\n";
+        return getPatients(deptId, sql);
     }
 
     private List<Patient> getPatients(ResultSet resultSet) throws SQLException {

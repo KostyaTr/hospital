@@ -35,8 +35,8 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
             preparedStatement.setString(6, dischargedPatient.getTreatmentCourse());
             preparedStatement.setString(7, null);
             preparedStatement.setString(8, dischargedPatient.getStatus());
-            preparedStatement.setDate(9, new java.sql.Date(dischargedPatient.getEnrollmentDate().getTime()));
-            preparedStatement.setDate(10, new java.sql.Date(dischargedPatient.getDischargeDate().getTime()));
+            preparedStatement.setDate(9, new Date(dischargedPatient.getEnrollmentDate().getTime()));
+            preparedStatement.setDate(10, new Date(dischargedPatient.getDischargeDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
                 key.next();

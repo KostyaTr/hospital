@@ -26,7 +26,7 @@ public class DefaultChamberDao implements ChamberDao {
         final String sql = "update chamber set chamber_load = chamber_load + ? where id = ?";
 
         try (Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, load);
             preparedStatement.setLong(2, id);
             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
@@ -38,6 +38,12 @@ public class DefaultChamberDao implements ChamberDao {
     @Override
     public List<Long> getEmptyChambersByDeptId(Long deptId) {
         final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false and dept_id = ?;";
+        return getChambers(sql, deptId);
+    }
+
+    @Override
+    public List<Long> getEmptyVipChambersByDeptId(Long deptId) {
+        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = true and dept_id = ?;";
         return getChambers(sql, deptId);
     }
 

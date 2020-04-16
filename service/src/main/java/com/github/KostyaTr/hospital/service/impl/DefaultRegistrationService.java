@@ -1,15 +1,15 @@
 package com.github.KostyaTr.hospital.service.impl;
 
+import com.github.KostyaTr.hospital.dao.AuthUserDao;
 import com.github.KostyaTr.hospital.dao.CardDao;
+import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultCardDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
-import com.github.KostyaTr.hospital.model.Card;
-import com.github.KostyaTr.hospital.service.RegistrationService;
 import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Card;
 import com.github.KostyaTr.hospital.model.User;
-import com.github.KostyaTr.hospital.dao.AuthUserDao;
-import com.github.KostyaTr.hospital.dao.UserDao;
+import com.github.KostyaTr.hospital.service.RegistrationService;
 
 public class DefaultRegistrationService implements RegistrationService {
     private UserDao userDao = DefaultUserDao.getInstance();

@@ -26,9 +26,9 @@ public class DataSource {
         pool.setUser(user);
         pool.setPassword(pass);
 
-        pool.setMinPoolSize(3);
+        pool.setMinPoolSize(5);
         pool.setAcquireIncrement(5);
-        pool.setMaxPoolSize(10);
+        pool.setMaxPoolSize(15);
         pool.setMaxStatements(180);
     }
 
