@@ -1,7 +1,6 @@
 package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
-import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
