@@ -35,7 +35,7 @@ public class DefaultQueueServiceTest {
         when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 16);
         when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 14);
 
-        assertEquals(17, queueService.getCouponNum((long) 1, new Date()));
+        assertEquals(17, queueService.getCouponNum((long) 1, new Date()).intValue());
     }
 
     @Test
@@ -46,7 +46,7 @@ public class DefaultQueueServiceTest {
 
         when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 16);
         when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 18);
-        Long latestCoupon = queueService.getCouponNum((long) 1, new Date());
+        int latestCoupon = queueService.getCouponNum((long) 1, new Date()).intValue();
 
         assertEquals(19, latestCoupon);
     }
