@@ -5,7 +5,6 @@ import com.github.KostyaTr.hospital.model.User;
 import java.util.List;
 
 public interface UserDao {
-    List<User> getUsers();
 
     Long saveUser(User user);
 

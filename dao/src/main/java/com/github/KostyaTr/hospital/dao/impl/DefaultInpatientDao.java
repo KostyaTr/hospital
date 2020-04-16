@@ -19,21 +19,6 @@ public class DefaultInpatientDao implements InpatientDao {
         return DefaultInpatientDao.SingletonHolder.HOLDER_INSTANCE;
     }
 
-
-    @Override
-    public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
-        final String sql = "select * from inpatient where doctor_id = ?";
-        return getInpatients(doctorId, sql);
-    }
-
-    @Override
-    public List<Inpatient> getInpatientsByDepId(Long deptId) {
-        final String sql = "select * from inpatient " +
-                "join chamber on inpatient.dept_chamber_id = chamber.id" +
-                "where chamber.dept_id = ?;";
-        return getInpatients(deptId, sql);
-    }
-
     private List<Inpatient> getInpatients(Long id, String sql) {
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -44,20 +29,6 @@ public class DefaultInpatientDao implements InpatientDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public List<Inpatient> getUndiagnosedInpatientsByDep(Long deptId) {
-        final String sql = "select * from inpatient " +
-                "join chamber on inpatient.dept_chamber_id = chamber.id" +
-                "where chamber.dept_id = ? and where inpatient.diagnose is null;";
-        return getInpatients(deptId, sql);
-    }
-
-    @Override
-    public List<Inpatient> getUndiagnosedInpatientsByDoctor(Long doctorId) {
-        final String sql = "select * from inpatient where diagnose is null and doctor_id = ?;";
-        return getInpatients(doctorId, sql);
     }
 
     private List<Inpatient> getInpatients(ResultSet resultSet) throws SQLException {

@@ -54,40 +54,6 @@ public class DefaultInpatientDao implements InpatientDao {
     }
 
     @Override
-    public List<Inpatient> getUndiagnosedInpatientsByDoctor(Long doctorId) {
-        final String sql = "select inpatient.id, concat(user.first_name, \" \", user.last_name) as patient_name, chamber.chamber_id, inpatient.diagnose, medicine.medicine_name," +
-                " treatment_course.drug_dose, inpatient.patient_status, inpatient.enrollment_date  from inpatient \n" +
-                "join user on user.id = inpatient.user_id\n" +
-                "left join treatment_course on treatment_course.id = inpatient.treatment_course_id\n" +
-                "left join medicine on medicine.id = treatment_course.medicine_id\n" +
-                "join chamber on inpatient.dept_chamber_id = chamber.id\n" +
-                "where inpatient.doctor_id = ? and diagnose is null;";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, doctorId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                List<Inpatient> inpatients = new ArrayList<>();
-                while (resultSet.next()){
-                    final Inpatient inpatient = new Inpatient(
-                            resultSet.getLong("id"),
-                            resultSet.getString("patient_name"),
-                            resultSet.getLong("chamber_id"),
-                            resultSet.getString("diagnose"),
-                            resultSet.getString("medicine_name"),
-                            resultSet.getDouble("drug_dose"),
-                            resultSet.getString("patient_status"),
-                            resultSet.getDate("enrollment_date"));
-                    inpatients.add(inpatient);
-                }
-                return inpatients;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
         final String sql = "select inpatient.id, concat(user.first_name, \" \", user.last_name) as patient_name, chamber.chamber_id, inpatient.diagnose, medicine.medicine_name," +
                 " treatment_course.drug_dose, inpatient.patient_status, inpatient.enrollment_date  from inpatient \n" +

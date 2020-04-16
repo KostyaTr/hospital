@@ -12,8 +12,6 @@ import java.util.List;
 public interface UserService {
     List<DoctorSpecialityDept> getDoctors();
 
-    List<String> getDepartments();
-
     Long makeAppointment(Patient patient);
 
     Long makeGuestAppointment(GuestPatient patient);

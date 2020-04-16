@@ -99,44 +99,6 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
         }
     }
 
-    @Override
-    public GuestPatient getPatientById(Long patientId) {
-        final String sql = "select * from guest_patient where id = ?;";
-
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, patientId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new GuestPatient(
-                            resultSet.getLong("id"),
-                            resultSet.getString("first_name"),
-                            resultSet.getString("last_name"),
-                            resultSet.getString("phone_number"),
-                            resultSet.getString("email"),
-                            resultSet.getLong("doctor_id"),
-                            resultSet.getLong("coupon_num"),
-                            resultSet.getLong("medical_service_id"),
-                            resultSet.getTimestamp("visit_date"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<GuestPatient> getPatientsByDepartmentId(Long deptId) {
-        final String sql = "select guest_patient.id, guest_patient.first_name, guest_patient.last_name, guest_patient.phone_number,\n" +
-                "guest_patient.email, guest_patient.doctor_id, guest_patient.coupon_num, guest_patient.medical_service_id, guest_patient.visit_date\n" +
-                "from guest_patient\n" +
-                "join doctor on doctor.id = guest_patient.doctor_id\n" +
-                "where doctor.dept_id = ?;";
-        return getPatients(deptId, sql);
-    }
-
     private List<GuestPatient> getPatients(ResultSet resultSet) throws SQLException {
         final List<GuestPatient> patients = new ArrayList<>();
         while (resultSet.next()){

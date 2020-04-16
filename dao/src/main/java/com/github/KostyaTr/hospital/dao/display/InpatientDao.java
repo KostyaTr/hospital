@@ -7,7 +7,5 @@ import java.util.List;
 public interface InpatientDao {
     List<Inpatient> getInpatientsByDoctorId(Long doctorId);
 
-    List<Inpatient> getUndiagnosedInpatientsByDoctor(Long doctorId);
-
     Inpatient getInpatientById(Long patientId);
 }

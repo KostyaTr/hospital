@@ -13,8 +13,6 @@ public interface MedDoctorService {
 
     List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId);
 
-    List<com.github.KostyaTr.hospital.model.display.Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId);
-
     boolean takeThePatient(Long patientId, String condition);
 
     boolean takeTheGuestPatient(Long guestPatientId);
@@ -23,13 +21,9 @@ public interface MedDoctorService {
 
     boolean prescribeTreatmentCourse(Long patientId, Long treatmentCourseId);
 
-    Card getCardByPatientId(Long patientId);
-
     List<Medicine> getMedicine();
 
     Long createTreatmentCourse(TreatmentCourse treatmentCourse);
-
-    boolean updateTreatmentCourse(TreatmentCourse treatmentCourse);
 
     boolean updateStatus(Long patientId, String status);
 

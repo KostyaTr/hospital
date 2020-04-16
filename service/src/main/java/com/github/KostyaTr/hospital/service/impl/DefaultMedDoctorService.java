@@ -81,11 +81,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public Card getCardByPatientId(Long patientId) {
-        return cardDao.getCardByUserId(patientDao.getPatientById(patientId).getUserId());
-    }
-
-    @Override
     public List<Medicine> getMedicine() {
         return medicineDao.getMedicine();
     }
@@ -93,11 +88,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
     @Override
     public Long createTreatmentCourse(TreatmentCourse treatmentCourse) {
         return treatmentCourseDao.addTreatmentCourse(treatmentCourse);
-    }
-
-    @Override
-    public boolean updateTreatmentCourse(TreatmentCourse treatmentCourse) {
-        return treatmentCourseDao.updateTreatmentCourseById(treatmentCourse);
     }
 
     @Override
@@ -149,11 +139,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
     @Override
     public List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId) {
         return inpatientDaoDisp.getInpatientsByDoctorId(doctorId);
-    }
-
-    @Override
-    public List<com.github.KostyaTr.hospital.model.display.Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId) {
-        return inpatientDaoDisp.getUndiagnosedInpatientsByDoctor(doctorId);
     }
 
     private Long putPatientInHospital(Long patientId, String condition) {

@@ -34,11 +34,6 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<String> getDepartments() {
-        return departmentDao.getDepartments();
-    }
-
-    @Override
     public List<DoctorSpecialityDept> getDoctors() {
         return doctorSpecialityDeptDao.getDoctors();
     }

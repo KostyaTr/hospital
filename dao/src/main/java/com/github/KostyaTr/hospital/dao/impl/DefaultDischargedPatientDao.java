@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultDischargedPatientDao implements DischargedPatientDao {
-    private final int ONE_ROW_AFFECTED = 1;
-
     private static class SingletonHolder {
         static final DischargedPatientDao HOLDER_INSTANCE = new DefaultDischargedPatientDao();
     }
