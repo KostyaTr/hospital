@@ -65,8 +65,8 @@ public class DefaultCardDao implements CardDao {
 
     @Override
     public boolean updateCardHistory(Long userId, String diagnose) {
-        final String newHistory = getCardByUserId(userId).getHistory() + " " + diagnose;
-        final String sql = "update card set history = ? where userId = ?;";
+        final String newHistory = getCardByUserId(userId).getHistory() + "\n" +   new java.util.Date().toString() + " " + diagnose;
+        final String sql = "update card set history = ? where user_id = ?;";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){

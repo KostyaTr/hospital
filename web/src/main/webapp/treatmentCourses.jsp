@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=cp1251" pageEncoding="Cp1251" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -6,16 +6,6 @@
 <head>
     <title>Hospital</title>
     <style>
-        table {
-            width: 50%;
-            counter-reset: row-num -1;
-        }
-        table  tr  {
-            counter-increment: row-num;
-        }
-        table tr td:first-child::before {
-            content: counter(row-num) ". ";
-        }
         ul {
             list-style-type: none;
             margin: 0;
@@ -54,35 +44,36 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
 
-<h3>Choose Patient To Take</h3>
-<br/>
-<form action="${pageContext.request.contextPath}/personalDoctor/guestPatient" method="post">
-    <label for="patientId">Enter patient ¹</label>
-    <input type="number" id="patientId" name="patientId">
-    <input type="submit" value="Confirm">
-</form>
+<h3><c:out value="${treatmentCourseCreation}"/></h3>
 
-<h3>Guest Patients</h3>
-<c:if test="${guestPatients != null}">
+<a href="${pageContext.request.contextPath}/personalDoctor/createTreatmentCourse">Create New Treatment Course</a>
+<br/>
+<h3>Treatment Courses</h3>
+<c:if test="${treatmentCourse != null}">
     <table border="1">
         <tr>
-            <th>¹</th>
-            <th>Patient Name</th>
-            <th>Medical Service</th>
-            <th>Visit Date</th>
+            <th>â„–</th>
+            <th>Medicine Name</th>
+            <th>Medicine Dose</th>
+            <th>Reception Description</th>
+            <th>Times per Day</th>
+            <th>Duration in Days</th>
         </tr>
-        <c:forEach items="${guestPatients}" var="guestPatient">
+        <c:forEach items="${treatmentCourse}" var="treatmentCourse">
             <tr>
-                <td></td>
-                <td>${guestPatient.patientName}</td>
-                <td>${guestPatient.medicalService}</td>
-                <td>${guestPatient.visitDate}</td>
+                <td>${treatmentCourse.treatmentCourseId}</td>
+                <td>${treatmentCourse.medicineName}</td>
+                <td>${treatmentCourse.medicineDose}</td>
+                <td>${treatmentCourse.receptionDesc}</td>
+                <td>${treatmentCourse.timesPerDay}</td>
+                <td>${treatmentCourse.durationInDays}</td>
             </tr>
         </c:forEach>
     </table>
 </c:if>
+<br/>
 
-<p style="color: red">${error}</p>
+<a href="${pageContext.request.contextPath}/personalDoctor/createTreatmentCourse">Create New Treatment Course</a>
 
 </body>
 </html>

@@ -36,18 +36,18 @@
     <ul>
         <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <li><a href="${pageContext.request.contextPath}/personalDoctor/medicine">Medicine</a></li>
-        <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourse">Treatment Courses</a></li>
+            <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourses">Treatment Courses</a></li>
         <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatient">Guest Patients</a></li>
         <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
         <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
         <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
+        <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
     </ul>
 </nav>
 
 <h2>Welcome back, <c:out value="${name}"/> </h2>
 
 <h3><c:out value="${patient}"/></h3>
-<h3><c:out value="${treatmentCourse}"/></h3>
 
 </body>
 </html>

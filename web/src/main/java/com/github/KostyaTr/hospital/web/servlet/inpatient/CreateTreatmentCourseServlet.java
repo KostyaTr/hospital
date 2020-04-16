@@ -1,4 +1,4 @@
-package com.github.KostyaTr.hospital.web.servlet.patient;
+package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedicineDao;
 import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
@@ -58,11 +58,16 @@ public class CreateTreatmentCourseServlet extends HttpServlet {
                         Integer.parseInt(timesPerDay),
                         Integer.parseInt(durationInDays)
                 )) != null) {
-                    req.setAttribute("treatmentCourse", "Treatment Course Created");
+                    req.setAttribute("treatmentCourseCreation", "Treatment Course Created");
                 } else {
-                    req.setAttribute("treatmentCourse", "Treatment Course Was Not Created Because Database Has Encountered An Unexpected Error");
+                    req.setAttribute("treatmentCourseCreation", "Treatment Course Was Not Created Because Database Has Encountered An Unexpected Error");
                 }
-                WebUtils.forwardToJsp("doctorAccount", req, resp);
+                req.setAttribute("treatmentCourse", medDoctorService.getTreatmentCourses());
+                if (req.getSession().getAttribute("inpatient") == null){
+                    WebUtils.forwardToJsp("treatmentCourses", req, resp);
+                } else {
+                    WebUtils.forwardToJsp("treatmentCourse", req, resp);
+                }
             }
         }
     }

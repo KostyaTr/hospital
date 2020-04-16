@@ -11,7 +11,7 @@ public interface MedDoctorService {
 
     List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId);
 
-    List<Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId);
+    List<com.github.KostyaTr.hospital.model.display.Inpatient> getUndiagnosedInpatientsByDoctorId(Long doctorId);
 
     boolean takeThePatient(Long patientId, String condition);
 
@@ -31,7 +31,7 @@ public interface MedDoctorService {
 
     boolean updateStatus(Long patientId, String status);
 
-    boolean dischargeInpatient(Long patientId);
+    boolean dischargeInpatient(com.github.KostyaTr.hospital.model.display.Inpatient inpatient);
 
     List<com.github.KostyaTr.hospital.model.display.TreatmentCourse> getTreatmentCourses();
 }

@@ -9,13 +9,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/personalDoctor/treatmentCourse")
+@WebServlet("/personalDoctor/treatmentCourses")
 public class TreatmentCoursesServlet extends HttpServlet {
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         req.setAttribute("treatmentCourse", medDoctorService.getTreatmentCourses());
-        WebUtils.forwardToJsp("treatmentCourse", req, resp);
+        WebUtils.forwardToJsp("treatmentCourses", req, resp);
     }
 }

@@ -46,12 +46,39 @@
 <ul>
     <li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/medicine">Medicine</a></li>
-    <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourse">Treatment Courses</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/treatmentCourses">Treatment Courses</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/guestPatient">Guest Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
+<br/>
+<form action="${pageContext.request.contextPath}/personalDoctor/inpatients" method="post">
+    <label for="inpatientId">Enter inpatient ¹</label>
+    <input type="number" id="inpatientId" name="inpatientId">
+    <br/>
+
+    <label for="diagnose">Update Or Set Diagnose</label>
+    <input type="radio" name="option" id="diagnose" value="diagnose" checked>
+    <br/>
+
+    <label for="treatmentCourse">Prescribe New Treatment Course</label>
+    <input type="radio" name="option" id="treatmentCourse" value="treatmentCourse">
+    <br/>
+
+    <label for="updateStatus">Update Status</label>
+    <input type="radio" name="option" id="updateStatus" value="updateStatus">
+    <br/>
+
+    <label for="dischargeInpatient">Discharge Inpatient</label>
+    <input type="radio" name="option" id="dischargeInpatient" value="dischargeInpatient">
+    <br/>
+
+    <input type="submit" value="Confirm">
+</form>
+
+<p style="color: red">${error}</p>
 
 <h3>Inpatients</h3>
 <c:if test="${inpatients != null}">
