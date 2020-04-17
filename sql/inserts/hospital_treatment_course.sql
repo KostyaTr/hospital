@@ -1,0 +1,11 @@
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (1, 1, 20, 'at the middle of the day', 2, 30);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (2, 1, 90, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (3, 1, 90, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (4, 1, 70, 'After eating', 1, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (5, 1, 70, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (6, 1, 70, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (7, 1, 70, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (8, 1, 100, 'After eating', 3, 14);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (9, 2, 75, 'After eating', 1, 25);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (10, 2, 75, 'After eating', 1, 25);
+INSERT INTO hospital.treatment_course (id, medicine_id, drug_dose, reception_description, times_a_day, duration_in_days) VALUES (12, 2, 25, 'After eating', 2, 12);

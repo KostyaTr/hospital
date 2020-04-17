@@ -1,0 +1,2 @@
+INSERT INTO hospital.medical_service (id, service_name, needed_speciality_id, needed_equipment_id, service_cost) VALUES (1, 'test for COVID-19', 21, 1, 3000);
+INSERT INTO hospital.medical_service (id, service_name, needed_speciality_id, needed_equipment_id, service_cost) VALUES (2, 'heart ultrasound', 7, 2, 500);

@@ -1,0 +1,2 @@
+INSERT INTO hospital.inpatient (id, user_id, doctor_id, dept_chamber_id, diagnose, treatment_course_id, operation_service_id, patient_status, enrollment_date) VALUES (1, 9, 5, 1, 'COVID-19', 1, null, '', '2020-03-01');
+INSERT INTO hospital.inpatient (id, user_id, doctor_id, dept_chamber_id, diagnose, treatment_course_id, operation_service_id, patient_status, enrollment_date) VALUES (2, 10, 2, 3, null, null, null, '', '2020-04-10');

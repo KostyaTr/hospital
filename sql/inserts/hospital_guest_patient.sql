@@ -1,0 +1,1 @@
+INSERT INTO hospital.guest_patient (id, first_name, last_name, phone_number, email, doctor_id, coupon_num, medical_service_id, visit_date) VALUES (2, 'Sorpa', 'Vikhalen', '987-45-65', 'SorpaVikhalen@gmail.com', 5, 3, 1, '2020-04-12 11:20:00');

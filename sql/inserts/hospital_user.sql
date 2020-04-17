@@ -1,0 +1,11 @@
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (1, 'Paul', 'McCarbine', '951-28-36', 'PaulMc@google.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (2, 'Gaul', 'Daune', '711-12-48', 'GaulD@google.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (3, 'Michael', 'Kurd', '293-79-45', 'KurMich@google.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (4, 'Selma', 'Karney', '198-10-77', 'SelmKarney@google.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (5, 'Octavius', 'Celestas', '728-25-47', 'OctaCelesta@google.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (6, 'Афанасий', 'Васильев', '987-41-24', 'AfanVasan@mail.ru');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (7, 'Brenna', 'Fanni', '478-35-28', 'BreFann@yahoo.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (8, 'Virus', 'Savir', '789-21-43', 'ViruSavir@virus.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (9, 'Phil', 'Pull', '465-65-44', 'PPull@cd.com');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (10, 'Alexa', 'Flexa', '327-75-98', 'FlexAlex@sr.pl');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (26, 'Константин', 'Трепашко', '+375 (29) 330-04-42', 'kit.blackberry0408@gmail.com');

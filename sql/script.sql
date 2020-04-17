@@ -25,6 +25,25 @@ create table chamber
 )
     comment 'палата';
 
+create table discharged_patient
+(
+    id               int(64) auto_increment
+        primary key,
+    patient_name     varchar(255) not null,
+    doctor_name      varchar(255) not null,
+    dept_chamber_id  int(64)      not null,
+    diagnose         varchar(255) not null,
+    card_history     text         not null,
+    treatment_course varchar(255) not null,
+    operation_name   varchar(255) null,
+    patient_status   varchar(255) not null,
+    enrollment_date  date         not null,
+    discharge_date   date         not null,
+    constraint discharged_patient_chamber_id_fk
+        foreign key (dept_chamber_id) references chamber (id)
+            on update cascade
+);
+
 create table equipment
 (
     id             int auto_increment
@@ -201,36 +220,6 @@ create table operation_service
     operation_cost int          null,
     constraint operation_service_doctor_id_fk
         foreign key (doctor_id) references doctor (id)
-            on update cascade
-);
-
-create table discharged_patient
-(
-    id                   int(64) auto_increment
-        primary key,
-    user_id              int(64)      not null,
-    doctor_id            int(64)      not null,
-    dept_chamber_id      int(64)      not null,
-    diagnose             varchar(255) not null,
-    treatment_course_id  int(64)      not null,
-    operation_service_id int(64)      not null,
-    patient_status       varchar(255) not null,
-    enrollment_date      date         not null,
-    discharge_date       date         not null,
-    constraint discharged_patient_chamber_id_fk
-        foreign key (dept_chamber_id) references chamber (id)
-            on update cascade,
-    constraint discharged_patient_doctor_id_fk
-        foreign key (doctor_id) references doctor (id)
-            on update cascade,
-    constraint discharged_patient_operation_service_id_fk
-        foreign key (operation_service_id) references operation_service (id)
-            on update cascade,
-    constraint discharged_patient_treatment_course_id_fk
-        foreign key (treatment_course_id) references treatment_course (id)
-            on update cascade,
-    constraint discharged_patient_user_id_fk
-        foreign key (user_id) references user (id)
             on update cascade
 );
 

@@ -1,0 +1,2 @@
+INSERT INTO hospital.equipment (id, equipment_name, description) VALUES (1, 'ultrasound machine', 'drive a thing near the heart');
+INSERT INTO hospital.equipment (id, equipment_name, description) VALUES (2, 'test for COVID-19', 'smear for analysis is taken from the oropharynx or nasopharynx');
