@@ -35,7 +35,7 @@ public class DefaultUserDaoTest {
     @Test
     void getUserById() {
         assertNotNull(userDao.getUserById((long) 1));
-        assertNull(userDao.getUserById((long) 2));
+        assertNull(userDao.getUserById((long) 0));
         assertEquals("first", userDao.getUserById((long) 1).getFirstName());
     }
 
