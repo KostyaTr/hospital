@@ -10,15 +10,20 @@ import com.github.KostyaTr.hospital.model.display.Patient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import com.github.KostyaTr.hospital.web.servlet.inpatient.StatusServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @WebServlet("/personalDoctor/condition")
 public class ConditionServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(ConditionServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private PatientDao patientDaoDisp = DefaultPatientDao.getInstance();
     private UserDao userDao = DefaultUserDao.getInstance();
@@ -56,8 +61,10 @@ public class ConditionServlet extends HttpServlet {
                 WebUtils.forwardToJsp("patient", req, resp);
             } else {
                 if (condition.equals("Bad")){
+                    log.info("Doctor {} Put Patient {} In The Hospital at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
                     req.setAttribute("patient", "Patient was put in the hospital");
                 } else {
+                    log.info("Doctor {} Take Patient {} at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
                     req.setAttribute("patient", "Patient Taken");
                 }
                 req.getSession().removeAttribute("patientId");

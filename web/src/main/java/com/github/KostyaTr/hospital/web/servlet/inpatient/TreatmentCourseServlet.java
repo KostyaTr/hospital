@@ -8,6 +8,8 @@ import com.github.KostyaTr.hospital.model.display.TreatmentCourse;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @WebServlet("/personalDoctor/treatmentCourse")
 public class TreatmentCourseServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(TreatmentCourseServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
 
@@ -63,6 +66,8 @@ public class TreatmentCourseServlet extends HttpServlet {
             Inpatient inpatient = (Inpatient) req.getSession().getAttribute("inpatient");
             Long treatmentCourseId = courses.get(treatmentCourseNum - 1).getTreatmentCourseId();
             medDoctorService.prescribeTreatmentCourse(inpatient.getInpatientId(), treatmentCourseId);
+            AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+            log.info("Doctor {} Prescribe New Treatment Course {} to {}", authUser.getLogin(), treatmentCourseId, inpatient.getInpatientId());
             req.getSession().removeAttribute("inpatient");
             try {
                 resp.sendRedirect(req.getContextPath() +"/personalDoctor/inpatients");

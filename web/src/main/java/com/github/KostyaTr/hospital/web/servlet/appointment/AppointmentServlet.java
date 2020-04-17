@@ -105,7 +105,7 @@ public class AppointmentServlet extends HttpServlet {
                     medicalServiceId,
                     visit));
             req.setAttribute("coupon", couponNum);
-            log.info("user {} made appointment", id);
+            log.info("Guest User {} made appointment to Doctor {}", id, doctorId);
             WebUtils.forwardToJsp("guest's", req, resp);
         } else {
             AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
@@ -116,7 +116,7 @@ public class AppointmentServlet extends HttpServlet {
                     couponNum,
                     medicalServiceId,
                     visit));
-            log.info("user {} made appointment", authUser.getLogin());
+            log.info("User {} made appointment to Doctor {}", authUser.getLogin(), doctorId);
             try {
                 resp.sendRedirect(req.getContextPath() + "/" + WebUtils.personalAccount(req, resp));
             } catch (IOException e) {

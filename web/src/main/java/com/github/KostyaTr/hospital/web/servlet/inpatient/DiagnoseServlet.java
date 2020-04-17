@@ -9,6 +9,8 @@ import com.github.KostyaTr.hospital.model.display.Inpatient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @WebServlet("/personalDoctor/diagnose")
 public class DiagnoseServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(DiagnoseServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
     private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
@@ -50,6 +53,8 @@ public class DiagnoseServlet extends HttpServlet {
         } else {
             Long inpatientId = inpatient.getInpatientId();
             medDoctorService.updateDiagnose(inpatientId, diagnose);
+            AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+            log.info("Doctor {} Set new diagnose to {}", authUser.getLogin(), inpatientId);
             if (prescribeTreatmentCourse){
                 try {
                     req.getSession().setAttribute("inpatient", inpatientDao.getInpatientById(inpatientId));

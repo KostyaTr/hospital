@@ -4,11 +4,15 @@ import com.github.KostyaTr.hospital.dao.MedicineDao;
 import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicineDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultTreatmentCourseDao;
+import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Medicine;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import com.github.KostyaTr.hospital.web.servlet.appointment.AppointmentServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +22,7 @@ import java.util.List;
 
 @WebServlet("/personalDoctor/createTreatmentCourse")
 public class CreateTreatmentCourseServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(CreateTreatmentCourseServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
 
@@ -50,14 +55,17 @@ public class CreateTreatmentCourseServlet extends HttpServlet {
                 req.setAttribute("medicine", medicines);
                 WebUtils.forwardToJsp("createTreatmentCourse", req, resp);
             } else {
-                if (medDoctorService.createTreatmentCourse(new TreatmentCourse(
+                Long treatmentCourseId = medDoctorService.createTreatmentCourse(new TreatmentCourse(
                         null,
                         medicine.getMedicineId(),
                         Double.parseDouble(drugDose),
                         receptionDesc,
                         Integer.parseInt(timesPerDay),
                         Integer.parseInt(durationInDays)
-                )) != null) {
+                ));
+                if (treatmentCourseId != null) {
+                    AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+                    log.info("Doctor {} made new Treatment Course {}", authUser.getLogin(), treatmentCourseId);
                     req.setAttribute("treatmentCourseCreation", "Treatment Course Created");
                 } else {
                     req.setAttribute("treatmentCourseCreation", "Treatment Course Was Not Created Because Database Has Encountered An Unexpected Error");

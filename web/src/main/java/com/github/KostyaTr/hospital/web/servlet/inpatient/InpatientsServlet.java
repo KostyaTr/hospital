@@ -9,16 +9,20 @@ import com.github.KostyaTr.hospital.model.display.Inpatient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @WebServlet("/personalDoctor/inpatients")
 public class InpatientsServlet extends HttpServlet {
+    private static final Logger log = LoggerFactory.getLogger(InpatientsServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
     private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
@@ -66,6 +70,8 @@ public class InpatientsServlet extends HttpServlet {
                         resp.sendRedirect(req.getContextPath() + "/personalDoctor/inpatientStatus");
                     } else {
                         if (medDoctorService.dischargeInpatient(inpatient)){
+                            log.info("Doctor {} Discharge Patient {} at {}", authUser.getLogin(), inpatient.getInpatientId(), LocalDateTime.now());
+                            req.getSession().removeAttribute("inpatient");
                             resp.sendRedirect(req.getContextPath() +"/personalDoctor/dischargedInpatients");
                         } else {
                             req.setAttribute("error", "You Can't Discharge Inpatient If He's Feeling Bad Or Not Dead");
