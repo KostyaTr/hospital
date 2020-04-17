@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=Cp1251" pageEncoding="Cp1251" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
@@ -71,7 +71,7 @@
 <h3>Choose Doctor</h3>
 <br/>
 <form action="${pageContext.request.contextPath}/chooseDoctor" method="post">
-    <label for="doctorId">Enter doctor's â„–</label>
+    <label for="doctorId">Enter doctor's ¹</label>
     <input type="number" id="doctorId" name="doctorId">
     <input type="submit" value="Confirm">
 </form>
@@ -80,7 +80,7 @@
 <c:if test="${doctors != null}">
     <table border="1">
         <tr>
-            <th>â„–</th>
+            <th>¹</th>
             <th>Doctor Name</th>
             <th>Phone Number</th>
             <th>Email</th>

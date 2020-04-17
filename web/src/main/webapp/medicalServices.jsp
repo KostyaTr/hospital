@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=Cp1251" pageEncoding="Cp1251" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
@@ -55,7 +55,7 @@
 <c:if test="${services != null}">
     <table>
         <tr>
-            <th>â„–</th>
+            <th>¹</th>
             <th>Service Name</th>
             <th>Service Cost</th>
         </tr>

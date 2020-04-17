@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=Cp1251" pageEncoding="Cp1251" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -56,7 +56,7 @@
 <c:if test="${doctors != null}">
     <table>
         <tr>
-            <th>â„–</th>
+            <th>¹</th>
             <th>Doctor Name</th>
             <th>Phone Number</th>
             <th>Email</th>

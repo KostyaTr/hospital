@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=Cp1251" pageEncoding="Cp1251" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
@@ -59,7 +59,7 @@
 <c:if test="${inpatient != null}">
     <table border="1">
         <tr>
-            <th>â„–</th>
+            <th>¹</th>
             <th>Patient Name</th>
             <th>Chamber Num</th>
             <th>Diagnose</th>
@@ -95,7 +95,7 @@
 <br/>
 <h3>Choose Treatment Course</h3>
 <form action="${pageContext.request.contextPath}/personalDoctor/treatmentCourse" method="post">
-    <label for="treatmentCourseId">Enter course â„–</label>
+    <label for="treatmentCourseId">Enter course ¹</label>
     <input type="number" id="treatmentCourseId" name="treatmentCourseId">
     <input type="submit" value="Confirm">
 </form>
@@ -109,7 +109,7 @@
 <c:if test="${treatmentCourse != null}">
     <table border="1">
         <tr>
-            <th>â„–</th>
+            <th>¹</th>
             <th>Medicine Name</th>
             <th>Medicine Dose</th>
             <th>Reception Description</th>
