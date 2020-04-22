@@ -3,6 +3,7 @@ package com.github.KostyaTr.hospital.web.servlet.inpatient;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.display.Inpatient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
@@ -42,9 +43,9 @@ public class StatusServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        String status = req.getParameter("status");
+        Status status = Status.valueOf(req.getParameter("status"));
         Inpatient inpatient = (Inpatient) req.getSession().getAttribute("inpatient");
-        if ((status.equals("Good") || status.equals("Cured")) && inpatient.getMedicineName() == null){
+        if ((status.equals(Status.GOOD) || status.equals(Status.CURED)) && inpatient.getMedicineName() == null){
             req.setAttribute("error", "It Can't Be That Inpatient Got Better Without Any Treatment");
             WebUtils.forwardToJsp("inpatientStatus", req, resp);
         } else {

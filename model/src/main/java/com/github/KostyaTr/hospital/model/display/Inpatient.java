@@ -1,5 +1,7 @@
 package com.github.KostyaTr.hospital.model.display;
 
+import com.github.KostyaTr.hospital.model.Status;
+
 import java.util.Date;
 
 public class Inpatient {
@@ -9,11 +11,11 @@ public class Inpatient {
     private String diagnose;
     private String medicineName;
     private Double medicineDose;
-    private String status;
+    private Status status;
     private Date enrollmentDate;
 
     public Inpatient(Long inpatientId, String patientName, Long chamberId, String diagnose, String medicineName,
-                     Double medicineDose, String status, Date enrollmentDate) {
+                     Double medicineDose, Status status, Date enrollmentDate) {
 
         this.inpatientId = inpatientId;
         this.patientName = patientName;
@@ -49,7 +51,7 @@ public class Inpatient {
         return medicineDose;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 

@@ -1,6 +1,7 @@
 package com.github.KostyaTr.hospital.service;
 
 import com.github.KostyaTr.hospital.model.Medicine;
+import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface MedDoctorService {
 
     List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId);
 
-    boolean takeThePatient(Long patientId, String condition);
+    boolean takeThePatient(Long patientId, Status status);
 
     boolean takeTheGuestPatient(Long guestPatientId);
 
@@ -24,7 +25,7 @@ public interface MedDoctorService {
 
     Long createTreatmentCourse(TreatmentCourse treatmentCourse);
 
-    boolean updateStatus(Long patientId, String status);
+    boolean updateStatus(Long patientId, Status status);
 
     boolean dischargeInpatient(com.github.KostyaTr.hospital.model.display.Inpatient inpatient);
 

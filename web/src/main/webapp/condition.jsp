@@ -57,7 +57,7 @@
 <br/>
 <form action="${pageContext.request.contextPath}/personalDoctor/condition" method="post">
     <label for="condition">Enter condition:</label>
-    <input type="text" id="condition" name="condition"><h4>Enter "Bad" condition to put the patient in hospital</h4>
+    <input type="text" id="condition" name="condition"><h4>Enter "BAD" condition to put the patient in hospital</h4>
     <input type="submit" value="Confirm">
 </form>
 

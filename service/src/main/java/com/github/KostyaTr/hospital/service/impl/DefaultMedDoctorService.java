@@ -24,8 +24,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
     private com.github.KostyaTr.hospital.dao.display.PatientDao patientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultPatientDao.getInstance();
     private com.github.KostyaTr.hospital.dao.display.GuestPatientDao guestPatientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultGuestPatientDao.getInstance();
 
-    private final String PATIENT_BAD = "Bad";
-
     private final int FREE_CHAMBER = 0;
     private final int LOAD = 1;
 
@@ -50,9 +48,9 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public boolean takeThePatient(Long patientId, String condition) {
-        if (condition.equals("Bad")){
-            if(putPatientInHospital(patientId, condition) != null){
+    public boolean takeThePatient(Long patientId, Status status) {
+        if (status.equals(Status.BAD)){
+            if(putPatientInHospital(patientId, status) != null){
                 return patientDao.removePatientById(patientId);
             }
         } else {
@@ -91,13 +89,13 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public boolean updateStatus(Long patientId, String status) {
+    public boolean updateStatus(Long patientId, Status status) {
         return inpatientDao.updateStatus(patientId, status);
     }
 
     @Override
     public boolean dischargeInpatient(com.github.KostyaTr.hospital.model.display.Inpatient inpatientDisp) {
-        if(!inpatientDisp.getStatus().equals(PATIENT_BAD)){
+        if(!inpatientDisp.getStatus().equals(Status.BAD)){
             Inpatient inpatient = inpatientDao.getInpatientById(inpatientDisp.getInpatientId());
             chamberDao.updateChamberLoad(inpatient.getDeptChamberId(), -LOAD);
             String diagnose;
@@ -141,7 +139,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
         return inpatientDaoDisp.getInpatientsByDoctorId(doctorId);
     }
 
-    private Long putPatientInHospital(Long patientId, String condition) {
+    private Long putPatientInHospital(Long patientId, Status status) {
         Patient patient = patientDao.getPatientById(patientId);
         final List<Long> chambers = freeChambers(patient);
         if (!chambers.isEmpty()){
@@ -149,7 +147,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
             Long id = chambers.get(FREE_CHAMBER);
             Inpatient inpatient = new Inpatient(
                     null, patient.getUserId(), patient.getDoctorId(), id,
-                    null, null, null, condition, new Date());
+                    null, null, null, status, new Date());
             return inpatientDao.addInpatient(inpatient);
         }
         else {

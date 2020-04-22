@@ -10,13 +10,13 @@ public class DischargedPatient {
     private String diagnose;
     private String cardHistory;
     private String treatmentCourse;
-    private String status;
+    private Status status;
     private Date enrollmentDate;
     private Date dischargeDate;
 
     public DischargedPatient(Long dischargedPatientId, String patientName, String doctorName,
                              Long deptChamberId, String diagnose, String cardHistory,
-                             String treatmentCourse, String status, Date enrollmentDate,
+                             String treatmentCourse, Status status, Date enrollmentDate,
                              Date dischargeDate) {
 
         this.dischargedPatientId = dischargedPatientId;
@@ -59,7 +59,7 @@ public class DischargedPatient {
         return treatmentCourse;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 

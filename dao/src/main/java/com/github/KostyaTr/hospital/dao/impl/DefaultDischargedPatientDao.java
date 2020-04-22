@@ -3,6 +3,7 @@ package com.github.KostyaTr.hospital.dao.impl;
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.DischargedPatientDao;
 import com.github.KostyaTr.hospital.model.DischargedPatient;
+import com.github.KostyaTr.hospital.model.Status;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
             preparedStatement.setString(5, dischargedPatient.getCardHistory());
             preparedStatement.setString(6, dischargedPatient.getTreatmentCourse());
             preparedStatement.setString(7, null);
-            preparedStatement.setString(8, dischargedPatient.getStatus());
+            preparedStatement.setString(8, dischargedPatient.getStatus().toString());
             preparedStatement.setDate(9, new Date(dischargedPatient.getEnrollmentDate().getTime()));
             preparedStatement.setDate(10, new Date(dischargedPatient.getDischargeDate().getTime()));
             preparedStatement.executeUpdate();
@@ -62,7 +63,7 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
                         resultSet.getString("diagnose"),
                         resultSet.getString("card_history"),
                         resultSet.getString("treatment_course"),
-                        resultSet.getString("patient_status"),
+                        Status.valueOf(resultSet.getString("patient_status")),
                         resultSet.getDate("enrollment_date"),
                         resultSet.getDate("discharge_date"));
                 dischargedPatients.add(dischargedPatient);

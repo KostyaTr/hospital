@@ -2,6 +2,7 @@ package com.github.KostyaTr.hospital.dao.impl.display;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.display.InpatientDao;
+import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.display.Inpatient;
 
 import java.sql.Connection;
@@ -42,7 +43,7 @@ public class DefaultInpatientDao implements InpatientDao {
                             resultSet.getString("diagnose"),
                             resultSet.getString("medicine_name"),
                             resultSet.getDouble("drug_dose"),
-                            resultSet.getString("patient_status"),
+                            Status.valueOf(resultSet.getString("patient_status")),
                             resultSet.getDate("enrollment_date"));
                 } else {
                     return null;
@@ -76,7 +77,7 @@ public class DefaultInpatientDao implements InpatientDao {
                             resultSet.getString("diagnose"),
                             resultSet.getString("medicine_name"),
                             resultSet.getDouble("drug_dose"),
-                            resultSet.getString("patient_status"),
+                            Status.valueOf(resultSet.getString("patient_status")),
                             resultSet.getDate("enrollment_date"));
                     inpatients.add(inpatient);
                 }

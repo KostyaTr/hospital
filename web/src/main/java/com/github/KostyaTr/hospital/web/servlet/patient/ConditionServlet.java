@@ -5,12 +5,12 @@ import com.github.KostyaTr.hospital.dao.display.PatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.dao.impl.display.DefaultPatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
+import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.User;
 import com.github.KostyaTr.hospital.model.display.Patient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
-import com.github.KostyaTr.hospital.web.servlet.inpatient.StatusServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +49,8 @@ public class ConditionServlet extends HttpServlet {
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         Long patientId = (Long) req.getSession().getAttribute("patientId");
         Patient patient = patientDaoDisp.getPatientById(patientId);
-        String condition = req.getParameter("condition");
-        if (condition.equals("")) {
+        Status condition = Status.valueOf(req.getParameter("condition"));
+        if (condition.equals("")) { // remove when multiple choice is added to condition.jsp
             req.setAttribute("error", "field is empty");
             req.setAttribute("patient", patient);
             WebUtils.forwardToJsp("patient", req, resp);
@@ -60,7 +60,7 @@ public class ConditionServlet extends HttpServlet {
                 req.setAttribute("patient", patient);
                 WebUtils.forwardToJsp("patient", req, resp);
             } else {
-                if (condition.equals("Bad")){
+                if (condition.equals(Status.BAD)){
                     log.info("Doctor {} Put Patient {} In The Hospital at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
                     req.setAttribute("patient", "Patient was put in the hospital");
                 } else {

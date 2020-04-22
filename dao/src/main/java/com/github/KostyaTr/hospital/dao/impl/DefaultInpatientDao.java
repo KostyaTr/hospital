@@ -3,6 +3,7 @@ package com.github.KostyaTr.hospital.dao.impl;
 import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.InpatientDao;
 import com.github.KostyaTr.hospital.model.Inpatient;
+import com.github.KostyaTr.hospital.model.Status;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class DefaultInpatientDao implements InpatientDao {
                     resultSet.getString("diagnose"),
                     resultSet.getLong("treatment_course_id"),
                     resultSet.getLong("operation_service_id"),
-                    resultSet.getString("patient_status"),
+                    Status.valueOf(resultSet.getString("patient_status")),
                     resultSet.getDate("enrollment_date"));
             inpatients.add(user);
         }
@@ -78,7 +79,7 @@ public class DefaultInpatientDao implements InpatientDao {
                             resultSet.getString("diagnose"),
                             resultSet.getLong("treatment_course_id"),
                             resultSet.getLong("operation_service_id"),
-                            resultSet.getString("patient_status"),
+                            Status.valueOf(resultSet.getString("patient_status")),
                             resultSet.getDate("enrollment_date"));
                 } else {
                     return null;
@@ -104,7 +105,7 @@ public class DefaultInpatientDao implements InpatientDao {
             preparedStatement.setString(4, null);
             preparedStatement.setString(5, null);
             preparedStatement.setString(6, null);
-            preparedStatement.setString(7, inpatient.getStatus());
+            preparedStatement.setString(7, inpatient.getStatus().toString());
             preparedStatement.setDate(8, new Date(inpatient.getEnrollmentDate().getTime()));
             preparedStatement.executeUpdate();
             try(ResultSet key = preparedStatement.getGeneratedKeys()){
@@ -144,12 +145,12 @@ public class DefaultInpatientDao implements InpatientDao {
     }
 
     @Override
-    public boolean updateStatus(Long patientId, String status) {
+    public boolean updateStatus(Long patientId, Status status) {
         final String sql = "update inpatient set patient_status = ? where id = ?";
 
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, status);
+            preparedStatement.setString(1, status.toString());
             preparedStatement.setLong(2, patientId);
             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
         } catch (SQLException e) {

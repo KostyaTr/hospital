@@ -7,6 +7,7 @@ import com.github.KostyaTr.hospital.dao.PatientDao;
 import com.github.KostyaTr.hospital.model.Inpatient;
 import com.github.KostyaTr.hospital.model.MedDoctor;
 import com.github.KostyaTr.hospital.model.Patient;
+import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +56,7 @@ public class DefaultMedDoctorServiceTest {
     @Test
     void takeThePatientWithGoodConditionTest(){
         when(patientDao.removePatientById(1L)).thenReturn(true);
-        boolean check = medDoctorService.takeThePatient(1L, "Good");
+        boolean check = medDoctorService.takeThePatient(1L, Status.GOOD);
         assertTrue(check);
     }
 
@@ -78,7 +79,7 @@ public class DefaultMedDoctorServiceTest {
         when(medDoctorDao.getDoctorById(1L)).thenReturn(new MedDoctor(1L, null, 1L, false));
         List<Long> list = new ArrayList<>();
         when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(list);
-        boolean check = medDoctorService.takeThePatient(1L, "Bad");
+        boolean check = medDoctorService.takeThePatient(1L, Status.BAD);
         assertFalse(check);
     }
 
@@ -87,7 +88,7 @@ public class DefaultMedDoctorServiceTest {
         boolean check = medDoctorService.dischargeInpatient(
                 new com.github.KostyaTr.hospital.model.display.Inpatient(
                         null, null,null,null,null,
-                        null,"Bad",null));
+                        null,Status.BAD,null));
         assertFalse(check);
     }
 

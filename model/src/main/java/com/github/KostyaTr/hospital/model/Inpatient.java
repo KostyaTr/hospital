@@ -10,12 +10,12 @@ public class Inpatient {
     private String diagnose;
     private Long treatmentCourseId;
     private Long operationServiceId;
-    private String status;
+    private Status status;
     private Date enrollmentDate;
 
     public Inpatient(Long inpatientId, Long userId, Long doctorId, Long deptChamberId,
                      String diagnose, Long treatmentCourseId, Long operationServiceId,
-                     String status, Date enrollmentDate) {
+                     Status status, Date enrollmentDate) {
 
         this.inpatientId = inpatientId;
         this.userId = userId;
@@ -56,7 +56,7 @@ public class Inpatient {
         return operationServiceId;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
