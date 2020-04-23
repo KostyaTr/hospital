@@ -49,30 +49,24 @@ public class ConditionServlet extends HttpServlet {
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         Long patientId = (Long) req.getSession().getAttribute("patientId");
         Patient patient = patientDaoDisp.getPatientById(patientId);
-        Status condition = Status.valueOf(req.getParameter("condition"));
-        if (condition.equals("")) { // remove when multiple choice is added to condition.jsp
-            req.setAttribute("error", "field is empty");
+        Status condition = Status.valueOf(req.getParameter("status"));
+        if (!medDoctorService.takeThePatient(patientId, condition)){
+            req.setAttribute("error", "All chambers are full");
             req.setAttribute("patient", patient);
             WebUtils.forwardToJsp("patient", req, resp);
         } else {
-            if (!medDoctorService.takeThePatient(patientId, condition)){
-                req.setAttribute("error", "All chambers are full");
-                req.setAttribute("patient", patient);
-                WebUtils.forwardToJsp("patient", req, resp);
+            if (condition.equals(Status.BAD)){
+                log.info("Doctor {} Put Patient {} In The Hospital at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
+                req.setAttribute("patient", "Patient was put in the hospital");
             } else {
-                if (condition.equals(Status.BAD)){
-                    log.info("Doctor {} Put Patient {} In The Hospital at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
-                    req.setAttribute("patient", "Patient was put in the hospital");
-                } else {
-                    log.info("Doctor {} Take Patient {} at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
-                    req.setAttribute("patient", "Patient Taken");
-                }
-                req.getSession().removeAttribute("patientId");
-                final Long userId = authUser.getUserId();
-                User user = userDao.getUserById(userId);
-                req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
-                WebUtils.forwardToJsp("doctorAccount", req, resp);
+                log.info("Doctor {} Take Patient {} at {}", authUser.getLogin(), patient.getPatientId(), LocalDateTime.now());
+                req.setAttribute("patient", "Patient Taken");
             }
+            req.getSession().removeAttribute("patientId");
+            final Long userId = authUser.getUserId();
+            User user = userDao.getUserById(userId);
+            req.setAttribute("name", user.getFirstName() + " "+ user.getLastName());
+            WebUtils.forwardToJsp("doctorAccount", req, resp);
         }
     }
 

@@ -56,8 +56,14 @@
 
 <br/>
 <form action="${pageContext.request.contextPath}/personalDoctor/condition" method="post">
-    <label for="condition">Enter condition:</label>
-    <input type="text" id="condition" name="condition"><h4>Enter "BAD" condition to put the patient in hospital</h4>
+    <h4>Does the patient need to be hospitalized?</h4>
+    <label for="no">NO</label>
+    <input type="radio" name="status" id="no" value="GOOD" checked>
+    <br/>
+    <label for="yes">YES</label>
+    <input type="radio" name="status" id="yes" value="BAD">
+    <br/>
+
     <input type="submit" value="Confirm">
 </form>
 

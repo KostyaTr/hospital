@@ -98,19 +98,19 @@
 <form action="${pageContext.request.contextPath}/personalDoctor/inpatientStatus" method="post">
 
     <label for="cured">Cured</label>
-    <input type="radio" name="status" id="cured" value="Cured" checked>
+    <input type="radio" name="status" id="cured" value="CURED" checked>
     <br/>
 
     <label for="good">Good</label>
-    <input type="radio" name="status" id="good" value="Good">
+    <input type="radio" name="status" id="good" value="GOOD">
     <br/>
 
     <label for="bad">Bad</label>
-    <input type="radio" name="status" id="bad" value="Bad">
+    <input type="radio" name="status" id="bad" value="BAD">
     <br/>
 
     <label for="dead">Dead</label>
-    <input type="radio" name="status" id="dead" value="Dead">
+    <input type="radio" name="status" id="dead" value="DEAD">
     <br/>
     <input type="submit" value="Confirm">
 </form>
