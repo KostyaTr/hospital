@@ -118,7 +118,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
                    null,
                    inpatientDisp.getPatientName(),
                    getDoctorName(inpatient.getDoctorId()),
-                   inpatient.getDeptChamberId(),
                    diagnose,
                    cardDao.getCardByUserId(inpatient.getUserId()).getHistory(),
                    treatmentCourse,

@@ -51,8 +51,29 @@
     <li><a href="${pageContext.request.contextPath}/personalDoctor/patient">Patients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor/inpatients">Inpatients</a></li>
     <li><a href="${pageContext.request.contextPath}/personalDoctor">Personal Account</a></li>
-        <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
+    <li><a href="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients">Discharged Inpatients</a></li>
 </ul>
+<br/>
+
+<c:out value="Page number: ${page}"/>
+
+<form action="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients" method="post">
+    <c:if test="${pageCount != 0}">
+        <c:if test="${page != 1}">
+            <input type="submit" id="previousPage" name="previousPage" value="Previous Page">
+        </c:if>
+        <input type="submit" id="goto" name="goto" value="Go To">
+        <label for="goToPage">Page Number</label>
+        <select id="goToPage" name="goToPage">
+            <c:forEach var = "i" begin = "1" end = "${pageCount}">
+                <option value = "${i}" ${i == page ? 'selected="selected"' : ''}>${i}</option>
+            </c:forEach>
+        </select>
+        <c:if test="${page != pageCount}">
+            <input type="submit" id="nextPage" name="nextPage" value="Next Page"  />
+        </c:if>
+    </c:if>
+</form>
 
 <br/>
 <h3>Discharged Inpatients</h3>
@@ -84,7 +105,28 @@
         </c:forEach>
     </table>
 </c:if>
+
 <br/>
+<c:out value="Page number: ${page}"/>
+<br/>
+<form action="${pageContext.request.contextPath}/personalDoctor/dischargedInpatients" method="post">
+    <c:if test="${pageCount != 0}">
+        <c:if test="${page != 1}">
+            <input type="submit" id="previousPage" name="previousPage" value="Previous Page">
+        </c:if>
+        <input type="submit" id="goto" name="goto" value="Go To">
+        <label for="goToPage">Page Number</label>
+        <select id="goToPage" name="goToPage">
+            <c:forEach var = "i" begin = "1" end = "${pageCount}">
+                <option value = "${i}" ${i == page ? 'selected="selected"' : ''}>${i}</option>
+            </c:forEach>
+        </select>
+        <c:if test="${page != pageCount}">
+            <input type="submit" id="nextPage" name="nextPage" value="Next Page"  />
+        </c:if>
+    </c:if>
+</form>
+
 
 </body>
 </html>

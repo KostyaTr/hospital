@@ -6,7 +6,6 @@ public class DischargedPatient {
     private Long dischargedPatientId;
     private String patientName;
     private String doctorName;
-    private Long deptChamberId;
     private String diagnose;
     private String cardHistory;
     private String treatmentCourse;
@@ -15,14 +14,12 @@ public class DischargedPatient {
     private Date dischargeDate;
 
     public DischargedPatient(Long dischargedPatientId, String patientName, String doctorName,
-                             Long deptChamberId, String diagnose, String cardHistory,
-                             String treatmentCourse, Status status, Date enrollmentDate,
-                             Date dischargeDate) {
+                             String diagnose, String cardHistory, String treatmentCourse,
+                             Status status, Date enrollmentDate, Date dischargeDate) {
 
         this.dischargedPatientId = dischargedPatientId;
         this.patientName = patientName;
         this.doctorName = doctorName;
-        this.deptChamberId = deptChamberId;
         this.diagnose = diagnose;
         this.cardHistory = cardHistory;
         this.treatmentCourse = treatmentCourse;
@@ -41,10 +38,6 @@ public class DischargedPatient {
 
     public String getDoctorName() {
         return doctorName;
-    }
-
-    public Long getDeptChamberId() {
-        return deptChamberId;
     }
 
     public String getDiagnose() {

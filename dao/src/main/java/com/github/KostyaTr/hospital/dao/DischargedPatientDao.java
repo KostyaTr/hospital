@@ -8,5 +8,7 @@ import java.util.List;
 public interface DischargedPatientDao {
     Long addDischargedPatient(DischargedPatient dischargedPatient);
 
-    List<DischargedPatient> getDischargedPatients();
+    List<DischargedPatient> getDischargedPatients(int page);
+
+    double getDischargedPatientsCount();
 }

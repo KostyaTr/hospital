@@ -27,4 +27,6 @@ public class PersonalUserAccount extends HttpServlet {
         req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
         WebUtils.forwardToJsp("user's", req, resp);
     }
+
+    // add cancel and reschedule appointment buttons
 }
