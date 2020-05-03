@@ -41,7 +41,7 @@ public class DefaultAuthUserDao implements AuthUserDao {
 
     @Override
     public Long saveAuthUser(AuthUser user) {
-        final String sql = "insert into auth_user(login, password, role, user_id) values(?,?,?,?)";
+        final String sql = "insert into auth_user(login, password, role, user_id) values(?,md5(?),?,?)";
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getLogin());

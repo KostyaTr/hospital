@@ -40,6 +40,15 @@ public class DefaultAuthorizationServiceTest {
     }
 
     @Test
+    void passwordHashCheck(){
+        when(authUserDao.getByLogin("login")).thenReturn(
+                new AuthUser(null, "login",
+                        "a94d4950bba6053ab0fa6feb2ebe04ec", Role.Doctor,null));
+        AuthUser authUser = authorizationService.login("login", "Virus");
+        assertNotNull(authUser);
+    }
+
+    @Test
     void wrongPasswordCheck(){
         when(authUserDao.getByLogin("existingLogin")).thenReturn(
                 new AuthUser(null, "existingLogin",
