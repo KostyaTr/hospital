@@ -29,23 +29,13 @@ public class DefaultAuthorizationServiceTest {
     }
 
     @Test
-    void loginExistTest(){
-        when(authUserDao.getByLogin("existingLogin")).thenReturn(
-                new AuthUser(null, "existingLogin",
-                        "existingPassword", Role.AuthorizedUser, null));
-
-        AuthUser authUser = authorizationService.login("existingLogin", "existingPassword");
-        assertNotNull(authUser);
-        assertEquals("existingLogin", authUser.getLogin());
-    }
-
-    @Test
-    void passwordHashCheck(){
+    void passwordHashAndLoginCheck(){
         when(authUserDao.getByLogin("login")).thenReturn(
                 new AuthUser(null, "login",
                         "a94d4950bba6053ab0fa6feb2ebe04ec", Role.Doctor,null));
         AuthUser authUser = authorizationService.login("login", "Virus");
         assertNotNull(authUser);
+        assertEquals("login", authUser.getLogin());
     }
 
     @Test
