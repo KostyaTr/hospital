@@ -75,7 +75,7 @@ public class DefaultMedDoctorServiceTest {
 */
     @Test
     void takeThePatientWithBadAndFullChamberConditionTest(){
-        when(patientDao.getPatientById(1L)).thenReturn(new Patient(null,1L,1L,null,null, null));
+        when(patientDao.getPatientById(1L)).thenReturn(new Patient(null,1L,1L,0,null, null));
         when(medDoctorDao.getDoctorById(1L)).thenReturn(new MedDoctor(1L, null, 1L, false));
         List<Long> list = new ArrayList<>();
         when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(list);

@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,25 +29,23 @@ public class DefaultQueueServiceTest {
 
     @Test
     void couponNumPatientTest(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final LocalDate date = LocalDate.now();
+        int day = date.getDayOfMonth();
 
-        when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 16);
-        when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 14);
+        when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn(16);
+        when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn(14);
 
-        assertEquals(17, queueService.getCouponNum((long) 1, new Date()).intValue());
+        assertEquals(17, queueService.getCouponNum((long) 1, date));
     }
 
     @Test
     void couponNumGuestPatientTest(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final LocalDate date = LocalDate.now();
+        int day = date.getDayOfMonth();
 
-        when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 16);
-        when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn((long) 18);
-        int latestCoupon = queueService.getCouponNum((long) 1, new Date()).intValue();
+        when(patientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn(16);
+        when(guestPatientDao.getLatestCouponToDoctorByDay((long) 1, day)).thenReturn(18);
+        int latestCoupon = queueService.getCouponNum((long) 1, date);
 
         assertEquals(19, latestCoupon);
     }
