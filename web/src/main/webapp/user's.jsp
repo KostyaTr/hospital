@@ -45,13 +45,22 @@
 <h2>Welcome back, <c:out value="${name}"/> </h2>
 
 <br/>
-
+<form action="${pageContext.request.contextPath}/personalUser" method="post">
+    <label for="appointmentId">Appointment ¹</label>
+    <select id="appointmentId" name="appointmentId">
+        <c:forEach var = "i" begin = "1" end = "${appointmentsSize}">
+            <option>${i}</option>
+        </c:forEach>
+    </select>
+    <input type="submit" value="Reschedule Appointment" name="reschedule">
+    <input type="submit" value="Cancel Appointment" name="cancel">
+</form>
 <br/>
 
 <h3>Your appointments</h3>
 <ol>
     <c:forEach items="${appointments}" var="item">
-       <li>
+        <li>
            <h3><c:out value="Number in line: ${item.couponNum} to ${item.doctorName} at ${item.visitDate}"/></h3>
        </li>
     </c:forEach>

@@ -76,4 +76,14 @@ public class DefaultUserService implements UserService {
     public List<DoctorSpecialityDept> getDoctorsByMedicalService(Long medicalServiceId) {
         return getDoctorsBySpeciality(medicalServiceDao.getMedicalServiceById(medicalServiceId).getNeededSpecialityId());
     }
+
+    @Override
+    public boolean rescheduleAppointment(Patient patient) {
+        return patientDao.updateVisitDate(patient);
+    }
+
+    @Override
+    public boolean cancelAppointment(Long patientId) {
+        return patientDao.removePatientById(patientId);
+    }
 }

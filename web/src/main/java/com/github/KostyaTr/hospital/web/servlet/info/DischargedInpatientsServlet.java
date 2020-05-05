@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/personalDoctor/dischargedInpatients")
 public class DischargedInpatientsServlet extends HttpServlet {
    private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
-   private static int page = 1;
+   private int page = 1;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {

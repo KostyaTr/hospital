@@ -16,6 +16,10 @@ public interface UserService {
 
     Long makeGuestAppointment(GuestPatient patient);
 
+    boolean rescheduleAppointment(Patient patient);
+
+    boolean cancelAppointment(Long patientId);
+
     List<Appointment> getAppointmentsByUserId(Long userId);
 
     List<MedicalService> getMedicalServices();

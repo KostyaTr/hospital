@@ -1,7 +1,12 @@
 package com.github.KostyaTr.hospital.web.servlet.personal;
 
+import com.github.KostyaTr.hospital.dao.MedicalServiceDao;
+import com.github.KostyaTr.hospital.dao.PatientDao;
 import com.github.KostyaTr.hospital.dao.UserDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
+import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.web.WebUtils;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.User;
@@ -12,21 +17,49 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @WebServlet("/personalUser")
 public class PersonalUserAccount extends HttpServlet {
     private UserDao userDao = DefaultUserDao.getInstance();
     private UserService userService = DefaultUserService.getInstance();
-
+    private PatientDao patientDao = DefaultPatientDao.getInstance();
+    private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         User user = userDao.getUserById(authUser.getUserId());
         req.setAttribute("appointments", userService.getAppointmentsByUserId(user.getUserId()));
+        req.setAttribute("appointmentsSize", userService.getAppointmentsByUserId(user.getUserId()).size());
         req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
         WebUtils.forwardToJsp("user's", req, resp);
     }
 
-    // add cancel and reschedule appointment buttons
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+        User user = userDao.getUserById(authUser.getUserId());
+        int appointmentId = Integer.parseInt(req.getParameter("appointmentId"));
+        Long patientId = userService.getAppointmentsByUserId(user.getUserId()).get(appointmentId - 1).getAppointmentId();
+        String cancelAppointment = req.getParameter("cancel");
+        if (cancelAppointment != null){
+            userService.cancelAppointment(patientId);
+            try {
+                resp.sendRedirect(req.getContextPath() + "/" + WebUtils.personalAccount(req, resp));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Patient patient = patientDao.getPatientById(patientId);
+            req.getSession().setAttribute("doctorId", patient.getDoctorId());
+            req.getSession().setAttribute("medicalServiceId", patient.getMedicalServiceId());
+            req.getSession().setAttribute("patientId", patientId);
+            try {
+                resp.sendRedirect(req.getContextPath() + "/appointment");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

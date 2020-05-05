@@ -19,4 +19,6 @@ public interface PatientDao {
     int getLatestCouponToDoctorByDay(Long doctorId, int day);
 
     LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day);
+
+    boolean updateVisitDate(Patient patient);
 }

@@ -145,6 +145,20 @@ public class DefaultPatientDao implements PatientDao {
     }
 
     @Override
+    public boolean updateVisitDate(Patient patient) {
+        final String sql = "update patient set visit_date = ?, coupon_num = ? where id = ?";
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setTimestamp(1, new Timestamp(patient.getVisitDate().getTime()));
+            preparedStatement.setInt(2, patient.getCouponNum());
+            preparedStatement.setLong(3, patient.getPatientId());
+            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day) {
         final String sql = "select visit_date\n" +
                 "from patient\n" +

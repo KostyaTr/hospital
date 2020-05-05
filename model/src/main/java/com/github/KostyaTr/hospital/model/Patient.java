@@ -22,6 +22,10 @@ public class Patient {
         this.visitDate = visitDate;
     }
 
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
     public Long getPatientId() {
         return patientId;
     }
