@@ -21,7 +21,7 @@ public class DefaultAppointmentDao implements AppointmentDao {
 
     @Override
     public List<Appointment> getAppointmentsByUserId(Long userId) {
-       final String sql = "select patient.coupon_num, concat(user.first_name, \" \", user.last_name) as doctor_name, medical_service.service_name, patient.visit_date from patient\n" +
+       final String sql = "select patient.id, patient.coupon_num, concat(user.first_name, \" \", user.last_name) as doctor_name, medical_service.service_name, patient.visit_date from patient\n" +
                "join medical_service on patient.medical_service_id = medical_service.id\n" +
                "join doctor on patient.doctor_id = doctor.id\n" +
                "join user on doctor.user_id = user.id\n" +
@@ -34,6 +34,7 @@ public class DefaultAppointmentDao implements AppointmentDao {
                 final List<Appointment> appointments = new ArrayList<>();
                 while (resultSet.next()){
                     final Appointment appointment = new Appointment(
+                            resultSet.getLong("id"),
                             resultSet.getLong("coupon_num"),
                             resultSet.getString("doctor_name"),
                             resultSet.getString("service_name"),
