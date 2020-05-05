@@ -61,7 +61,7 @@ public class DefaultGuestPatientDaoTest {
 
     @Test
     void addPatient(){
-        assertNotNull(guestPatientDao.addPatient(new GuestPatient((long)2, "first","last","phone","email", (long)1, (long)1, (long)1, new Date())));
+        assertNotNull(guestPatientDao.addPatient(new GuestPatient((long)2, "first","last","phone","email", (long)1, 1, (long)1, new Date())));
     }
 
     @Test

@@ -9,12 +9,12 @@ public class GuestPatient {
     private String phoneNumber;
     private String email;
     private Long doctorId;
-    private Long couponNum;
+    private int couponNum;
     private Long medicalServiceId;
     private Date visitDate;
 
     public GuestPatient(Long patientId, String firstName, String lastName,
-                        String phoneNumber, String email, Long doctorId, Long couponNum,
+                        String phoneNumber, String email, Long doctorId, int couponNum,
                         Long medicalServiceId, Date visitDate) {
 
         this.patientId = patientId;
@@ -32,7 +32,7 @@ public class GuestPatient {
         return doctorId;
     }
 
-    public Long getCouponNum() {
+    public int getCouponNum() {
         return couponNum;
     }
 

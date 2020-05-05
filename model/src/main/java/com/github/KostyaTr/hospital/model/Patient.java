@@ -7,12 +7,12 @@ public class Patient {
     private Long patientId;
     private Long userId;
     private Long doctorId;
-    private Long couponNum;
+    private int couponNum;
     private Long medicalServiceId;
     private Date visitDate;
 
     public Patient(Long patientId, Long userId, Long doctorId,
-                   Long couponNum, Long medicalServiceId, Date visitDate) {
+                   int couponNum, Long medicalServiceId, Date visitDate) {
 
         this.patientId = patientId;
         this.userId = userId;
@@ -34,7 +34,7 @@ public class Patient {
         return doctorId;
     }
 
-    public Long getCouponNum() {
+    public int getCouponNum() {
         return couponNum;
     }
 
