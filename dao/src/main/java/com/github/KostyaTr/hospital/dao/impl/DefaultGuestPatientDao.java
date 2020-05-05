@@ -5,6 +5,7 @@ import com.github.KostyaTr.hospital.dao.GuestPatientDao;
 import com.github.KostyaTr.hospital.model.GuestPatient;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +67,9 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
     }
 
     @Override
-    public Long getLatestCouponToDoctorByDay(Long doctorId, int day) {
-        final String sql = "select coupon_num from guest_patient\n" +
-                "where doctor_id = ? and day(visit_date) = ?\n" +
-                "order by coupon_num desc\n" +
-                "limit 1;";
+    public int getLatestCouponToDoctorByDay(Long doctorId, int day) {
+        final String sql = "select ifnull(max(coupon_num), 0) as coupon_num from guest_patient\n" +
+                "where doctor_id = ? and day(visit_date) = ?";
 
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -78,9 +77,9 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
             preparedStatement.setInt(2, day);
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 if (resultSet.next()){
-                    return resultSet.getLong("coupon_num");
+                    return resultSet.getInt("coupon_num");
                 } else {
-                    return (long) 0;
+                    return 0;
                 }
             }
         } catch (SQLException e) {
@@ -109,7 +108,7 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
                     resultSet.getString("phone_number"),
                     resultSet.getString("email"),
                     resultSet.getLong("doctor_id"),
-                    resultSet.getLong("coupon_num"),
+                    resultSet.getInt("coupon_num"),
                     resultSet.getLong("medical_service_id"),
                     resultSet.getTimestamp("visit_date"));
             patients.add(patient);
@@ -123,6 +122,31 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 return getPatients(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day) {
+        final String sql = "select visit_date\n" +
+                "from guest_patient\n" +
+                "where doctor_id = ?\n" +
+                "and day(visit_date) = ?\n" +
+                "order by visit_date desc\n" +
+                "limit 1";
+
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, doctorId);
+            preparedStatement.setInt(2, day);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return resultSet.getTimestamp("visit_date").toLocalDateTime();
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

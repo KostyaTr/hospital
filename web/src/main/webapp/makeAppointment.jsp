@@ -55,26 +55,44 @@
 
 <br/>
 
-<ol>
-    <li>Your Name: ${user.firstName} ${user.lastName}</li>
-    <li>Your Phone Number: ${user.phoneNumber}</li>
-    <li>Your email: ${user.email}</li>
-    <li>Medical Service: ${medicalService.serviceName}</li>
-    <li>Appointed Doctor: ${doctor.firstName} ${doctor.lastName}, specialities: ${doctor.specialities}</li>
-</ol>
+<c:if test="${visitTime == null}">
+    <ol>
+        <li>Your Name: ${user.firstName} ${user.lastName}</li>
+        <li>Your Phone Number: ${user.phoneNumber}</li>
+        <li>Your email: ${user.email}</li>
+        <li>Medical Service: ${medicalService.serviceName}</li>
+        <li>Appointed Doctor: ${doctor.firstName} ${doctor.lastName}, specialities: ${doctor.specialities}</li>
+    </ol>
 
+    <form action="${pageContext.request.contextPath}/appointment" method="post">
+        <label for="visitDay">Choose a day for your appointment:</label>
+        <select id="visitDay" name="visitDay">
+            <c:if test="${availableDays != null}">
+                <c:forEach items="${availableDays}" var="day">
+                    <option>${day}</option>
+                </c:forEach>
+            </c:if>
+        </select><br/>
+        <input type="submit" value="Select" name="selectDayButton">
+    </form>
 
-<form action="${pageContext.request.contextPath}/appointment" method="post">
-    <label for="visitDate">Choose a time for your appointment:</label>
-    <input id="visitDate" type="datetime-local" name="visitDate">
-    <input type="submit" value="Confirm">
-</form>
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/chooseMedicalServices">Back To Medical Services</a></li>
+        <li><a href="${pageContext.request.contextPath}/chooseDoctor">Back To Doctors</a></li>
+    </ul>
+</c:if>
+
+<c:if test="${visitTime != null}">
+    <h4><c:out value="Earliest time is ${visitTime}. Is that OK?"/></h4>
+    <form action="${pageContext.request.contextPath}/appointment" method="post">
+        <input type="submit" value="Confirm"><br/>
+    </form>
+    <a href="${pageContext.request.contextPath}/appointment">Select another day</a>
+</c:if>
+
 
 <p style="color: red">${error}</p>
-<ul>
-    <li><a href="${pageContext.request.contextPath}/chooseMedicalServices">Back To Medical Services</a></li>
-    <li><a href="${pageContext.request.contextPath}/chooseDoctor">Back To Doctors</a></li>
-</ul>
+
 
 </body>
 </html>
