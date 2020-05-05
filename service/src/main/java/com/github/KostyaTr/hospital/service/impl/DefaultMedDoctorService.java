@@ -114,16 +114,20 @@ public class DefaultMedDoctorService implements MedDoctorService {
                 treatmentCourseDao.removeTreatmentCourseById(inpatient.getTreatmentCourseId());
                 treatmentCourse = inpatientDisp.getMedicineName() +" "+ inpatientDisp.getMedicineDose();
             }
-           return dischargedPatientDao.addDischargedPatient(new DischargedPatient(
-                   null,
-                   inpatientDisp.getPatientName(),
-                   getDoctorName(inpatient.getDoctorId()),
-                   diagnose,
-                   cardDao.getCardByUserId(inpatient.getUserId()).getHistory(),
-                   treatmentCourse,
-                   inpatient.getStatus(),
-                   inpatient.getEnrollmentDate(),
-                   new Date())) != null;
+            final DischargedPatient dischargedPatient = new DischargedPatient(
+                    null,
+                    inpatientDisp.getPatientName(),
+                    getDoctorName(inpatient.getDoctorId()),
+                    diagnose,
+                    cardDao.getCardByUserId(inpatient.getUserId()).getHistory(),
+                    treatmentCourse,
+                    inpatient.getStatus(),
+                    inpatient.getEnrollmentDate(),
+                    new Date());
+            if (inpatient.getStatus().equals(Status.DEAD)){
+                userDao.removeUser(inpatient.getUserId()); //cascade delete
+            }
+            return dischargedPatientDao.addDischargedPatient(dischargedPatient) != null;
         }
         return false;
     }

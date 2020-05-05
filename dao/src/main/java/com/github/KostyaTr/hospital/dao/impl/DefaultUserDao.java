@@ -37,6 +37,18 @@ public class DefaultUserDao implements UserDao {
     }
 
     @Override
+    public boolean removeUser(Long userId) {
+        final String sql = "delete from user where id = ?";
+        try(Connection connection = DataSource.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, userId);
+            return 1 == preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public User getUserById(Long userId) {
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select * from user where id = ?")) {
