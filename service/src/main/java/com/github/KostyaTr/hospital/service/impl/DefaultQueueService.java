@@ -96,7 +96,7 @@ public class DefaultQueueService implements QueueService {
             if (workday(latestPatientVisitDate)){
                 return latestPatientVisitDate.plusMinutes(20);
             }
-        } else if (latestPatientVisitDate == null || latestGuestPatientVisitDate.compareTo(latestPatientVisitDate) < 0){
+        } else if (latestPatientVisitDate == null || latestGuestPatientVisitDate.compareTo(latestPatientVisitDate) > 0){
             if (workday(latestGuestPatientVisitDate)){
                 return latestGuestPatientVisitDate.plusMinutes(20);
             }
