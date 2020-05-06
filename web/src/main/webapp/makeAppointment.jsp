@@ -61,6 +61,7 @@
         <li>Your Phone Number: ${user.phoneNumber}</li>
         <li>Your email: ${user.email}</li>
         <li>Medical Service: ${medicalService.serviceName}</li>
+        <li>Service COST: ${medicalService.serviceCost} bel.rub.</li>
         <li>Appointed Doctor: ${doctor.firstName} ${doctor.lastName}, specialities: ${doctor.specialities}</li>
     </ol>
 
