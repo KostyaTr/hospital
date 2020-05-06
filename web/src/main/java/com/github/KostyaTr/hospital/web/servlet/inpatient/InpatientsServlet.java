@@ -41,48 +41,69 @@ public class InpatientsServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        if (req.getParameter("selectAnotherPatient") != null){
+            req.getSession().removeAttribute("inpatient");
+            req.getSession().removeAttribute("card");
+            try {
+                resp.sendRedirect(req.getContextPath() + "/personalDoctor/inpatients");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         List<Inpatient> inpatients = medDoctorService.getInpatientsByDoctorId(
                 medDoctorDao.getDoctorByUserId(authUser.getUserId()).getDoctorId());
+        Inpatient inpatient = (Inpatient) req.getSession().getAttribute("inpatient");
 
-        String inpatientStr = req.getParameter("inpatientId");
-        String option = req.getParameter("option");
-
-        if (inpatientStr.equals("")) {
-            req.setAttribute("error", "field is empty");
-            req.setAttribute("inpatients", inpatients);
-            WebUtils.forwardToJsp("inpatient", req, resp);
-        } else {
-            int inpatientNum = Integer.parseInt(inpatientStr);
-            if (inpatientNum > inpatients.size() || inpatientNum < 1) {
-                req.setAttribute("error", "incorrect input");
+        if (inpatient == null){
+            int inpatientNum;
+            String inpatientStr = req.getParameter("inpatientId");
+            if (inpatientStr.equals("")) {
+                req.setAttribute("error", "field is empty");
                 req.setAttribute("inpatients", inpatients);
                 WebUtils.forwardToJsp("inpatient", req, resp);
+                return;
             } else {
-                Inpatient inpatient = inpatientDao.getInpatientById(inpatients.get(inpatientNum - 1).getInpatientId());
-                req.getSession().setAttribute("inpatient", inpatient);
-                try {
-                    if (option.equals("diagnose")){
-                        resp.sendRedirect(req.getContextPath() +"/personalDoctor/diagnose");
-                    } else if (option.equals("treatmentCourse")){
-                        resp.sendRedirect(req.getContextPath() +"/personalDoctor/treatmentCourse");
-                    } else if (option.equals("updateStatus")){
-                        resp.sendRedirect(req.getContextPath() + "/personalDoctor/inpatientStatus");
-                    } else {
-                        if (medDoctorService.dischargeInpatient(inpatient)){
-                            log.info("Doctor {} Discharge Patient {} at {}", authUser.getLogin(), inpatient.getInpatientId(), LocalDateTime.now());
-                            req.getSession().removeAttribute("inpatient");
-                            resp.sendRedirect(req.getContextPath() +"/personalDoctor/dischargedInpatients");
-                        } else {
-                            req.setAttribute("error", "You Can't Discharge Inpatient If He's Feeling Bad Or Not Dead");
-                            req.setAttribute("inpatients", inpatients);
-                            WebUtils.forwardToJsp("inpatient", req, resp);
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                inpatientNum = Integer.parseInt(inpatientStr);
+                if (inpatientNum > inpatients.size() || inpatientNum < 1) {
+                    req.setAttribute("error", "incorrect input");
+                    req.setAttribute("inpatients", inpatients);
+                    WebUtils.forwardToJsp("inpatient", req, resp);
+                    return;
                 }
             }
+            inpatient = inpatientDao.getInpatientById(inpatients.get(inpatientNum - 1).getInpatientId());
+            req.getSession().setAttribute("inpatient", inpatient);
         }
+        if (req.getParameter("cardInfo") != null){
+            req.getSession().setAttribute("card", medDoctorService.getCardInfo(inpatient.getInpatientId()));
+            WebUtils.forwardToJsp("inpatient", req, resp);
+            return;
+        }
+        String option = req.getParameter("option");
+        try {
+            if (option.equals("diagnose")){
+                resp.sendRedirect(req.getContextPath() +"/personalDoctor/diagnose");
+            } else if (option.equals("treatmentCourse")){
+                resp.sendRedirect(req.getContextPath() +"/personalDoctor/treatmentCourse");
+            } else if (option.equals("updateStatus")){
+                resp.sendRedirect(req.getContextPath() + "/personalDoctor/inpatientStatus");
+            } else {
+                if (medDoctorService.dischargeInpatient(inpatient)){
+                    log.info("Doctor {} Discharge Patient {} at {}", authUser.getLogin(), inpatient.getInpatientId(), LocalDateTime.now());
+                    req.getSession().removeAttribute("inpatient");
+                    req.getSession().removeAttribute("card");
+                    resp.sendRedirect(req.getContextPath() +"/personalDoctor/dischargedInpatients");
+                } else {
+                    req.setAttribute("error", "You Can't Discharge Inpatient If He's Feeling Bad Or Not Dead");
+                    req.setAttribute("inpatients", inpatients);
+                    WebUtils.forwardToJsp("inpatient", req, resp);
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

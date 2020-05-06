@@ -55,16 +55,15 @@ public class DiagnoseServlet extends HttpServlet {
             medDoctorService.updateDiagnose(inpatientId, diagnose);
             AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
             log.info("Doctor {} Set new diagnose to {}", authUser.getLogin(), inpatientId);
+            req.getSession().setAttribute("inpatient", inpatientDao.getInpatientById(inpatientId));
             if (prescribeTreatmentCourse){
                 try {
-                    req.getSession().setAttribute("inpatient", inpatientDao.getInpatientById(inpatientId));
                     resp.sendRedirect(req.getContextPath() +"/personalDoctor/treatmentCourse");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
-                req.getSession().removeAttribute("inpatient");
-                try {
+                 try {
                     resp.sendRedirect(req.getContextPath() +"/personalDoctor/inpatients");
                 } catch (IOException e) {
                     throw new RuntimeException(e);

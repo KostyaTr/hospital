@@ -1,7 +1,9 @@
 package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
+import com.github.KostyaTr.hospital.dao.display.InpatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
+import com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.display.Inpatient;
@@ -23,6 +25,7 @@ public class StatusServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(StatusServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
+    private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -49,10 +52,11 @@ public class StatusServlet extends HttpServlet {
             req.setAttribute("error", "It Can't Be That Inpatient Got Better Without Any Treatment");
             WebUtils.forwardToJsp("inpatientStatus", req, resp);
         } else {
-            medDoctorService.updateStatus(inpatient.getInpatientId(), status);
+            final Long inpatientId = inpatient.getInpatientId();
+            medDoctorService.updateStatus(inpatientId, status);
             AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
-            log.info("Doctor {} Update Status {} to {}", authUser.getLogin(), status, inpatient.getInpatientId());
-            req.getSession().removeAttribute("inpatient");
+            req.getSession().setAttribute("inpatient", inpatientDao.getInpatientById(inpatientId));
+            log.info("Doctor {} Update Status {} to {}", authUser.getLogin(), status, inpatientId);
             try {
                 resp.sendRedirect(req.getContextPath() +"/personalDoctor/inpatients");
             } catch (IOException e) {

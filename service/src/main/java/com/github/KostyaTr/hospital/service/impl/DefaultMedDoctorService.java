@@ -167,4 +167,10 @@ public class DefaultMedDoctorService implements MedDoctorService {
     public List<com.github.KostyaTr.hospital.model.display.TreatmentCourse> getTreatmentCourses() {
         return treatmentCourseDaoDisp.getTreatmentCourses();
     }
+
+    @Override
+    public Card getCardInfo(Long inpatientId) {
+        Inpatient inpatient = inpatientDao.getInpatientById(inpatientId);
+        return cardDao.getCardByUserId(inpatient.getUserId());
+    }
 }

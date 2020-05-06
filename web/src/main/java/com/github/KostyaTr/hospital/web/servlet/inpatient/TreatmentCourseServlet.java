@@ -1,7 +1,9 @@
 package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
+import com.github.KostyaTr.hospital.dao.display.InpatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
+import com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.display.Inpatient;
 import com.github.KostyaTr.hospital.model.display.TreatmentCourse;
@@ -23,6 +25,7 @@ public class TreatmentCourseServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(TreatmentCourseServlet.class);
     private MedDoctorService medDoctorService = DefaultMedDoctorService.getInstance();
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
+    private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -65,10 +68,11 @@ public class TreatmentCourseServlet extends HttpServlet {
             }
             Inpatient inpatient = (Inpatient) req.getSession().getAttribute("inpatient");
             Long treatmentCourseId = courses.get(treatmentCourseNum - 1).getTreatmentCourseId();
-            medDoctorService.prescribeTreatmentCourse(inpatient.getInpatientId(), treatmentCourseId);
+            final Long inpatientId = inpatient.getInpatientId();
+            medDoctorService.prescribeTreatmentCourse(inpatientId, treatmentCourseId);
             AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
-            log.info("Doctor {} Prescribe New Treatment Course {} to {}", authUser.getLogin(), treatmentCourseId, inpatient.getInpatientId());
-            req.getSession().removeAttribute("inpatient");
+            log.info("Doctor {} Prescribe New Treatment Course {} to {}", authUser.getLogin(), treatmentCourseId, inpatientId);
+            req.getSession().setAttribute("inpatient", inpatientDao.getInpatientById(inpatientId));
             try {
                 resp.sendRedirect(req.getContextPath() +"/personalDoctor/inpatients");
             } catch (IOException e) {
