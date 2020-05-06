@@ -72,14 +72,18 @@
                     <option>${day}</option>
                 </c:forEach>
             </c:if>
-        </select><br/>
-        <input type="submit" value="Select" name="selectDayButton">
+        </select>
+        <input type="submit" value="Select" name="selectDayButton"><br/>
+        <c:if test="${patientId != null}">
+            <input type="submit" value="Cancel Rescheduling" name="cancelRescheduling">
+        </c:if>
     </form>
-
-    <ul>
-        <li><a href="${pageContext.request.contextPath}/chooseMedicalServices">Back To Medical Services</a></li>
-        <li><a href="${pageContext.request.contextPath}/chooseDoctor">Back To Doctors</a></li>
-    </ul>
+    <c:if test="${patientId == null}">
+        <ul>
+            <li><a href="${pageContext.request.contextPath}/chooseMedicalServices">Back To Medical Services</a></li>
+            <li><a href="${pageContext.request.contextPath}/chooseDoctor">Back To Doctors</a></li>
+        </ul>
+    </c:if>
 </c:if>
 
 <c:if test="${visitTime != null}">

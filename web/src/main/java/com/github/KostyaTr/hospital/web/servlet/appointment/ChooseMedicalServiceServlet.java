@@ -16,6 +16,14 @@ public class ChooseMedicalServiceServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp){
+        if (req.getSession().getAttribute("patientId") != null){
+            try {
+                resp.sendRedirect(req.getContextPath() +"/appointment");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         req.setAttribute("services", userService.getMedicalServices());
         WebUtils.forwardToJsp("chooseMedicalService", req, resp);
     }

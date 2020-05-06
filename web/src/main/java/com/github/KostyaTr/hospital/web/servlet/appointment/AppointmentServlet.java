@@ -21,8 +21,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -87,6 +85,18 @@ public class AppointmentServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+        if (req.getParameter("cancelRescheduling") != null){
+            req.getSession().removeAttribute("medicalServiceId");
+            req.getSession().removeAttribute("doctorId");
+            req.getSession().removeAttribute("patientId");
+            try {
+                resp.sendRedirect(req.getContextPath() + "/" + WebUtils.personalAccount(req, resp));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
         Long doctorId = (Long) req.getSession().getAttribute("doctorId");
         String selectedDay = req.getParameter("selectDayButton");
 

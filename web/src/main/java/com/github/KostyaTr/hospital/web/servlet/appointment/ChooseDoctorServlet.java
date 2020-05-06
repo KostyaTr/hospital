@@ -19,6 +19,14 @@ public class ChooseDoctorServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        if (req.getSession().getAttribute("patientId") != null){
+            try {
+                resp.sendRedirect(req.getContextPath() +"/appointment");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         if (req.getSession().getAttribute("medicalServiceId") == null){
             try {
                 resp.sendRedirect(req.getContextPath() +"/chooseMedicalServices");
