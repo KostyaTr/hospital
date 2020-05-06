@@ -15,7 +15,7 @@ public class DefaultMedicineDaoTest {
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
     @BeforeAll
     static void insert() throws SQLException {
-        final String sqlMed = "insert into medicine values(1,'first', 20, 20.1, 2, 300000, 1)";
+        final String sqlMed = "insert into medicine values(1,'first', 20, 20.1, 2, 300000)";
 
         try(Connection connection = DataSource.getInstance().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("delete from medicine where 1=1");

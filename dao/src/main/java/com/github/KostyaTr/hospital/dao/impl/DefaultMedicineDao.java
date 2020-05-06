@@ -33,8 +33,7 @@ public class DefaultMedicineDao implements MedicineDao {
                             resultSet.getDouble("normal_dose"),
                             resultSet.getDouble("critical_dose"),
                             resultSet.getInt("package_amount"),
-                            resultSet.getDouble("price"),
-                            resultSet.getInt("stock_balance"));
+                            resultSet.getDouble("price"));
                 }
                 return null;
             }
@@ -58,8 +57,7 @@ public class DefaultMedicineDao implements MedicineDao {
                         resultSet.getDouble("normal_dose"),
                         resultSet.getDouble("critical_dose"),
                         resultSet.getInt("package_amount"),
-                        resultSet.getDouble("price"),
-                        resultSet.getInt("stock_balance"));
+                        resultSet.getDouble("price"));
                 medicines.add(user);
             }
             return medicines;

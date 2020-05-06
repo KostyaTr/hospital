@@ -7,10 +7,9 @@ public class Medicine {
     private Double criticalDose;
     private Integer packageAmount;
     private Double price;
-    private Integer stockBalance;
 
     public Medicine(Long medicineId, String medicineName, Double normalDose, Double criticalDose,
-                    Integer packageAmount, Double price, Integer stockBalance) {
+                    Integer packageAmount, Double price) {
 
         this.medicineId = medicineId;
         this.medicineName = medicineName;
@@ -18,7 +17,6 @@ public class Medicine {
         this.criticalDose = criticalDose;
         this.packageAmount = packageAmount;
         this.price = price;
-        this.stockBalance = stockBalance;
     }
 
     public Long getMedicineId() {
@@ -43,9 +41,5 @@ public class Medicine {
 
     public Double getPrice() {
         return price;
-    }
-
-    public Integer getStockBalance() {
-        return stockBalance;
     }
 }
