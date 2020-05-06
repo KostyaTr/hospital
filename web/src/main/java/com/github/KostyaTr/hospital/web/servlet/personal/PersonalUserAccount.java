@@ -2,9 +2,11 @@ package com.github.KostyaTr.hospital.web.servlet.personal;
 
 import com.github.KostyaTr.hospital.dao.MedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.PatientDao;
+import com.github.KostyaTr.hospital.dao.ReceiptDao;
 import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultReceiptDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.web.WebUtils;
@@ -24,7 +26,7 @@ public class PersonalUserAccount extends HttpServlet {
     private UserDao userDao = DefaultUserDao.getInstance();
     private UserService userService = DefaultUserService.getInstance();
     private PatientDao patientDao = DefaultPatientDao.getInstance();
-    private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
+    private ReceiptDao receiptDao = DefaultReceiptDao.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
@@ -32,6 +34,7 @@ public class PersonalUserAccount extends HttpServlet {
         User user = userDao.getUserById(authUser.getUserId());
         req.setAttribute("appointments", userService.getAppointmentsByUserId(user.getUserId()));
         req.setAttribute("appointmentsSize", userService.getAppointmentsByUserId(user.getUserId()).size());
+        req.setAttribute("receipt", receiptDao.getReceiptByUserId(user.getUserId()));
         req.setAttribute("name", user.getFirstName() + " " + user.getLastName());
         WebUtils.forwardToJsp("user's", req, resp);
     }

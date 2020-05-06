@@ -8,4 +8,5 @@ public interface TreatmentCourseDao {
 
     boolean removeTreatmentCourseById(Long treatmentCourseId);
 
+    TreatmentCourse getTreatmentCourseById(Long treatmentCourseId);
 }

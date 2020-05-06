@@ -5,6 +5,8 @@ import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
     private final int ONE_ROW_AFFECTED = 1;
@@ -47,6 +49,31 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
             preparedStatement.setLong(1, treatmentCourseId);
             return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public TreatmentCourse getTreatmentCourseById(Long treatmentCourseId) {
+        final String sql = "select * from treatment_course where id = ?;";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setLong(1, treatmentCourseId);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()){
+                    return new TreatmentCourse(
+                            resultSet.getLong("id"),
+                            resultSet.getLong("medicine_id"),
+                            resultSet.getDouble("drug_dose"),
+                            resultSet.getString("reception_description"),
+                            resultSet.getInt("times_a_day"),
+                            resultSet.getInt("duration_in_days"));
+                } else {
+                    return null;
+                }
+            }
+        }  catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

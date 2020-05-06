@@ -44,7 +44,7 @@ public class DefaultInpatientDao implements InpatientDao {
                     resultSet.getLong("treatment_course_id"),
                     resultSet.getLong("operation_service_id"),
                     Status.valueOf(resultSet.getString("patient_status")),
-                    resultSet.getDate("enrollment_date"));
+                    new Date(resultSet.getDate("enrollment_date").getTime()));
             inpatients.add(user);
         }
         return inpatients;

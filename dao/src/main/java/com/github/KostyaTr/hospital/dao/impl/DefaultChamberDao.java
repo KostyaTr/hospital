@@ -36,6 +36,24 @@ public class DefaultChamberDao implements ChamberDao {
     }
 
     @Override
+    public double getPriceForChamber(Long deptChamberId) {
+        final String sql = "select price_a_day from chamber where id = ?";
+
+        try (Connection connection = DataSource.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, deptChamberId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                if (resultSet.next()){
+                    return resultSet.getDouble("price_a_day");
+                }
+                return 0;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<Long> getEmptyChambersByDeptId(Long deptId) {
         final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false and dept_id = ?;";
         return getChambers(sql, deptId);

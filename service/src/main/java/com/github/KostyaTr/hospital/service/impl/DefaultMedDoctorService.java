@@ -4,11 +4,14 @@ import com.github.KostyaTr.hospital.dao.*;
 import com.github.KostyaTr.hospital.dao.impl.*;
 import com.github.KostyaTr.hospital.model.*;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
+import com.github.KostyaTr.hospital.service.PriceCalculationService;
 
 import java.util.Date;
 import java.util.List;
 
 public class DefaultMedDoctorService implements MedDoctorService {
+    private PriceCalculationService priceCalculationService = DefaultPriceCalculationService.getInstance();
+
     private PatientDao patientDao = DefaultPatientDao.getInstance();
     private GuestPatientDao guestPatientDao = DefaultGuestPatientDao.getInstance();
     private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
@@ -97,6 +100,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
     public boolean dischargeInpatient(com.github.KostyaTr.hospital.model.display.Inpatient inpatientDisp) {
         if(!inpatientDisp.getStatus().equals(Status.BAD)){
             Inpatient inpatient = inpatientDao.getInpatientById(inpatientDisp.getInpatientId());
+            priceCalculationService.calculateReceipt(inpatient);
             chamberDao.updateChamberLoad(inpatient.getDeptChamberId(), -LOAD);
             String diagnose;
             if (inpatient.getDiagnose() == null){

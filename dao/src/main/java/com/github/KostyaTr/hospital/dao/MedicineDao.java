@@ -8,4 +8,6 @@ public interface MedicineDao {
     List<Medicine> getMedicine();
 
     Medicine getMedicineByName(String medicineName);
+
+    Medicine getMedicineById(Long medicineId);
 }

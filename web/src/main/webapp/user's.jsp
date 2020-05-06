@@ -66,5 +66,21 @@
     </c:forEach>
 </ol>
 
+<c:if test="${receipt != null}">
+    <br/>
+    <h3>Your hospital bill</h3>
+    <table border="1">
+        <tr>
+            <th>Price For Chamber</th>
+            <th>Price For Medicine</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td>${receipt.priceForChamber}</td>
+            <td>${receipt.priceForMedicine}</td>
+            <td>${receipt.priceForMedicine + receipt.priceForChamber}</td>
+        </tr>
+    </table>
+</c:if>
 </body>
 </html>
