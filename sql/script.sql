@@ -31,17 +31,13 @@ create table discharged_patient
         primary key,
     patient_name     varchar(255) not null,
     doctor_name      varchar(255) not null,
-    dept_chamber_id  int(64)      not null,
     diagnose         varchar(255) not null,
     card_history     text         not null,
     treatment_course varchar(255) not null,
     operation_name   varchar(255) null,
     patient_status   varchar(255) not null,
     enrollment_date  date         not null,
-    discharge_date   date         not null,
-    constraint discharged_patient_chamber_id_fk
-        foreign key (dept_chamber_id) references chamber (id)
-            on update cascade
+    discharge_date   date         not null
 );
 
 create table equipment
@@ -58,12 +54,11 @@ create table medicine
 (
     id             int(64) auto_increment
         primary key,
-    medicine_name  varchar(255)      not null,
-    normal_dose    int(64)           not null,
-    critical_dose  int(64)           not null,
-    package_amount int(64)           not null,
-    price          int(64)           not null,
-    stock_balance  int(64) default 0 not null,
+    medicine_name  varchar(255) not null,
+    normal_dose    int(64)      not null,
+    critical_dose  int(64)      not null,
+    package_amount int(64)      not null,
+    price          int(64)      not null,
     constraint medicine_medicine_name_uindex
         unique (medicine_name)
 );
@@ -143,7 +138,7 @@ create table auth_user
         unique (login),
     constraint auth_user_user_id_fk
         foreign key (user_id) references user (id)
-            on update cascade
+            on update cascade on delete cascade
 );
 
 create table card
@@ -159,6 +154,7 @@ create table card
         unique (user_id),
     constraint card_user_id_fk
         foreign key (user_id) references user (id)
+            on update cascade on delete cascade
 );
 
 create table doctor
@@ -249,7 +245,7 @@ create table inpatient
             on update cascade,
     constraint inpatient_user_id_fk
         foreign key (user_id) references user (id)
-            on update cascade
+            on update cascade on delete cascade
 )
     comment 'стационарный больной';
 
@@ -270,6 +266,18 @@ create table patient
             on update cascade,
     constraint patient_user_id_fk
         foreign key (user_id) references user (id)
+            on update cascade on delete cascade
+);
+
+create table receipt
+(
+    user_id            int(64) not null
+        primary key,
+    price_for_chamber  double  not null,
+    price_for_medicine double  not null,
+    constraint receipt_user_id_fk
+        foreign key (user_id) references user (id)
+            on update cascade
 );
 
 create table scheduled_operation
@@ -283,7 +291,7 @@ create table scheduled_operation
     operation_reason varchar(255) not null,
     constraint operation_inpatient_id_fk
         foreign key (patient_id) references inpatient (id)
-            on update cascade,
+            on update cascade on delete cascade,
     constraint operation_operation_room_id_fk
         foreign key (operation_room) references operation_room (id),
     constraint scheduled_operation_operation_service_id_fk
@@ -301,5 +309,4 @@ create table performed_operation
     constraint performed_operation_scheduled_operation_id_fk
         foreign key (scheduled_operation_id) references scheduled_operation (id)
 );
-
 
