@@ -9,3 +9,5 @@ INSERT INTO hospital.card (id, user_id, history, address, date_of_birth, insuran
 INSERT INTO hospital.card (id, user_id, history, address, date_of_birth, insurance) VALUES (3, 9, 'Height = 171, Weight = 61.Sex = M.
 Sun May 03 18:33:21 MSK 2020 COVID-19 CURED', '50 fifties street, apartment 50', '1989-05-19', 0);
 INSERT INTO hospital.card (id, user_id, history, address, date_of_birth, insurance) VALUES (4, 10, 'Height = 160, Weight = 59. Sex = W', '13 Friday street, apartment 4', '1998-07-17', 1);
+INSERT INTO hospital.card (id, user_id, history, address, date_of_birth, insurance) VALUES (13, 27, 'M
+Thu May 07 13:20:42 MSK 2020 Heart Failure CURED', 'test', '2020-05-15', 1);

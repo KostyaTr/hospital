@@ -19,6 +19,8 @@ create table chamber
     chamber_capacity int           not null,
     chamber_load     int default 0 not null,
     price_a_day      int           not null,
+    constraint chamber_pk
+        unique (chamber_id, dept_id),
     constraint chamber_department_id_fk
         foreign key (dept_id) references department (id)
             on update cascade
@@ -309,4 +311,3 @@ create table performed_operation
     constraint performed_operation_scheduled_operation_id_fk
         foreign key (scheduled_operation_id) references scheduled_operation (id)
 );
-

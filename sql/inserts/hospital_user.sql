@@ -8,3 +8,4 @@ INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUE
 INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (8, 'Virus', 'Savir', '789-21-43', 'ViruSavir@virus.com');
 INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (9, 'Phil', 'Pull', '465-65-44', 'PPull@cd.com');
 INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (10, 'Alexa', 'Flexa', '327-75-98', 'FlexAlex@sr.pl');
+INSERT INTO hospital.user (id, first_name, last_name, phone_number, email) VALUES (27, 'ProTester', 'TesterPro', '465', 'kit.blackberry0408@gmail.com');

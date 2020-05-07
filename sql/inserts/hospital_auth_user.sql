@@ -4,3 +4,4 @@ INSERT INTO hospital.auth_user (id, login, password, role, user_id) VALUES (3, '
 INSERT INTO hospital.auth_user (id, login, password, role, user_id) VALUES (4, 'OctaCelesta', '5079a6c0874b86a25bcd7a89c53b56c0', 'Doctor', 5);
 INSERT INTO hospital.auth_user (id, login, password, role, user_id) VALUES (5, 'Mich', 'b8a19e544fad619a62c61d30f2105327', 'Doctor', 3);
 INSERT INTO hospital.auth_user (id, login, password, role, user_id) VALUES (18, 'ViruSavir', 'a94d4950bba6053ab0fa6feb2ebe04ec', 'Doctor', 8);
+INSERT INTO hospital.auth_user (id, login, password, role, user_id) VALUES (21, 'Tester', '098f6bcd4621d373cade4e832627b4f6', 'AuthorizedUser', 27);
