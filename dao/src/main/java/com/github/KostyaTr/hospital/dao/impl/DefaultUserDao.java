@@ -1,9 +1,12 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.model.User;
+import org.hibernate.Session;
 
+import javax.management.Query;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,54 +22,30 @@ public class DefaultUserDao implements UserDao {
 
     @Override
     public Long saveUser(User user) {
-        final String sql = "insert into user(first_name, last_name, phone_number, email) values(?,?,?,?)";
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, user.getFirstName());
-            preparedStatement.setString(2, user.getLastName());
-            preparedStatement.setString(3, user.getPhoneNumber());
-            preparedStatement.setString(4, user.getEmail());
-            preparedStatement.executeUpdate();
-            try(ResultSet key = preparedStatement.getGeneratedKeys()){
-                key.next();
-                return key.getLong(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
+        return user.getUserId();
     }
 
     @Override
     public boolean removeUser(Long userId) {
-        final String sql = "delete from user where id = ?";
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, userId);
-            return 1 == preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("delete User where id = :id")
+                .setParameter("id", userId)
+                .executeUpdate();
+        session.getTransaction().commit();
+        return getUserById(userId) == null;
     }
 
     @Override
     public User getUserById(Long userId) {
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from user where id = ?")) {
-            preparedStatement.setLong(1, userId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new User(
-                            resultSet.getLong("id"),
-                            resultSet.getString("first_name"),
-                            resultSet.getString("last_name"),
-                            resultSet.getString("phone_number"),
-                            resultSet.getString("email"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+       Session session = HibernateUtil.getSession();
+       session.beginTransaction();
+       User user = session.get(User.class, userId);
+       session.getTransaction().commit();
+       return user;
     }
 }

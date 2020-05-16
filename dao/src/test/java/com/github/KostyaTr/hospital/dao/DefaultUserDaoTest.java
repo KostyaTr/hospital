@@ -2,28 +2,13 @@ package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.User;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultUserDaoTest {
     private UserDao userDao = DefaultUserDao.getInstance();
-    @BeforeAll
-    static void insert() throws SQLException{
-        final String sqlUser = "insert into user values(1,'first','last','phone','email')";
-
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from user where 1=1");
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connection.prepareStatement(sqlUser);
-            preparedStatement.executeUpdate();
-        }
-    }
 
     @Test
     void insertUser() {
@@ -33,17 +18,18 @@ public class DefaultUserDaoTest {
     }
 
     @Test
-    void getUserById() {
-        assertNotNull(userDao.getUserById((long) 1));
-        assertNull(userDao.getUserById((long) 0));
-        assertEquals("first", userDao.getUserById((long) 1).getFirstName());
+    void deleteUser(){
+        Long userId = userDao.saveUser(new User(null, "delete","delete","delete","delete"));
+        assertTrue(userDao.removeUser(userId));
     }
 
-    @AfterAll
-    static void delete() throws SQLException {
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from user where 1=1");
-            preparedStatement.executeUpdate();
-        }
+    @Test
+    void getUserById() {
+       Long userId = userDao.saveUser(new User(
+                null, "get", "get",
+                "get","get"));
+        assertNotNull(userDao.getUserById(userId));
+        assertNull(userDao.getUserById(0L));
+        assertEquals("get", userDao.getUserById(userId).getFirstName());
     }
 }
