@@ -1,15 +1,9 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.UserDao;
 import com.github.KostyaTr.hospital.model.User;
 import org.hibernate.Session;
-
-import javax.management.Query;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DefaultUserDao implements UserDao {
     private static class SingletonHolder {

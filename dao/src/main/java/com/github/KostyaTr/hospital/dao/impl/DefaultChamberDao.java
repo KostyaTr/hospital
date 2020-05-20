@@ -1,17 +1,14 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.ChamberDao;
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
+import com.github.KostyaTr.hospital.model.Chamber;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class DefaultChamberDao implements ChamberDao {
-    private final int ONE_ROW_AFFECTED = 1;
 
     private static class SingletonHolder {
         static final ChamberDao HOLDER_INSTANCE = new DefaultChamberDao();
@@ -22,56 +19,40 @@ public class DefaultChamberDao implements ChamberDao {
     }
 
     @Override
-    public boolean updateChamberLoad(Long id, int load) {
-        final String sql = "update chamber set chamber_load = chamber_load + ? where id = ?";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, load);
-            preparedStatement.setLong(2, id);
-            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void updateChamberLoad(Long id, int load) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("update Chamber set chamberLoad = chamberLoad + :load " +
+                    " where id = :id")
+                    .setParameter("id", id)
+                    .setParameter("load", load)
+                    .executeUpdate();
+        session.getTransaction().commit();
     }
 
     @Override
     public double getPriceForChamber(Long deptChamberId) {
-        final String sql = "select price_a_day from chamber where id = ?";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, deptChamberId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return resultSet.getDouble("price_a_day");
-                }
-                return 0;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        double priceADay;
+        try {
+            priceADay = session.createQuery("select priceADay from Chamber" +
+                    " where id = :id", Double.class)
+                    .setParameter("id", deptChamberId).getSingleResult();
+        } catch (NoResultException e){
+            priceADay = 0;
         }
+        session.getTransaction().commit();
+        return priceADay;
     }
 
     @Override
-    public List<Long> getEmptyChambersByDeptId(Long deptId) {
-        final String sql = "select id from chamber where chamber_capacity > chamber_load and vip = false and dept_id = ?;";
-        return getChambers(sql, deptId);
-    }
-
-    private List<Long> getChambers(String sql, Long deptId) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, deptId);
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                List<Long> chambers = new ArrayList<>();
-                while (resultSet.next()){
-                    chambers.add(resultSet.getLong("id"));
-                }
-                return chambers;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public List<Chamber> getEmptyChambersByDeptId(Long deptId) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<Chamber> chambers = session.createQuery("select c from Chamber c where dept_id = :dept_id", Chamber.class)
+                .setParameter("dept_id", deptId).list();
+        session.getTransaction().commit();
+        return chambers;
     }
 }

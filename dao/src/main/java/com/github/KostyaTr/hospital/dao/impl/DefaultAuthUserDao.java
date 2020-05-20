@@ -1,12 +1,11 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.AuthUserDao;
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.model.AuthUser;
-import com.github.KostyaTr.hospital.model.Role;
+import org.hibernate.Session;
 
-import java.sql.*;
-
+import javax.persistence.NoResultException;
 
 public class DefaultAuthUserDao implements AuthUserDao {
 
@@ -19,42 +18,25 @@ public class DefaultAuthUserDao implements AuthUserDao {
 
     @Override
     public AuthUser getByLogin(String login) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("select * from auth_user where login = ?")) {
-            preparedStatement.setString(1, login);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new AuthUser(
-                            resultSet.getLong("id"),
-                            resultSet.getString("login"),
-                            resultSet.getString("password"),
-                            Role.valueOf(resultSet.getString("role")),
-                            resultSet.getLong("user_id"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        AuthUser authUser;
+        try {
+            authUser = session.createQuery("select au from AuthUser au where login = :login", AuthUser.class)
+                    .setParameter("login", login).getSingleResult();
+        } catch (NoResultException e){
+            authUser = null;
         }
+        session.getTransaction().commit();
+        return authUser;
     }
 
     @Override
     public Long saveAuthUser(AuthUser user) {
-        final String sql = "insert into auth_user(login, password, role, user_id) values(?,md5(?),?,?)";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getRole().name());
-            preparedStatement.setLong(4, user.getUserId());
-            preparedStatement.executeUpdate();
-            try (ResultSet key = preparedStatement.getGeneratedKeys()) {
-                key.next();
-                return key.getLong(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(user);
+        session.getTransaction().commit();
+        return user.getAuthUserId();
     }
 }

@@ -1,14 +1,17 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedicineDao;
 import com.github.KostyaTr.hospital.model.Medicine;
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-import java.util.ArrayList;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class DefaultMedicineDao implements MedicineDao {
+    private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
 
     private static class SingletonHolder{
         static final MedicineDao HOLDER_INSTANCE = new DefaultMedicineDao();
@@ -20,73 +23,41 @@ public class DefaultMedicineDao implements MedicineDao {
 
     @Override
     public Medicine getMedicineByName(String medicineName) {
-        final String sql = "select * from medicine where medicine_name = ?";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, medicineName);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new Medicine(
-                            resultSet.getLong("id"),
-                            resultSet.getString("medicine_name"),
-                            resultSet.getDouble("normal_dose"),
-                            resultSet.getDouble("critical_dose"),
-                            resultSet.getInt("package_amount"),
-                            resultSet.getDouble("price"));
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Medicine medicine;
+        try {
+            medicine = session.createQuery("From Medicine where medicine_name = :medicine_name", Medicine.class)
+                    .setParameter("medicine_name", medicineName).getSingleResult();
+        } catch (NoResultException e){
+            medicine = null;
+            log.info("Medicine {} wasn't found", medicineName, e);
         }
+        session.getTransaction().commit();
+        return medicine;
     }
 
     @Override
     public Medicine getMedicineById(Long medicineId) {
-        final String sql = "select * from medicine where id = ?";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, medicineId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new Medicine(
-                            resultSet.getLong("id"),
-                            resultSet.getString("medicine_name"),
-                            resultSet.getDouble("normal_dose"),
-                            resultSet.getDouble("critical_dose"),
-                            resultSet.getInt("package_amount"),
-                            resultSet.getDouble("price"));
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Medicine medicine;
+        try {
+            medicine = session.get(Medicine.class, medicineId);
+        } catch (NoResultException e){
+            medicine = null;
+            log.info("Medicine {} wasn't found", medicineId, e);
         }
+        session.getTransaction().commit();
+        return medicine;
     }
 
     @Override
     public List<Medicine> getMedicine() {
-        final String sql = "select * from medicine;";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-            List<Medicine> medicines = new ArrayList<>();
-            while (resultSet.next()){
-                final Medicine user = new Medicine(
-                        resultSet.getLong("id"),
-                        resultSet.getString("medicine_name"),
-                        resultSet.getDouble("normal_dose"),
-                        resultSet.getDouble("critical_dose"),
-                        resultSet.getInt("package_amount"),
-                        resultSet.getDouble("price"));
-                medicines.add(user);
-            }
-            return medicines;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<Medicine> medicines = session.createQuery("From Medicine").list();
+        session.getTransaction().commit();
+        return medicines;
     }
 }
