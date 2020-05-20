@@ -1,11 +1,11 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.model.MedDoctor;
+import org.hibernate.Session;
 
-import java.sql.*;
-import java.util.ArrayList;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class DefaultMedDoctorDao implements MedDoctorDao {
@@ -20,58 +20,39 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
 
     @Override
     public List<MedDoctor> getDoctors() {
-        final String sql = "select * from doctor";
-        return getMedDoctors(sql);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<MedDoctor> doctors = session.createQuery("From MedDoctor", MedDoctor.class).list();
+        session.getTransaction().commit();
+        return doctors;
     }
 
     @Override
     public MedDoctor getDoctorById(Long doctorId) {
-        final String sql = "select * from doctor where id = ?;";
-        return getMedDoctor(doctorId, sql);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        MedDoctor doctor;
+        try {
+            doctor = session.get(MedDoctor.class, doctorId);
+        } catch (NoResultException e){
+            doctor = null;
+        }
+        session.getTransaction().commit();
+        return doctor;
     }
 
     @Override
     public MedDoctor getDoctorByUserId(Long userId) {
-        final String sql = "select * from doctor where user_id = ?;";
-        return getMedDoctor(userId, sql);
-    }
-
-    private MedDoctor getMedDoctor(Long id, String sql) {
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()) {
-                    return new MedDoctor(
-                            resultSet.getLong("id"),
-                            resultSet.getLong("user_id"),
-                            resultSet.getLong("dept_id"),
-                            resultSet.getBoolean("head_of_dept"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        MedDoctor doctor;
+        try {
+            doctor = session.createQuery("From MedDoctor where user_id = :user_id", MedDoctor.class)
+                    .setParameter("user_id", userId).getSingleResult();
+        } catch (NoResultException e){
+            doctor = null;
         }
-    }
-
-    private List<MedDoctor> getMedDoctors(String sql) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()){
-            final List<MedDoctor> medDoctors = new ArrayList<>();
-            while (resultSet.next()){
-                final MedDoctor medDoctor = new MedDoctor(
-                        resultSet.getLong("id"),
-                        resultSet.getLong("user_id"),
-                        resultSet.getLong("dept_id"),
-                        resultSet.getBoolean("head_of_dept"));
-                medDoctors.add(medDoctor);
-            }
-            return medDoctors;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        session.getTransaction().commit();
+        return doctor;
     }
 }

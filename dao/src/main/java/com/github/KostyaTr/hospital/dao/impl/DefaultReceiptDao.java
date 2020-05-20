@@ -1,10 +1,11 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.ReceiptDao;
 import com.github.KostyaTr.hospital.model.Receipt;
+import org.hibernate.Session;
 
-import java.sql.*;
+import javax.persistence.NoResultException;
 
 public class DefaultReceiptDao implements ReceiptDao {
     private static class SingletonHolder{
@@ -18,41 +19,28 @@ public class DefaultReceiptDao implements ReceiptDao {
 
     @Override
     public Receipt getReceiptByUserId(Long userId) {
-        final String sql = "select * from receipt where user_id = ?";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, userId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return new Receipt(
-                            resultSet.getLong("user_id"),
-                            resultSet.getDouble("price_for_chamber"),
-                            resultSet.getDouble("price_for_medicine"));
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Receipt receipt;
+        try {
+            receipt = session.get(Receipt.class, userId);
+        } catch (NoResultException e){
+            receipt = null;
         }
+        session.getTransaction().commit();
+        return receipt;
     }
 
     @Override
-    public boolean updateReceipt(Receipt receipt) {
-        final String sql = "update receipt set price_for_chamber = price_for_chamber + ?," +
-                " price_for_medicine = price_for_medicine + ? where user_id = ?";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setDouble(1, receipt.getPriceForChamber());
-            preparedStatement.setDouble(2, receipt.getPriceForMedicine());
-            preparedStatement.setLong(3, receipt.getUserId());
-            return preparedStatement.executeUpdate() == 1;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public boolean insertOrUpdateReceipt(Receipt receipt) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.saveOrUpdate(receipt);
+        session.getTransaction().commit();
+        return receipt.getUser() != null;
     }
 
-    @Override
+    /*@Override
     public boolean insertReceipt(Receipt receipt) {
         final String sql = "insert into receipt values(?, ?, ?) ;";
         try (Connection connection = DataSource.getInstance().getConnection();
@@ -64,5 +52,5 @@ public class DefaultReceiptDao implements ReceiptDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 }

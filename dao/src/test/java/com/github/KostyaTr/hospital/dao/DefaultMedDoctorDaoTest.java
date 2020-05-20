@@ -1,68 +1,64 @@
 package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import com.github.KostyaTr.hospital.model.Department;
+import com.github.KostyaTr.hospital.model.MedDoctor;
+import com.github.KostyaTr.hospital.model.User;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
-import java.sql.*;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultMedDoctorDaoTest {
     private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
 
-    @BeforeAll
-    static void insert() throws SQLException {
-        final String sqlUser = "insert into user values(1,'first','last','phone','email')";
-        final String sqslDoctor = "insert into doctor values(1, 1, 1, 1);";
-        final String sqlDept = "insert into department values(1, '1', 1, 1);";
-
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from doctor where 1=1");
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement("delete from department where 1=1");
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connection.prepareStatement("delete from user where 1=1");
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connection.prepareStatement(sqlDept);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(sqlUser);
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement(sqslDoctor);
-            preparedStatement.executeUpdate();
-
-        }
-    }
-
-
     @Test
     void getDoctors(){
-        assertFalse(medDoctorDao.getDoctors().isEmpty());
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        final Department departmentCheck = new Department(null, "departmentCheckDoctors", 1, 1, null, null);
+        session.save(departmentCheck);
+        final User user = new User(null, "doctorsGetCheck", "doctorsGetCheck", "doctorsGetCheck", "doctorsGetCheck", null, null, null, null, null, null);
+        session.save(user);
+        final User user1 = new User(null, "doctors1GetCheck", "doctors2GetCheck", "doctors2GetCheck", "doctors2GetCheck", null, null, null, null, null, null);
+        session.save(user1);
+        session.save(new MedDoctor(null, user,departmentCheck,false, null, null, null, null));
+        Long doctorId = (Long) session.save(new MedDoctor(null, user1,departmentCheck,false, null, null, null, null));
+        session.getTransaction().commit();
+        List<MedDoctor> doctors = medDoctorDao.getDoctors();
+        assertFalse(doctors.isEmpty());
+        assertEquals(doctors.get(doctors.size() - 1).getDoctorId(), doctorId);
     }
 
     @Test
     public void getDoctorById() {
-        assertNull(medDoctorDao.getDoctorById((long) 2));
-        assertNull(medDoctorDao.getDoctorByUserId((long)2));
-        final int doctorById = Math.toIntExact(medDoctorDao.getDoctorById((long) 1).getDoctorId());
-        assertEquals(1, doctorById);
-        final int doctorByUserId = Math.toIntExact(medDoctorDao.getDoctorByUserId((long) 1).getDoctorId());
-        assertEquals(1, doctorByUserId);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        final Department departmentCheck = new Department(null, "departmentCheckDoctorById", 1, 1, null, null);
+        session.save(departmentCheck);
+        final User user = new User(null, "doctorGetCheck", "doctorGetCheck", "doctorGetCheck", "doctorGetCheck", null, null, null, null, null, null);
+        session.save(user);
+        Long doctorId = (Long) session.save(new MedDoctor(null, user,departmentCheck,false, null, null, null, null));
+        session.getTransaction().commit();
+
+        assertNotNull(medDoctorDao.getDoctorById(doctorId));
+        assertNull(medDoctorDao.getDoctorById(0L));
     }
 
-    @AfterAll
-    static void delete() throws SQLException {
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from doctor where 1=1");
-            preparedStatement.executeUpdate();
-            preparedStatement = connection.prepareStatement("delete from department where 1=1");
-            preparedStatement.executeUpdate();
+    @Test
+    public void getDoctorByUserId(){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        final Department departmentCheck = new Department(null, "departmentCheckDoctorByUserId", 1, 1, null, null);
+        session.save(departmentCheck);
+        final User user = new User(null, "doctorGetByUserCheck", "doctorGetByUserCheck", "doctorGetByUserCheck", "doctorGetByUserCheck", null, null, null, null, null, null);
+        session.save(user);
+        session.save(new MedDoctor(null, user,departmentCheck,false, null, null, null, null));
+        session.getTransaction().commit();
 
-            preparedStatement = connection.prepareStatement("delete from user where 1=1");
-            preparedStatement.executeUpdate();
-        }
+        assertNotNull(medDoctorDao.getDoctorByUserId(user.getUserId()));
+        assertNull(medDoctorDao.getDoctorByUserId(0L));
     }
 }

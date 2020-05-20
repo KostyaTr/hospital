@@ -1,16 +1,15 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.GuestPatientDao;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.model.GuestPatient;
+import org.hibernate.Session;
 
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import javax.persistence.NoResultException;
+import java.util.Date;
 import java.util.List;
 
 public class DefaultGuestPatientDao implements GuestPatientDao {
-    private final int ONE_ROW_AFFECTED = 1;
 
     private static class SingletonHolder {
         static final GuestPatientDao HOLDER_INSTANCE = new DefaultGuestPatientDao();
@@ -23,133 +22,70 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
 
     @Override
     public List<GuestPatient> getPatientsByDoctorId(Long doctorId) {
-        final String sql = "select * from guest_patient where doctor_id = ?;";
-
-        return getPatients(doctorId, sql);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<GuestPatient> guestPatients = session.createQuery("select gu from GuestPatient gu where doctor_id = :doctor_id", GuestPatient.class)
+                .setParameter("doctor_id", doctorId).list();
+        session.getTransaction().commit();
+        return guestPatients;
     }
 
     @Override
     public List<GuestPatient> getPatients() {
-        final String sql = "select * from guest_patient;";
-
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()){
-            return getPatients(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<GuestPatient> guestPatients = session.createQuery("select gu from GuestPatient gu", GuestPatient.class)
+                .list();
+        session.getTransaction().commit();
+        return guestPatients;
     }
 
     @Override
     public Long addPatient(GuestPatient guestPatient) {
-        final String sql = "insert into guest_patient(first_name, last_name, phone_number, email, doctor_id, coupon_num, medical_service_id, visit_date) values(?,?,?,?,?,?,?,?)";
-
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, guestPatient.getFirstName());
-            preparedStatement.setString(2, guestPatient.getLastName());
-            preparedStatement.setString(3, guestPatient.getPhoneNumber());
-            preparedStatement.setString(4, guestPatient.getEmail());
-            preparedStatement.setLong(5, guestPatient.getDoctorId());
-            preparedStatement.setLong(6, guestPatient.getCouponNum());
-            preparedStatement.setLong(7, guestPatient.getMedicalServiceId());
-            preparedStatement.setTimestamp(8, new Timestamp(guestPatient.getVisitDate().getTime()));
-            preparedStatement.executeUpdate();
-            try(ResultSet key = preparedStatement.getGeneratedKeys()){
-                key.next();
-                return key.getLong(1);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(guestPatient);
+        session.getTransaction().commit();
+        return guestPatient.getPatientId();
     }
 
     @Override
     public int getLatestCouponToDoctorByDay(Long doctorId, int day) {
-        final String sql = "select ifnull(max(coupon_num), 0) as coupon_num from guest_patient\n" +
-                "where doctor_id = ? and day(visit_date) = ?";
-
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, doctorId);
-            preparedStatement.setInt(2, day);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return resultSet.getInt("coupon_num");
-                } else {
-                    return 0;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        int coupon;
+        try {
+            coupon = session.createQuery("select max(couponNum) from GuestPatient " +
+                    "where doctor_id = :doctor_id and  day(visit_date) = :day", Integer.class)
+                    .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
+        } catch (NoResultException e){
+            coupon = 0;
         }
+        return coupon;
     }
 
     @Override
-    public boolean removePatientById(Long patientId) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("delete from guest_patient where id = ?")) {
-            preparedStatement.setLong(1, patientId);
-            return preparedStatement.executeUpdate() == ONE_ROW_AFFECTED;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private List<GuestPatient> getPatients(ResultSet resultSet) throws SQLException {
-        final List<GuestPatient> patients = new ArrayList<>();
-        while (resultSet.next()){
-            final GuestPatient patient = new GuestPatient(
-                    resultSet.getLong("id"),
-                    resultSet.getString("first_name"),
-                    resultSet.getString("last_name"),
-                    resultSet.getString("phone_number"),
-                    resultSet.getString("email"),
-                    resultSet.getLong("doctor_id"),
-                    resultSet.getInt("coupon_num"),
-                    resultSet.getLong("medical_service_id"),
-                    resultSet.getTimestamp("visit_date"));
-            patients.add(patient);
-        }
-        return patients;
-    }
-
-    private List<GuestPatient> getPatients(Long id, String sql) {
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                return getPatients(resultSet);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public void removePatientById(Long patientId) {
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("delete GuestPatient where id = :id")
+                .setParameter("id", patientId)
+                .executeUpdate();
+        session.getTransaction().commit();
     }
 
     @Override
-    public LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day) {
-        final String sql = "select visit_date\n" +
-                "from guest_patient\n" +
-                "where doctor_id = ?\n" +
-                "and day(visit_date) = ?\n" +
-                "order by visit_date desc\n" +
-                "limit 1";
-
-        try(Connection connection = DataSource.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, doctorId);
-            preparedStatement.setInt(2, day);
-            try(ResultSet resultSet = preparedStatement.executeQuery()){
-                if (resultSet.next()){
-                    return resultSet.getTimestamp("visit_date").toLocalDateTime();
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public Date getLatestTimeToDoctorByDay(Long doctorId, int day) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Date date;
+        try {
+            date = session.createQuery("select max(visitDate) from GuestPatient " +
+                    "where doctor_id = :doctor_id and day(visit_date) = :day", Date.class)
+                    .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
+        } catch (NoResultException e){
+            date = null;
         }
+        return date;
     }
 }

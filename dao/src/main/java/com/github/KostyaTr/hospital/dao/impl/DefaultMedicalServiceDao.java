@@ -1,14 +1,17 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
+import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedicalServiceDao;
 import com.github.KostyaTr.hospital.model.MedicalService;
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-import java.util.ArrayList;
+import javax.persistence.NoResultException;
 import java.util.List;
 
 public class DefaultMedicalServiceDao implements MedicalServiceDao {
+    private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
 
     private static class SingletonHolder {
         static final MedicalServiceDao HOLDER_INSTANCE = new DefaultMedicalServiceDao();
@@ -21,47 +24,25 @@ public class DefaultMedicalServiceDao implements MedicalServiceDao {
 
     @Override
     public List<MedicalService> getMedicalServices() {
-        final String sql = "select * from medical_service;";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()){
-            final List<MedicalService> medicalServices = new ArrayList<>();
-            while (resultSet.next()){
-                medicalServices.add(new MedicalService(
-                        resultSet.getLong("id"),
-                        resultSet.getString("service_name"),
-                        resultSet.getLong("needed_speciality_id"),
-                        resultSet.getLong("needed_equipment_id"),
-                        resultSet.getDouble("service_cost")));
-            }
-            return medicalServices;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<MedicalService> medicalServices = session.createQuery("From MedicalService", MedicalService.class).list();
+        session.getTransaction().commit();
+        return medicalServices;
     }
 
     @Override
     public MedicalService getMedicalServiceById(Long medicalServiceId) {
-        final String sql = "select * from medical_service where id = ?;";
-
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setLong(1, medicalServiceId);
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return new MedicalService(
-                            resultSet.getLong("id"),
-                            resultSet.getString("service_name"),
-                            resultSet.getLong("needed_speciality_id"),
-                            resultSet.getLong("needed_equipment_id"),
-                            resultSet.getDouble("service_cost"));
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        MedicalService medicalService;
+        try {
+           medicalService = session.get(MedicalService.class, medicalServiceId);
+        } catch (NoResultException e){
+            medicalService = null;
+            log.info("No medical service was found by {} id", medicalServiceId, e);
         }
+        session.getTransaction().commit();
+        return medicalService;
     }
 }

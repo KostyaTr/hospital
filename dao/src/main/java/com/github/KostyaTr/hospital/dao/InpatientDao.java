@@ -1,7 +1,6 @@
 package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.model.Inpatient;
-import com.github.KostyaTr.hospital.model.Status;
 
 import java.util.List;
 
@@ -14,9 +13,5 @@ public interface InpatientDao {
 
     Long addInpatient(Inpatient inpatient);
 
-    boolean updateDiagnose(Long patientId, String diagnose);
-
-    boolean updateStatus(Long patientId, Status status);
-
-    boolean updateTreatmentCourse(Long patientId, Long treatmentCourseId);
+    void updateInpatient(Inpatient inpatient);
 }

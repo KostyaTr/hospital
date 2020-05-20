@@ -1,41 +1,51 @@
 package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicineDao;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import com.github.KostyaTr.hospital.model.Medicine;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultMedicineDaoTest {
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
-    @BeforeAll
-    static void insert() throws SQLException {
-        final String sqlMed = "insert into medicine values(1,'first', 20, 20.1, 2, 300000)";
 
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from medicine where 1=1");
-            preparedStatement.executeUpdate();
-
-            preparedStatement = connection.prepareStatement(sqlMed);
-            preparedStatement.executeUpdate();
-        }
-    }
 
     @Test
     void getMedicine(){
-        assertFalse(medicineDao.getMedicine().isEmpty());
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(new Medicine(null,"firstMedicine", 1d, 1d, 1, 1d, null));
+        Long medicineId = (Long) session.save(new Medicine(null,"secondMedicine", 1d, 1d, 1, 1d, null));
+        session.getTransaction().commit();
+        final List<Medicine> medicines = medicineDao.getMedicine();
+        assertFalse(medicines.isEmpty());
+        assertEquals(medicines.get(medicines.size() - 1).getMedicineId(), medicineId);
     }
 
-    @AfterAll
-    static void delete() throws SQLException {
-        try(Connection connection = DataSource.getInstance().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete from medicine where 1=1");
-            preparedStatement.executeUpdate();
-        }
+    @Test
+    void getMedicineByName(){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(new Medicine(null,"medicineName", 1d, 1d, 1, 1d, null));
+        session.getTransaction().commit();
+        assertNotNull(medicineDao.getMedicineByName("medicineName"));
+        assertNull(medicineDao.getMedicineByName("nonExistingName"));
+        assertEquals(medicineDao.getMedicineByName("medicineName").getMedicineName(), "medicineName");
     }
+
+    @Test
+    void getMedicineById(){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Long medicineId = (Long) session.save(new Medicine(null,"medicine", 1d, 1d, 1, 1d, null));
+        session.getTransaction().commit();
+        assertNotNull(medicineDao.getMedicineById(medicineId));
+        assertNull(medicineDao.getMedicineById(0L));
+        assertEquals(medicineDao.getMedicineById(medicineId).getMedicineName(), "medicine");
+    }
+
 }
