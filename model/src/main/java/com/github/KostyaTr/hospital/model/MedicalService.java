@@ -3,17 +3,15 @@ package com.github.KostyaTr.hospital.model;
 public class MedicalService {
     private Long medicalServiceId;
     private String serviceName;
-    private Long neededSpecialityId;
-    private Long neededEquipmentId;
+    private Speciality neededSpeciality;
     private Double serviceCost;
 
-    public MedicalService(Long medicalServiceId, String serviceName, Long neededSpecialityId,
-                          Long neededEquipmentId, Double serviceCost) {
+    public MedicalService(Long medicalServiceId, String serviceName,
+                          Speciality neededSpeciality, Double serviceCost) {
 
         this.medicalServiceId = medicalServiceId;
         this.serviceName = serviceName;
-        this.neededSpecialityId = neededSpecialityId;
-        this.neededEquipmentId = neededEquipmentId;
+        this.neededSpeciality = neededSpeciality;
         this.serviceCost = serviceCost;
     }
 
@@ -25,12 +23,8 @@ public class MedicalService {
         return serviceName;
     }
 
-    public Long getNeededSpecialityId() {
-        return neededSpecialityId;
-    }
-
-    public Long getNeededEquipmentId() {
-        return neededEquipmentId;
+    public Speciality getNeededSpeciality() {
+        return neededSpeciality;
     }
 
     public Double getServiceCost() {

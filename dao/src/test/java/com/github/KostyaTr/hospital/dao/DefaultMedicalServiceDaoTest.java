@@ -1,5 +1,7 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.entity.MedicalServiceEntity;
+import com.github.KostyaTr.hospital.dao.entity.SpecialityEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
 import com.github.KostyaTr.hospital.model.MedicalService;
 import com.github.KostyaTr.hospital.model.Speciality;
@@ -17,9 +19,9 @@ public class DefaultMedicalServiceDaoTest {
     void getMedicalServiceById() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Speciality speciality = new Speciality(null, "getMedicalServicesCheckById", null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "getMedicalServicesCheckById", null, null);
         session.save(speciality);
-        Long medicalServiceId = (Long) session.save(new MedicalService(null, "getMedicalServicesCheckById", speciality, 1L, 1d, null, null));
+        Long medicalServiceId = (Long) session.save(new MedicalServiceEntity(null, "getMedicalServicesCheckById", speciality, 1d, null, null));
         session.getTransaction().commit();
         assertNotNull(medicalServiceDao.getMedicalServiceById(medicalServiceId));
         assertEquals(medicalServiceDao.getMedicalServiceById(medicalServiceId).getServiceName(), "getMedicalServicesCheckById");
@@ -30,10 +32,10 @@ public class DefaultMedicalServiceDaoTest {
     void getMedicalServices(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Speciality speciality = new Speciality(null, "getMedicalServicesCheck", null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "getMedicalServicesCheck", null, null);
         session.save(speciality);
-        session.save(new MedicalService(null, "getMedicalServicesCheck1", speciality, 1L, 1d, null, null));
-        session.save(new MedicalService(null, "getMedicalServicesCheck2", speciality, 1L, 1d, null, null));
+        session.save(new MedicalServiceEntity(null, "getMedicalServicesCheck1", speciality, 1d, null, null));
+        session.save(new MedicalServiceEntity(null, "getMedicalServicesCheck2", speciality, 1d, null, null));
         session.getTransaction().commit();
         final List<MedicalService> medicalServices = medicalServiceDao.getMedicalServices();
         assertFalse(medicalServices.isEmpty());

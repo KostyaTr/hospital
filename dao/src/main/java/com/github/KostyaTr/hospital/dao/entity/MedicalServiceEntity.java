@@ -23,12 +23,10 @@ public class MedicalServiceEntity {
     @Column(name = "service_name") @Access(AccessType.PROPERTY)
     private String serviceName;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "needed_speciality_id") @Access(AccessType.PROPERTY)
     private SpecialityEntity speciality;
 
-    @Column(name = "needed_equipment_id") @Access(AccessType.PROPERTY)
-    private Long neededEquipmentId;
     @Column(name = "service_cost") @Access(AccessType.PROPERTY)
     private Double serviceCost;
 
