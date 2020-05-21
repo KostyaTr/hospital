@@ -14,12 +14,12 @@ public class DefaultUserDaoTest {
     void insertUser() {
       assertNotNull(userDao.saveUser(new User(
                null, "first1", "last1",
-               "phone1","email1", null, null, null, null, null, null)));
+               "phone1","email1")));
     }
 
     @Test
     void deleteUser(){
-        Long userId = userDao.saveUser(new User(null, "delete","delete","delete","delete", null, null, null, null, null, null));
+        Long userId = userDao.saveUser(new User(null, "delete","delete","delete","delete"));
         assertTrue(userDao.removeUser(userId));
         assertTrue(userDao.removeUser(0L));
     }
@@ -28,7 +28,7 @@ public class DefaultUserDaoTest {
     void getUserById() {
        Long userId = userDao.saveUser(new User(
                 null, "get", "get",
-                "get","get", null, null, null, null, null, null));
+                "get","get"));
         assertNotNull(userDao.getUserById(userId));
         assertNull(userDao.getUserById(0L));
         assertEquals("get", userDao.getUserById(userId).getFirstName());

@@ -26,14 +26,8 @@ public class UserEntity {
     @Column(name = "email") @Access(AccessType.PROPERTY)
     private String email;
 
-    @OneToOne (mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private AuthUserEntity authUser;
-
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private MedDoctorEntity doctor;
-
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private CardEntity card;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private ReceiptEntity receipt;
