@@ -2,12 +2,15 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.PatientDao;
+import com.github.KostyaTr.hospital.dao.converter.PatientConverter;
+import com.github.KostyaTr.hospital.dao.entity.PatientEntity;
 import com.github.KostyaTr.hospital.model.Patient;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultPatientDao implements PatientDao {
 
@@ -24,12 +27,14 @@ public class DefaultPatientDao implements PatientDao {
     public List<Patient> getPatientsByDoctorId(Long doctorId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<Patient> patients = session.createQuery("select p from Patient p where doctor_id = :doctor_id",
-                Patient.class)
+        List<PatientEntity> patients = session.createQuery("select p from PatientEntity p where doctor_id = :doctor_id",
+                PatientEntity.class)
                 .setParameter("doctor_id", doctorId)
                 .list();
         session.getTransaction().commit();
-        return patients;
+        return patients.stream()
+                .map(PatientConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -38,7 +43,7 @@ public class DefaultPatientDao implements PatientDao {
         session.beginTransaction();
         int coupon;
         try {
-            coupon = session.createQuery("select max(couponNum) from Patient " +
+            coupon = session.createQuery("select max(couponNum) from PatientEntity " +
                     "where doctor_id = :doctor_id and  day(visit_date) = :day", Integer.class)
                     .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
         } catch (NoResultException e){
@@ -51,26 +56,29 @@ public class DefaultPatientDao implements PatientDao {
     public List<Patient> getPatients() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<Patient> patients = session.createQuery("select p from Patient p", Patient.class)
+        List<PatientEntity> patients = session.createQuery("select p from PatientEntity p", PatientEntity.class)
                 .list();
         session.getTransaction().commit();
-        return patients;
+        return patients.stream()
+                .map(PatientConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Long addPatient(Patient patient) {
+        PatientEntity patientEntity = PatientConverter.toEntity(patient);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(patient);
+        session.save(patientEntity);
         session.getTransaction().commit();
-        return patient.getPatientId();
+        return patientEntity.getPatientId();
     }
 
     @Override
     public boolean removePatientById(Long patientId) {
         final Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.createQuery("delete Patient where id = :id")
+        session.createQuery("delete PatientEntity where id = :id")
                 .setParameter("id", patientId)
                 .executeUpdate();
         session.getTransaction().commit();
@@ -81,16 +89,17 @@ public class DefaultPatientDao implements PatientDao {
     public Patient getPatientById(Long patientId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Patient patient = session.get(Patient.class, patientId);
+        PatientEntity patientEntity = session.get(PatientEntity.class, patientId);
         session.getTransaction().commit();
-        return patient;
+        return PatientConverter.fromEntity(patientEntity);
     }
 
     @Override
     public void updateVisitDate(Patient patient) {
+        PatientEntity patientEntity = PatientConverter.toEntity(patient);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.update(patient);
+        session.update(patientEntity);
         session.getTransaction().commit();
     }
 
@@ -100,7 +109,7 @@ public class DefaultPatientDao implements PatientDao {
         session.beginTransaction();
         java.util.Date date;
         try {
-            date = session.createQuery("select max(visitDate) from Patient " +
+            date = session.createQuery("select max(visitDate) from PatientEntity " +
                     "where doctor_id = :doctor_id and day(visit_date) = :day", Date.class)
                     .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
         } catch (NoResultException e){

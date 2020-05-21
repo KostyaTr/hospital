@@ -1,5 +1,8 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
+import com.github.KostyaTr.hospital.dao.converter.MedicalServiceConverter;
+import com.github.KostyaTr.hospital.dao.entity.*;
 import com.github.KostyaTr.hospital.dao.impl.DefaultGuestPatientDao;
 import com.github.KostyaTr.hospital.model.*;
 import org.hibernate.Session;
@@ -21,19 +24,19 @@ public class DefaultGuestPatientDaoTest {
     void getPatients(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department departmentCheck = new Department(null, "getGuestPatientsCheck", 1, 1, null, null);
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getGuestPatientsCheck", 1, 1, null, null);
         session.save(departmentCheck);
-        final User user = new User(null, "getGuestPatientsCheck", "getGuestPatientsCheck", "getGuestPatientsCheck", "getGuestPatientsCheck", null, null, null, null, null, null);
+        final UserEntity user = new UserEntity(null, "getGuestPatientsCheck", "getGuestPatientsCheck", "getGuestPatientsCheck", "getGuestPatientsCheck", null, null, null);
         session.save(user);
-        final MedDoctor doctor = new MedDoctor(null, user, departmentCheck, false, null, null, null, null);
+        final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
         session.save(doctor);
-        final Speciality speciality = new Speciality(null, "getGuestPatientsCheck", Collections.singletonList(doctor), null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "getGuestPatientsCheck", Collections.singletonList(doctor), null);
         session.save(speciality);
-        final MedicalService medicalService = new MedicalService(null, "getGuestPatientsCheck", speciality, 1L, 1d, null, null);
+        final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientsCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
-        session.save(new GuestPatient(null, "getGuestPatients1","getGuestPatients1","getGuestPatients1","getGuestPatients1", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatient(null, "getGuestPatients2","getGuestPatients2","getGuestPatients2","getGuestPatients2", doctor, 2, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatients1","getGuestPatients1","getGuestPatients1","getGuestPatients1", doctor, 1, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatients2","getGuestPatients2","getGuestPatients2","getGuestPatients2", doctor, 2, medicalService, new Date()));
         session.getTransaction().commit();
 
 
@@ -46,38 +49,43 @@ public class DefaultGuestPatientDaoTest {
     void addPatient(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department departmentCheck = new Department(null, "addGuestPatients", 1, 1, null, null);
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "addGuestPatients", 1, 1, null, null);
         session.save(departmentCheck);
-        final User user = new User(null, "addGuestPatients", "addGuestPatients", "addGuestPatients", "addGuestPatients", null, null, null, null, null, null);
-        session.save(user);
-        final MedDoctor doctor = new MedDoctor(null, user, departmentCheck, false, null, null, null, null);
-        session.save(doctor);
-        final Speciality speciality = new Speciality(null, "addGuestPatients", Collections.singletonList(doctor), null);
+        final UserEntity userEntity = new UserEntity(null, "addGuestPatients", "addGuestPatients", "addGuestPatients", "addGuestPatients", null, null, null);
+        session.save(userEntity);
+        final MedDoctorEntity doctorEntity = new MedDoctorEntity(null, userEntity, departmentCheck, false, null, null, null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "addGuestPatients", Collections.singletonList(doctorEntity), null);
+        session.save(doctorEntity);
+        speciality.setDoctors(Collections.singletonList(doctorEntity));
+        doctorEntity.setSpecialities(Collections.singletonList(speciality));
         session.save(speciality);
-        final MedicalService medicalService = new MedicalService(null, "addGuestPatients", speciality, 1L, 1d, null, null);
-        session.save(medicalService);
+        final MedicalServiceEntity medicalServiceEntity = new MedicalServiceEntity(null, "addGuestPatients", speciality, 1d, null, null);
+        session.save(medicalServiceEntity);
 
         session.getTransaction().commit();
 
-        assertNotNull(guestPatientDao.addPatient(new GuestPatient(null, "addGuestPatients","addGuestPatients","addGuestPatients","addGuestPatients", doctor, 2, medicalService, new Date())));
+        assertNotNull(guestPatientDao.addPatient(new GuestPatient(null, "addGuestPatients",
+                "addGuestPatients","addGuestPatients", "addGuestPatients",
+                MedDoctorConverter.fromEntity(doctorEntity), 2,
+                MedicalServiceConverter.fromEntity(medicalServiceEntity), new Date())));
     }
 
     @Test
     void getPatientsByDoctorId(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department departmentCheck = new Department(null, "getGuestPatientByDoctorId", 1, 1, null, null);
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getGuestPatientByDoctorId", 1, 1, null, null);
         session.save(departmentCheck);
-        final User user = new User(null, "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", null, null, null, null, null, null);
+        final UserEntity user = new UserEntity(null, "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", "getGuestPatientByDoctorId", null, null, null);
         session.save(user);
-        final MedDoctor doctor = new MedDoctor(null, user, departmentCheck, false, null, null, null, null);
+        final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
         Long doctorId = (Long) session.save(doctor);
-        final Speciality speciality = new Speciality(null, "getGuestPatientByDoctorId", Collections.singletonList(doctor), null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "getGuestPatientByDoctorId", Collections.singletonList(doctor), null);
         session.save(speciality);
-        final MedicalService medicalService = new MedicalService(null, "getGuestPatientByDoctorId", speciality, 1L, 1d, null, null);
+        final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientByDoctorId", speciality, 1d, null, null);
         session.save(medicalService);
-        session.save(new GuestPatient(null, "getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatient(null, "getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2", doctor, 2, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId", doctor, 1, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2", doctor, 2, medicalService, new Date()));
         session.getTransaction().commit();
 
         final List<GuestPatient> patients = guestPatientDao.getPatientsByDoctorId(doctorId);
@@ -90,28 +98,28 @@ public class DefaultGuestPatientDaoTest {
     void getLatestCoupon(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department departmentCheck = new Department(null, "getGuestPatientLatestCoupon", 1, 1, null, null);
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getGuestPatientLatestCoupon", 1, 1, null, null);
         session.save(departmentCheck);
-        final User user = new User(null, "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", null, null, null, null, null, null);
+        final UserEntity user = new UserEntity(null, "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", "getGuestPatientLatestCoupon", null, null, null);
         session.save(user);
-        final MedDoctor doctor = new MedDoctor(null, user, departmentCheck, false, null, null, null, null);
+        final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "getGuestPatientLatestCoupon", Collections.singletonList(doctor), null);
         Long doctorId = (Long) session.save(doctor);
-        final Speciality speciality = new Speciality(null, "getGuestPatientLatestCoupon", Collections.singletonList(doctor), null);
         session.save(speciality);
-        final MedicalService medicalService = new MedicalService(null, "getGuestPatientLatestCoupon", speciality, 1L, 1d, null, null);
+        final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientLatestCoupon", speciality, 1d, null, null);
         session.save(medicalService);
-        session.save(new GuestPatient(null, "getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatient(null, "getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2", doctor, 20, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon", doctor, 1, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2", doctor, 20, medicalService, new Date()));
         session.getTransaction().commit();
 
         assertEquals(guestPatientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()), 20);
     }
 
-   /* @Test
+  /*@Test
     void getLatestDate(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department departmentCheck = new Department(null, "getGuestPatientLatestDate", 1, 1, null);
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getGuestPatientLatestDate", 1, 1, null);
         session.save(departmentCheck);
         final User user = new User(null, "getGuestPatientLatestDate", "getGuestPatientLatestDate", "getGuestPatientLatestDate", "getGuestPatientLatestDate", null, null, null, null);
         session.save(user);
@@ -128,5 +136,6 @@ public class DefaultGuestPatientDaoTest {
 
         final Date expected = new Date(guestPatientDao.getLatestTimeToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()).getTime());
         assertEquals(expected.getTime(), visitDate.getTime());
-    }*/
+    }
+*/
 }

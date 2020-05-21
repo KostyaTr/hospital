@@ -1,5 +1,7 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.entity.MedicineEntity;
+import com.github.KostyaTr.hospital.dao.entity.TreatmentCourseEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultTreatmentCourseDao;
 import com.github.KostyaTr.hospital.model.*;
 import org.hibernate.Session;
@@ -14,8 +16,8 @@ public class DefaultTreatmentCourseDaoTest {
 
     @Test
     void getTreatmentCourse(){
-        Medicine medicine = new Medicine(null,"medicineForTreatment", 1d, 1d, 1, 1d, null);
-        TreatmentCourse treatmentCourse = new TreatmentCourse(null, null, 1d, "desc", 1, 1, null);
+        MedicineEntity medicine = new MedicineEntity(null,"medicineForTreatment", 1d, 1d, 1, 1d, null);
+        TreatmentCourseEntity treatmentCourse = new TreatmentCourseEntity(null, null, 1d, "desc", 1, 1, null);
         medicine.setTreatmentCourses(Collections.singletonList(treatmentCourse));
         treatmentCourse.setMedicine(medicine);
         Session session = HibernateUtil.getSession();
@@ -31,10 +33,10 @@ public class DefaultTreatmentCourseDaoTest {
     void addTreatmentCourse(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Medicine medicineToAddTreatment = new Medicine(null, "medicineToAddTreatment", 1d, 1d, 1, 1d, null);
-        session.save(medicineToAddTreatment);
+        final MedicineEntity medicineToAddTreatment = new MedicineEntity(null, "medicineToAddTreatment", 1d, 1d, 1, 1d, null);
+        Long medicineId = (Long) session.save(medicineToAddTreatment);
         session.getTransaction().commit();
-        final Long treatmentCourse = treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(null, medicineToAddTreatment, 1d, "desc", 1, 1, null));
+        final Long treatmentCourse = treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(medicineId, "medicineToAddTreatment", 1d, 1d, 1, 1d, null, 1d, "desc", 1, null));
         assertNotNull(treatmentCourse);
     }
 
@@ -42,10 +44,10 @@ public class DefaultTreatmentCourseDaoTest {
     void removeTreatmentCourse(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Medicine medicineToRemoveTreatment = new Medicine(null, "medicineToRemoveTreatment", 1d, 1d, 1, 1d, null);
-        session.saveOrUpdate(medicineToRemoveTreatment);
+        final MedicineEntity medicineToRemoveTreatment = new MedicineEntity(null, "medicineToRemoveTreatment", 1d, 1d, 1, 1d, null);
+        Long medicineId = (Long) session.save(medicineToRemoveTreatment);
         session.getTransaction().commit();
-        final Long treatmentCourse = treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(null, medicineToRemoveTreatment, 1d, "desc", 1, 1, null));
+        final Long treatmentCourse = treatmentCourseDao.addTreatmentCourse(new TreatmentCourse(medicineId, "medicineToRemoveTreatment", 1d, 1d, 1, 1d, null, 1d, "desc", 1, null));
         assertTrue(treatmentCourseDao.removeTreatmentCourseById(treatmentCourse));
     }
 }

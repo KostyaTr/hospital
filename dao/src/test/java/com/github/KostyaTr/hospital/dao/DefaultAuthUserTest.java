@@ -1,11 +1,12 @@
 package com.github.KostyaTr.hospital.dao;
 
 
+import com.github.KostyaTr.hospital.dao.entity.AuthUserEntity;
+import com.github.KostyaTr.hospital.dao.entity.UserEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Role;
-import com.github.KostyaTr.hospital.model.User;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +19,12 @@ public class DefaultAuthUserTest {
 
     @Test
     void findByLogin(){
-        User user = new User(null, "authCheck","authCheck","authCheck","authCheck", null, null, null, null, null, null);
-        final AuthUser authUser = new AuthUser(null, "login", "password", Role.AuthorizedUser, null);
-        user.setAuthUser(authUser);
-        authUser.setUser(user);
+        UserEntity user = new UserEntity(null, "authCheck","authCheck","authCheck","authCheck", null, null, null);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(user);
+        Long userId = (Long) session.save(user);
+        final AuthUserEntity authUser = new AuthUserEntity(null, "login", "password", Role.AuthorizedUser, userId);
+        session.save(authUser);
         session.getTransaction().commit();
 
         assertNotNull(authUserDao.getByLogin("login"));
@@ -33,10 +33,13 @@ public class DefaultAuthUserTest {
 
     @Test
     void saveAuthUser(){
-        User user = new User(null, "saveAuthCheck","saveAuthCheck","saveAuthCheck","saveAuthCheck", null, null, null, null, null, null);
-        userDao.saveUser(user);
+        UserEntity user = new UserEntity(null, "saveCheck","saveCheck","saveCheck","saveCheck", null, null, null);
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Long userId = (Long) session.save(user);
+        session.getTransaction().commit();
         final AuthUser authUser = new AuthUser(
-                null, "saveCheck", "saveCheck", Role.AuthorizedUser, user);
+                null, "saveCheck", "saveCheck", Role.AuthorizedUser, userId);
         assertNotNull(authUserDao.saveAuthUser(authUser));
     }
 }

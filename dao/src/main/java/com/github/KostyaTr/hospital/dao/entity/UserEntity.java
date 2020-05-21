@@ -29,9 +29,6 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private MedDoctorEntity doctor;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private ReceiptEntity receipt;
-
     @OneToOne (mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private PatientEntity patient;
 

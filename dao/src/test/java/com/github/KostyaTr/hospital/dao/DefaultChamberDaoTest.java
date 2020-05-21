@@ -1,8 +1,8 @@
 package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.dao.impl.DefaultChamberDao;
-import com.github.KostyaTr.hospital.model.Chamber;
-import com.github.KostyaTr.hospital.model.Department;
+import com.github.KostyaTr.hospital.dao.entity.ChamberEntity;
+import com.github.KostyaTr.hospital.dao.entity.DepartmentEntity;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +17,9 @@ public class DefaultChamberDaoTest {
     void updateChamberLoad() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department department = new Department(null, "updateChamberLoad", 3, 3, null, null);
+        final DepartmentEntity department = new DepartmentEntity(null, "updateChamberLoad", 3, 3, null, null);
         session.save(department);
-        final Chamber chamber = new Chamber(null, 2, department, true, 5, 1, 5, null);
+        final ChamberEntity chamber = new ChamberEntity(null, 2, department, true, 5, 1, 5, null);
         Long chamberId = (Long) session.save (chamber);
         session.getTransaction().commit();
 
@@ -35,9 +35,9 @@ public class DefaultChamberDaoTest {
     void getPriceForChamber() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department department = new Department(null, "getChamberPrice", 3, 3, null, null);
+        final DepartmentEntity department = new DepartmentEntity(null, "getChamberPrice", 3, 3, null, null);
         session.save(department);
-        Long chamberId = (Long) session.save (new Chamber(null, 1, department, true, 5, 1, 5, null));
+        Long chamberId = (Long) session.save (new ChamberEntity(null, 1, department, true, 5, 1, 5, null));
         session.getTransaction().commit();
 
         assertEquals(chamberDao.getPriceForChamber(chamberId), 5);
@@ -48,15 +48,16 @@ public class DefaultChamberDaoTest {
     void getEmptyChambers(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        final Department department = new Department(null, "getEmptyChambers", 3, 3, null, null);
+        final DepartmentEntity department = new DepartmentEntity(null, "getEmptyChambers", 3, 3, null, null);
         Long deptId = (Long) session.save(department);
-        session.save (new Chamber(null, 1, department, true, 5, 5, 5, null));
-        session.save (new Chamber(null, 2, department, true, 5, 1, 5, null));
-        session.save (new Chamber(null, 3, department, true, 5, 1, 5, null));
+        session.save (new ChamberEntity(null, 1, department, true, 5, 5, 5, null));
+        session.save (new ChamberEntity(null, 2, department, true, 5, 1, 5, null));
+        Long chamberId = (Long) session.save (new ChamberEntity(null, 3, department, true, 5, 1, 5, null));
         session.getTransaction().commit();
 
-        final List<Chamber> emptyChambersByDeptId = chamberDao.getEmptyChambersByDeptId(deptId);
+        final List<Long> emptyChambersByDeptId = chamberDao.getEmptyChambersByDeptId(deptId);
         assertFalse(emptyChambersByDeptId.isEmpty());
-        assertEquals(emptyChambersByDeptId.get(emptyChambersByDeptId.size() - 1).getChamberNum(), 3);
+        final Long chamberNum = emptyChambersByDeptId.get(emptyChambersByDeptId.size() - 1);
+        assertEquals(chamberId, chamberNum);
     }
 }

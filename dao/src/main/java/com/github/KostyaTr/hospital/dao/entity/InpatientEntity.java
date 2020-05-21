@@ -24,7 +24,7 @@ public class InpatientEntity {
     @Column(name = "id") @Access(AccessType.PROPERTY)
     private Long inpatientId;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id") @Access(AccessType.PROPERTY)
     private UserEntity user;
 
@@ -42,9 +42,6 @@ public class InpatientEntity {
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "treatment_course_id") @Access(AccessType.PROPERTY)
     private TreatmentCourseEntity treatmentCourse;
-
-    @Column(name = "operation_service_id") @Access(AccessType.PROPERTY)
-    private Long operationServiceId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "patient_status") @Access(AccessType.PROPERTY)

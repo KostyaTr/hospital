@@ -28,8 +28,6 @@ public class AuthUserEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "role") @Access(AccessType.PROPERTY)
     private Role role;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") @Access(AccessType.PROPERTY)
-    private UserEntity user;
+    @Column(name = "user_id") @Access(AccessType.PROPERTY)
+    private Long userId;
 }

@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.ReceiptDao;
+import com.github.KostyaTr.hospital.dao.converter.ReceiptConverter;
+import com.github.KostyaTr.hospital.dao.entity.ReceiptEntity;
 import com.github.KostyaTr.hospital.model.Receipt;
 import org.hibernate.Session;
 
@@ -21,36 +23,23 @@ public class DefaultReceiptDao implements ReceiptDao {
     public Receipt getReceiptByUserId(Long userId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Receipt receipt;
+        ReceiptEntity receiptEntity;
         try {
-            receipt = session.get(Receipt.class, userId);
+            receiptEntity = session.get(ReceiptEntity.class, userId);
         } catch (NoResultException e){
-            receipt = null;
+            receiptEntity = null;
         }
         session.getTransaction().commit();
-        return receipt;
+        return ReceiptConverter.fromEntity(receiptEntity);
     }
 
     @Override
     public boolean insertOrUpdateReceipt(Receipt receipt) {
+        ReceiptEntity receiptEntity = ReceiptConverter.toEntity(receipt);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.saveOrUpdate(receipt);
+        session.saveOrUpdate(receiptEntity);
         session.getTransaction().commit();
-        return receipt.getUser() != null;
+        return receiptEntity.getUserId() != null;
     }
-
-    /*@Override
-    public boolean insertReceipt(Receipt receipt) {
-        final String sql = "insert into receipt values(?, ?, ?) ;";
-        try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setLong(1, receipt.getUserId());
-            preparedStatement.setDouble(2, receipt.getPriceForChamber());
-            preparedStatement.setDouble(3, receipt.getPriceForMedicine());
-            return preparedStatement.executeUpdate() == 1;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 }

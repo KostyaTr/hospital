@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.UserDao;
+import com.github.KostyaTr.hospital.dao.converter.UserConverter;
+import com.github.KostyaTr.hospital.dao.entity.UserEntity;
 import com.github.KostyaTr.hospital.model.User;
 import org.hibernate.Session;
 
@@ -16,18 +18,19 @@ public class DefaultUserDao implements UserDao {
 
     @Override
     public Long saveUser(User user) {
+        UserEntity userEntity = UserConverter.toEntity(user);
         final Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(user);
+        session.save(userEntity);
         session.getTransaction().commit();
-        return user.getUserId();
+        return userEntity.getUserId();
     }
 
     @Override
     public boolean removeUser(Long userId) {
         final Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.createQuery("delete User where id = :id")
+        session.createQuery("delete UserEntity where id = :id")
                 .setParameter("id", userId)
                 .executeUpdate();
         session.getTransaction().commit();
@@ -38,8 +41,8 @@ public class DefaultUserDao implements UserDao {
     public User getUserById(Long userId) {
        Session session = HibernateUtil.getSession();
        session.beginTransaction();
-       User user = session.get(User.class, userId);
+        UserEntity userEntity = session.get(UserEntity.class, userId);
        session.getTransaction().commit();
-       return user;
+       return UserConverter.fromEntity(userEntity);
     }
 }

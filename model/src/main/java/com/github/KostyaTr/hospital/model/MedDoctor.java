@@ -1,15 +1,22 @@
 package com.github.KostyaTr.hospital.model;
 
-public class MedDoctor {
+import java.util.List;
+
+public class MedDoctor extends User {
     private Long doctorId;
-    private Long userId;
-    private Long deptNum;
+    private Department department;
+    private List<Speciality> specialityList;
     private boolean headOfDept;
 
-    public MedDoctor(Long doctorId, Long userId, Long deptNum, boolean headOfDept) {
+    public MedDoctor(Long userId, String firstName, String lastName,
+                     String phoneNumber, String email, Long doctorId,
+                     Department department, List<Speciality> specialityList,
+                     boolean headOfDept) {
+
+        super(userId, firstName, lastName, phoneNumber, email);
         this.doctorId = doctorId;
-        this.userId = userId;
-        this.deptNum = deptNum;
+        this.department = department;
+        this.specialityList = specialityList;
         this.headOfDept = headOfDept;
     }
 
@@ -17,12 +24,12 @@ public class MedDoctor {
         return doctorId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Department getDeptNum() {
+        return department;
     }
 
-    public Long getDeptNum() {
-        return deptNum;
+    public List<Speciality> getSpecialityList() {
+        return specialityList;
     }
 
     public boolean isHeadOfDept() {

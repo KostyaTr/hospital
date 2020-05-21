@@ -22,19 +22,19 @@ public class MedDoctorEntity {
     @Column(name = "id") @Access(AccessType.PROPERTY)
     private Long doctorId;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @Access(AccessType.PROPERTY)
     private UserEntity user;
 
-    @ManyToOne (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "dept_id") @Access(AccessType.PROPERTY)
     private DepartmentEntity department;
 
     @Column(name = "head_of_dept") @Access(AccessType.PROPERTY)
     private boolean headOfDept;
 
-    @ManyToMany (fetch = FetchType.LAZY)
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(name = "doctor_speciality", joinColumns = {@JoinColumn(name = "doctor_id")},
             inverseJoinColumns = {@JoinColumn (name = "speciality_id")})
     private List<SpecialityEntity> specialities = new ArrayList<>();

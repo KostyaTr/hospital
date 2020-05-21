@@ -25,6 +25,6 @@ public class SpecialityEntity {
     @ManyToMany(fetch = FetchType.LAZY,mappedBy = "specialities", cascade = CascadeType.ALL)
     private List<MedDoctorEntity> doctors = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "speciality")
-    private MedicalServiceEntity medicalService;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "speciality")
+    private List<MedicalServiceEntity> medicalServices;
 }

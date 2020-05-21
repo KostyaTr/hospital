@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.AuthUserDao;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
+import com.github.KostyaTr.hospital.dao.converter.AuthUserConverter;
+import com.github.KostyaTr.hospital.dao.entity.AuthUserEntity;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import org.hibernate.Session;
 
@@ -20,23 +22,24 @@ public class DefaultAuthUserDao implements AuthUserDao {
     public AuthUser getByLogin(String login) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        AuthUser authUser;
+        AuthUserEntity authUserEntity;
         try {
-            authUser = session.createQuery("select au from AuthUser au where login = :login", AuthUser.class)
+            authUserEntity = session.createQuery("select au from AuthUserEntity au where login = :login", AuthUserEntity.class)
                     .setParameter("login", login).getSingleResult();
         } catch (NoResultException e){
-            authUser = null;
+            authUserEntity = null;
         }
         session.getTransaction().commit();
-        return authUser;
+        return AuthUserConverter.fromEntity(authUserEntity);
     }
 
     @Override
-    public Long saveAuthUser(AuthUser user) {
+    public Long saveAuthUser(AuthUser authUser) {
+        AuthUserEntity authUserEntity = AuthUserConverter.toEntity(authUser);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(user);
+        session.save(authUserEntity);
         session.getTransaction().commit();
-        return user.getAuthUserId();
+        return authUserEntity.getAuthUserId();
     }
 }

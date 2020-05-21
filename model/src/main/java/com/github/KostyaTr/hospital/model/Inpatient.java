@@ -2,28 +2,26 @@ package com.github.KostyaTr.hospital.model;
 
 import java.util.Date;
 
-public class Inpatient {
+public class Inpatient extends User {
     private Long inpatientId;
-    private Long userId;
-    private Long doctorId;
-    private Long deptChamberId;
+    private MedDoctor doctor;
+    private Chamber chamber;
     private String diagnose;
-    private Long treatmentCourseId;
-    private Long operationServiceId;
+    private TreatmentCourse treatmentCourse;
     private Status status;
     private Date enrollmentDate;
 
-    public Inpatient(Long inpatientId, Long userId, Long doctorId, Long deptChamberId,
-                     String diagnose, Long treatmentCourseId, Long operationServiceId,
-                     Status status, Date enrollmentDate) {
+    public Inpatient(Long userId, String firstName, String lastName,
+                     String phoneNumber, String email, Long inpatientId,
+                     MedDoctor doctor, Chamber chamber, String diagnose,
+                     TreatmentCourse treatmentCourse, Status status, Date enrollmentDate) {
 
+        super(userId, firstName, lastName, phoneNumber, email);
         this.inpatientId = inpatientId;
-        this.userId = userId;
-        this.doctorId = doctorId;
-        this.deptChamberId = deptChamberId;
+        this.doctor = doctor;
+        this.chamber = chamber;
         this.diagnose = diagnose;
-        this.treatmentCourseId = treatmentCourseId;
-        this.operationServiceId = operationServiceId;
+        this.treatmentCourse = treatmentCourse;
         this.status = status;
         this.enrollmentDate = enrollmentDate;
     }
@@ -32,28 +30,20 @@ public class Inpatient {
         return inpatientId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public MedDoctor getDoctor() {
+        return doctor;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public Long getDeptChamberId() {
-        return deptChamberId;
+    public Chamber getChamber() {
+        return chamber;
     }
 
     public String getDiagnose() {
         return diagnose;
     }
 
-    public Long getTreatmentCourseId() {
-        return treatmentCourseId;
-    }
-
-    public Long getOperationServiceId() {
-        return operationServiceId;
+    public TreatmentCourse getTreatmentCourse() {
+        return treatmentCourse;
     }
 
     public Status getStatus() {

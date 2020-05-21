@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.CardDao;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
+import com.github.KostyaTr.hospital.dao.converter.CardConverter;
+import com.github.KostyaTr.hospital.dao.entity.CardEntity;
 import com.github.KostyaTr.hospital.model.Card;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -25,35 +27,37 @@ public class DefaultCardDao implements CardDao {
     public Card getCardByUserId(Long userId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Card card;
+        CardEntity cardEntity;
         try {
-            card = session.createQuery("select c from Card c where user_id = :user_id", Card.class)
+            cardEntity = session.createQuery("select c from CardEntity c where user_id = :user_id", CardEntity.class)
                     .setParameter("user_id", userId).getSingleResult();
         } catch (NoResultException e){
-            card = null;
+            cardEntity = null;
             log.info("No card was found by {} user id", userId, e);
         }
         session.getTransaction().commit();
         session.close();
-        return card;
+        return CardConverter.fromEntity(cardEntity);
     }
 
     @Override
     public Long addCard(Card card) {
+        CardEntity cardEntity = CardConverter.toEntity(card);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(card);
+        session.save(cardEntity);
         session.getTransaction().commit();
-        return card.getCardId();
+        return cardEntity.getCardId();
     }
 
     @Override
     public void updateCardHistory(Long userId, String diagnose) {
         Card card = getInstance().getCardByUserId(userId);
-        card.setHistory(card.getHistory() + " " + diagnose);
+        CardEntity cardEntity = CardConverter.toEntity(card);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.update(card);
+        cardEntity.setHistory(card.getHistory() + " " + diagnose);
+        session.update(cardEntity);
         session.getTransaction().commit();
     }
 }

@@ -1,5 +1,6 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.entity.DischargedPatientEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultDischargedPatientDao;
 import com.github.KostyaTr.hospital.model.DischargedPatient;
 import com.github.KostyaTr.hospital.model.Status;
@@ -19,7 +20,7 @@ public class DefaultDischargedPatientDaoTest {
     void delete() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.createQuery("delete DischargedPatient").executeUpdate();
+        session.createQuery("delete DischargedPatientEntity").executeUpdate();
         session.getTransaction().commit();
         session.close();
     }
@@ -35,7 +36,7 @@ public class DefaultDischargedPatientDaoTest {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         for (int i = 0; i < 21; i++) {
-            session.save(new DischargedPatient(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
+            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
         }
         session.getTransaction().commit();
         final List<DischargedPatient> firstTen = dischargedPatientDao.getDischargedPatients(1);
@@ -62,7 +63,7 @@ public class DefaultDischargedPatientDaoTest {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         for (int i = 0; i < 21; i++) {
-            session.save(new DischargedPatient(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
+            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
         }
         session.getTransaction().commit();
 

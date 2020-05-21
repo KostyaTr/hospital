@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedicineDao;
+import com.github.KostyaTr.hospital.dao.converter.MedicineConverter;
+import com.github.KostyaTr.hospital.dao.entity.MedicineEntity;
 import com.github.KostyaTr.hospital.model.Medicine;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultMedicineDao implements MedicineDao {
     private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
@@ -25,39 +28,41 @@ public class DefaultMedicineDao implements MedicineDao {
     public Medicine getMedicineByName(String medicineName) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Medicine medicine;
+        MedicineEntity medicineEntity;
         try {
-            medicine = session.createQuery("From Medicine where medicine_name = :medicine_name", Medicine.class)
+            medicineEntity = session.createQuery("From MedicineEntity where medicine_name = :medicine_name", MedicineEntity.class)
                     .setParameter("medicine_name", medicineName).getSingleResult();
         } catch (NoResultException e){
-            medicine = null;
+            medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineName, e);
         }
         session.getTransaction().commit();
-        return medicine;
+        return MedicineConverter.fromEntity(medicineEntity);
     }
 
     @Override
     public Medicine getMedicineById(Long medicineId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Medicine medicine;
+        MedicineEntity medicineEntity;
         try {
-            medicine = session.get(Medicine.class, medicineId);
+            medicineEntity = session.get(MedicineEntity.class, medicineId);
         } catch (NoResultException e){
-            medicine = null;
+            medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineId, e);
         }
         session.getTransaction().commit();
-        return medicine;
+        return MedicineConverter.fromEntity(medicineEntity);
     }
 
     @Override
     public List<Medicine> getMedicine() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<Medicine> medicines = session.createQuery("From Medicine").list();
+        List<MedicineEntity> medicines = session.createQuery("From MedicineEntity").list();
         session.getTransaction().commit();
-        return medicines;
+        return medicines.stream()
+                .map(MedicineConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 }

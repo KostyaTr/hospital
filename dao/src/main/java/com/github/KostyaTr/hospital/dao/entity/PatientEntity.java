@@ -20,7 +20,7 @@ public class PatientEntity {
     @Column(name = "id") @Access(AccessType.PROPERTY)
     private Long patientId;
 
-    @OneToOne (fetch = FetchType.LAZY)
+    @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id") @Access(AccessType.PROPERTY)
     private UserEntity user;
 

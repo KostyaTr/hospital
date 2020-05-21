@@ -21,7 +21,7 @@ public class TreatmentCourseEntity {
     @Column(name = "id") @Access(AccessType.PROPERTY)
     private Long treatmentCourseId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumn(name = "medicine_id")
     private MedicineEntity medicine;
 

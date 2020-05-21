@@ -1,8 +1,9 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.entity.CardEntity;
+import com.github.KostyaTr.hospital.dao.entity.UserEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultCardDao;
 import com.github.KostyaTr.hospital.model.Card;
-import com.github.KostyaTr.hospital.model.User;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,33 +15,31 @@ public class CardDaoTest {
 
     @Test
     void updateCardHistory(){
-        User user = new User(null, "cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate", null, null, null, null, null, null);
-        Card card = new Card(null, null, "history", "address", new Date(), true);
-        user.setCard(card);
-        card.setUser(user);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(user);
+        UserEntity user = new UserEntity(null, "cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate", null, null, null);
+        Long userId = (Long) session.save(user);
+        CardEntity card = new CardEntity(null, userId, "history", "address", new Date(), true);
+        session.save(card);
         session.getTransaction().commit();
 
-        cardDao.updateCardHistory(user.getUserId(), "new history");
-        assertEquals(cardDao.getCardByUserId(user.getUserId()).getHistory(),
+        cardDao.updateCardHistory(userId, "new history");
+        assertEquals(cardDao.getCardByUserId(userId).getHistory(),
                 "history new history");
     }
 
     @Test
     void getCardByUserId(){
-        User user = new User(null, "cardHistoryGet","cardHistoryGet","cardHistoryGet","cardHistoryGet", null, null, null, null, null, null);
-        Card card = new Card(null, null, "history", "address", new Date(), true);
-        user.setCard(card);
-        card.setUser(user);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(user);
+        UserEntity user = new UserEntity(null, "cardHistoryGet","cardHistoryGet","cardHistoryGet","cardHistoryGet", null, null,null);
+        Long userId = (Long) session.save(user);
+        CardEntity card = new CardEntity(null, userId, "history", "address", new Date(), true);
+        session.save(card);
         session.getTransaction().commit();
 
-        assertNotNull(cardDao.getCardByUserId(user.getUserId()));
-        assertEquals(cardDao.getCardByUserId(user.getUserId()).getHistory(), "history");
+        assertNotNull(cardDao.getCardByUserId(userId));
+        assertEquals(cardDao.getCardByUserId(userId).getHistory(), "history");
         assertNull(cardDao.getCardByUserId(0L));
     }
 
@@ -48,10 +47,10 @@ public class CardDaoTest {
     void addCard(){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        User user = new User(null, "cardHistoryAdd","cardHistoryAdd","cardHistoryAdd","cardHistoryAdd", null, null, null, null, null, null);
-        session.save(user);
+        UserEntity user = new UserEntity(null, "cardHistoryAdd","cardHistoryAdd","cardHistoryAdd","cardHistoryAdd", null, null, null);
+        Long userId = (Long) session.save(user);
         session.getTransaction().commit();
-        final Long cardId = cardDao.addCard(new Card(null, user, "history", "address", new Date(), true));
+        final Long cardId = cardDao.addCard(new Card(null, userId, "history", "address", new Date(), true));
         assertNotNull(cardId);
     }
 }

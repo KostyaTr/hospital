@@ -13,10 +13,8 @@ import java.io.Serializable;
 @Table(name = "receipt")
 public class ReceiptEntity implements Serializable {
     @Id
-    @OneToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") @Access(AccessType.PROPERTY)
-    private UserEntity user;
-
+    @Column(name = "user_id") @Access(AccessType.PROPERTY)
+    private Long userId;
     @Column(name = "price_for_chamber") @Access(AccessType.PROPERTY)
     private double priceForChamber;
     @Column(name = "price_for_medicine") @Access(AccessType.PROPERTY)

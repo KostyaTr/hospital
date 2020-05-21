@@ -3,47 +3,39 @@ package com.github.KostyaTr.hospital.model;
 
 import java.util.Date;
 
-public class Patient {
+public class Patient extends User {
     private Long patientId;
-    private Long userId;
-    private Long doctorId;
+    private MedDoctor medDoctor;
     private int couponNum;
-    private Long medicalServiceId;
+    private MedicalService medicalService;
     private Date visitDate;
 
-    public Patient(Long patientId, Long userId, Long doctorId,
-                   int couponNum, Long medicalServiceId, Date visitDate) {
+    public Patient(Long userId, String firstName, String lastName, String phoneNumber,
+                   String email, Long patientId, MedDoctor medDoctor, int couponNum,
+                   MedicalService medicalService, Date visitDate) {
 
+        super(userId, firstName, lastName, phoneNumber, email);
         this.patientId = patientId;
-        this.userId = userId;
-        this.doctorId = doctorId;
+        this.medDoctor = medDoctor;
         this.couponNum = couponNum;
-        this.medicalServiceId = medicalServiceId;
+        this.medicalService = medicalService;
         this.visitDate = visitDate;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
     }
 
     public Long getPatientId() {
         return patientId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
+    public MedDoctor getDoctor() {
+        return medDoctor;
     }
 
     public int getCouponNum() {
         return couponNum;
     }
 
-    public Long getMedicalServiceId() {
-        return medicalServiceId;
+    public MedicalService getMedicalService() {
+        return medicalService;
     }
 
     public Date getVisitDate() {

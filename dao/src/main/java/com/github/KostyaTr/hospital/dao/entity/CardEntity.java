@@ -18,11 +18,8 @@ public class CardEntity {
     @GenericGenerator(name = "gen", strategy = "increment")
     @Column(name = "id") @Access(AccessType.PROPERTY)
     private Long cardId;
-
-    @OneToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id") @Access(AccessType.PROPERTY)
-    private UserEntity user;
-
+    @Column(name = "user_id") @Access(AccessType.PROPERTY)
+    private Long userId;
     @Column(name = "history", columnDefinition = "text") @Access(AccessType.PROPERTY)
     private String history;
     @Column(name = "address") @Access(AccessType.PROPERTY)

@@ -2,7 +2,6 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.ChamberDao;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
-import com.github.KostyaTr.hospital.model.Chamber;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
@@ -22,7 +21,7 @@ public class DefaultChamberDao implements ChamberDao {
     public void updateChamberLoad(Long id, int load) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.createQuery("update Chamber set chamberLoad = chamberLoad + :load " +
+        session.createQuery("update ChamberEntity set chamberLoad = chamberLoad + :load " +
                     " where id = :id")
                     .setParameter("id", id)
                     .setParameter("load", load)
@@ -36,7 +35,7 @@ public class DefaultChamberDao implements ChamberDao {
         session.beginTransaction();
         double priceADay;
         try {
-            priceADay = session.createQuery("select priceADay from Chamber" +
+            priceADay = session.createQuery("select priceADay from ChamberEntity" +
                     " where id = :id", Double.class)
                     .setParameter("id", deptChamberId).getSingleResult();
         } catch (NoResultException e){
@@ -47,10 +46,11 @@ public class DefaultChamberDao implements ChamberDao {
     }
 
     @Override
-    public List<Chamber> getEmptyChambersByDeptId(Long deptId) {
+    public List<Long> getEmptyChambersByDeptId(Long deptId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<Chamber> chambers = session.createQuery("select c from Chamber c where dept_id = :dept_id", Chamber.class)
+        List<Long> chambers = session.createQuery("select id from ChamberEntity c where dept_id = :dept_id " +
+                "and chamber_capacity > chamber_load", Long.class)
                 .setParameter("dept_id", deptId).list();
         session.getTransaction().commit();
         return chambers;

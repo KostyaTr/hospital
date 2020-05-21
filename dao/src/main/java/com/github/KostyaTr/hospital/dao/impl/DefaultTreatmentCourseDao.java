@@ -2,6 +2,8 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
+import com.github.KostyaTr.hospital.dao.converter.TreatmentCourseConverter;
+import com.github.KostyaTr.hospital.dao.entity.TreatmentCourseEntity;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import org.hibernate.Session;
 
@@ -17,18 +19,19 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
 
     @Override
     public Long addTreatmentCourse(TreatmentCourse treatmentCourse) {
+        TreatmentCourseEntity treatmentCourseEntity = TreatmentCourseConverter.toEntity(treatmentCourse);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.save(treatmentCourse);
+        session.save(treatmentCourseEntity);
         session.getTransaction().commit();
-        return treatmentCourse.getTreatmentCourseId();
+        return treatmentCourseEntity.getTreatmentCourseId();
     }
 
     @Override
     public boolean removeTreatmentCourseById(Long treatmentCourseId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        session.createQuery("delete TreatmentCourse where id = :id")
+        session.createQuery("delete TreatmentCourseEntity where id = :id")
                 .setParameter("id", treatmentCourseId).executeUpdate();
         session.getTransaction().commit();
         return getTreatmentCourseById(treatmentCourseId) == null;
@@ -38,13 +41,13 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
     public TreatmentCourse getTreatmentCourseById(Long treatmentCourseId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        TreatmentCourse treatmentCourse;
+        TreatmentCourseEntity treatmentCourseEntity;
         try{
-            treatmentCourse = session.get(TreatmentCourse.class, treatmentCourseId);
+            treatmentCourseEntity = session.get(TreatmentCourseEntity.class, treatmentCourseId);
         } catch (NoResultException e){
-            treatmentCourse = null;
+            treatmentCourseEntity = null;
         }
         session.getTransaction().commit();
-        return treatmentCourse;
+        return TreatmentCourseConverter.fromEntity(treatmentCourseEntity);
     }
 }

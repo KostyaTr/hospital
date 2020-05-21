@@ -2,11 +2,14 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
+import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
+import com.github.KostyaTr.hospital.dao.entity.MedDoctorEntity;
 import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultMedDoctorDao implements MedDoctorDao {
 
@@ -22,37 +25,39 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
     public List<MedDoctor> getDoctors() {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<MedDoctor> doctors = session.createQuery("From MedDoctor", MedDoctor.class).list();
+        List<MedDoctorEntity> doctorsEntity = session.createQuery("From MedDoctorEntity", MedDoctorEntity.class).list();
         session.getTransaction().commit();
-        return doctors;
+        return doctorsEntity.stream()
+                .map(MedDoctorConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public MedDoctor getDoctorById(Long doctorId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        MedDoctor doctor;
+        MedDoctorEntity doctorEntity;
         try {
-            doctor = session.get(MedDoctor.class, doctorId);
+            doctorEntity = session.get(MedDoctorEntity.class, doctorId);
         } catch (NoResultException e){
-            doctor = null;
+            doctorEntity = null;
         }
         session.getTransaction().commit();
-        return doctor;
+        return MedDoctorConverter.fromEntity(doctorEntity);
     }
 
     @Override
     public MedDoctor getDoctorByUserId(Long userId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        MedDoctor doctor;
+        MedDoctorEntity doctorEntity;
         try {
-            doctor = session.createQuery("From MedDoctor where user_id = :user_id", MedDoctor.class)
+            doctorEntity = session.createQuery("From MedDoctorEntity where user_id = :user_id", MedDoctorEntity.class)
                     .setParameter("user_id", userId).getSingleResult();
         } catch (NoResultException e){
-            doctor = null;
+            doctorEntity = null;
         }
         session.getTransaction().commit();
-        return doctor;
+        return MedDoctorConverter.fromEntity(doctorEntity);
     }
 }
