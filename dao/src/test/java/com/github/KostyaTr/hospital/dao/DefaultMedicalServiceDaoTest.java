@@ -4,7 +4,6 @@ import com.github.KostyaTr.hospital.dao.entity.MedicalServiceEntity;
 import com.github.KostyaTr.hospital.dao.entity.SpecialityEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
 import com.github.KostyaTr.hospital.model.MedicalService;
-import com.github.KostyaTr.hospital.model.Speciality;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
