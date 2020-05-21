@@ -4,21 +4,21 @@
              version="2.0">
     <persistence-unit name="hospital" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.github.KostyaTr.hospital.model.User</class>
-        <class>com.github.KostyaTr.hospital.model.AuthUser</class>
-        <class>com.github.KostyaTr.hospital.model.Patient</class>
-        <class>com.github.KostyaTr.hospital.model.Receipt</class>
-        <class>com.github.KostyaTr.hospital.model.Inpatient</class>
-        <class>com.github.KostyaTr.hospital.model.TreatmentCourse</class>
-        <class>com.github.KostyaTr.hospital.model.MedDoctor</class>
-        <class>com.github.KostyaTr.hospital.model.Medicine</class>
-        <class>com.github.KostyaTr.hospital.model.MedicalService</class>
-        <class>com.github.KostyaTr.hospital.model.Card</class>
-        <class>com.github.KostyaTr.hospital.model.DischargedPatient</class>
-        <class>com.github.KostyaTr.hospital.model.GuestPatient</class>
-        <class>com.github.KostyaTr.hospital.model.Speciality</class>
-        <class>com.github.KostyaTr.hospital.model.Department</class>
-        <class>com.github.KostyaTr.hospital.model.Chamber</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.AuthUserEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.UserEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.CardEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.ChamberEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.DepartmentEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.DischargedPatientEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.GuestPatientEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.InpatientEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.MedDoctorEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.MedicalServiceEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.MedicineEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.PatientEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.SpecialityEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.ReceiptEntity</class>
+        <class>com.github.KostyaTr.hospital.dao.entity.TreatmentCourseEntity</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -26,7 +26,7 @@
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="admin"/>
             <property name="hibernate.dialect.storage_engine" value="innodb"/>
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
             <property name="hibernate.use_sql_comments" value="true"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.connection.pool_size" value="10"/>
