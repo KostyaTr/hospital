@@ -41,4 +41,8 @@ public class Patient extends User {
     public Date getVisitDate() {
         return visitDate;
     }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
 }

@@ -53,4 +53,16 @@ public class Inpatient extends User {
     public Date getEnrollmentDate() {
         return enrollmentDate;
     }
+
+    public void setDiagnose(String diagnose) {
+        this.diagnose = diagnose;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setTreatmentCourse(TreatmentCourse treatmentCourse) {
+        this.treatmentCourse = treatmentCourse;
+    }
 }

@@ -24,7 +24,7 @@ public class MedDoctor extends User {
         return doctorId;
     }
 
-    public Department getDeptNum() {
+    public Department getDepartment() {
         return department;
     }
 
