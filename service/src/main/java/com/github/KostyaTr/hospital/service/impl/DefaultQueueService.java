@@ -9,7 +9,9 @@ import com.github.KostyaTr.hospital.service.QueueService;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DefaultQueueService implements QueueService {
@@ -43,14 +45,31 @@ public class DefaultQueueService implements QueueService {
         List<LocalDate> availableDays = new ArrayList<>(5);
         int day = LocalDate.now().getDayOfMonth();
         for (int i = 0; i < workdays; i++) {
-            day = LocalDate.now().withDayOfMonth(day).plusDays(1).getDayOfMonth();
             if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SATURDAY)){
                 day+= 2;
             } else if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SUNDAY)){
                 day++;
             }
-            LocalDateTime latestPatientVisitDate = patientDao.getLatestTimeToDoctorByDay(doctorId, day);
-            LocalDateTime latestGuestPatientVisitDate = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day);
+            final Date latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day);
+            LocalDateTime latestPatientVisitDate;
+            if (latestTimeToDoctorByDay != null){
+                latestPatientVisitDate = latestTimeToDoctorByDay.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+            } else {
+                latestPatientVisitDate = null;
+            }
+
+            final Date latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day);
+            LocalDateTime latestGuestPatientVisitDate;
+            if (latestGuestTimeToDoctorByDay != null){
+                latestGuestPatientVisitDate = latestGuestTimeToDoctorByDay.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+            } else {
+                latestGuestPatientVisitDate = null;
+            }
+
             if (latestGuestPatientVisitDate == null && latestPatientVisitDate == null){
                 if (LocalDateTime.now().getDayOfMonth() == day){
                     if (workday(LocalDateTime.now().withDayOfMonth(day))){
@@ -74,14 +93,33 @@ public class DefaultQueueService implements QueueService {
                     availableDays.add(getAvailableDay(day));
                 }
             }
+            day = LocalDate.now().withDayOfMonth(day).plusDays(1).getDayOfMonth();
         }
         return availableDays;
     }
 
     @Override
     public LocalDateTime getVisitTime(Long doctorId, LocalDate day) {
-        LocalDateTime latestPatientVisitDate = patientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
-        LocalDateTime latestGuestPatientVisitDate = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
+        final Date latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
+        LocalDateTime latestPatientVisitDate;
+        if (latestTimeToDoctorByDay != null){
+            latestPatientVisitDate = latestTimeToDoctorByDay.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        } else {
+            latestPatientVisitDate = null;
+        }
+
+        final Date latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
+        LocalDateTime latestGuestPatientVisitDate;
+        if (latestGuestTimeToDoctorByDay != null){
+            latestGuestPatientVisitDate = latestGuestTimeToDoctorByDay.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+        } else {
+            latestGuestPatientVisitDate = null;
+        }
+
         if (latestGuestPatientVisitDate == null && latestPatientVisitDate == null){
             if (day.getDayOfMonth() == LocalDate.now().getDayOfMonth() && day.getMonthValue() == LocalDate.now().getMonthValue()){
                 if (workday(LocalDateTime.now().withDayOfMonth(day.getDayOfMonth()).withMonth(day.getMonthValue()))){

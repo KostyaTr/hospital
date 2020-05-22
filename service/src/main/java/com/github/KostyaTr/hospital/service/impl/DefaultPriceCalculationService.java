@@ -3,9 +3,7 @@ package com.github.KostyaTr.hospital.service.impl;
 import com.github.KostyaTr.hospital.dao.*;
 import com.github.KostyaTr.hospital.dao.impl.*;
 import com.github.KostyaTr.hospital.model.Inpatient;
-import com.github.KostyaTr.hospital.model.Medicine;
 import com.github.KostyaTr.hospital.model.Receipt;
-import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import com.github.KostyaTr.hospital.service.PriceCalculationService;
 
 import java.time.LocalDate;
@@ -16,9 +14,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DefaultPriceCalculationService implements PriceCalculationService {
     private ChamberDao chamberDao = DefaultChamberDao.getInstance();
-    private TreatmentCourseDao treatmentCourseDao = DefaultTreatmentCourseDao.getInstance();
-    private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
-    private ReceiptDao receiptDao = DefaultReceiptDao.getInstance();
     private CardDao cardDao = DefaultCardDao.getInstance();
 
     public static PriceCalculationService getInstance() {
@@ -30,31 +25,25 @@ public class DefaultPriceCalculationService implements PriceCalculationService {
     }
 
     @Override
-    public boolean calculateReceipt(Inpatient inpatient) {
+    public Receipt calculateReceipt(Inpatient inpatient) {
         if (insuranceCheck(inpatient)){
-          return false;
+          return null;
         }
         LocalDate enrollmentDate;
-
-
         enrollmentDate = new Date(inpatient.getEnrollmentDate().getTime())
                     .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         long timeAtChamber = DAYS.between(enrollmentDate, LocalDate.now());
-        double priceForChamber = chamberDao.getPriceForChamber(inpatient.getDeptChamberId()) * timeAtChamber;
-        TreatmentCourse treatmentCourse = treatmentCourseDao.getTreatmentCourseById(inpatient.getTreatmentCourseId());
-        Medicine medicine = medicineDao.getMedicineById(treatmentCourse.getMedicineId());
+        // get price a day from database to have actual price for chamber at the moment
+        double priceForChamber = chamberDao.getPriceForChamber(inpatient.getChamber().getChamberId()) * timeAtChamber;
+        // get price from object because medicine was by that price and not actual at the moment
+        // *1d to convert from int to double
+        double medicineAmount = Math.ceil(inpatient.getTreatmentCourse().getDurationInDays()
+                * inpatient.getTreatmentCourse().getTimesPerDay() * 1d / inpatient.getTreatmentCourse().getPackageAmount());
+        double priceForMedicine = inpatient.getTreatmentCourse().getPrice() * medicineAmount;
 
-        double medicineAmount = Math.ceil(treatmentCourse.getDurationInDays()
-                * treatmentCourse.getTimesPerDay()
-                * treatmentCourse.getMedicineDose() / medicine.getPackageAmount());
-        double priceForMedicine = medicine.getPrice() * medicineAmount;
+        return new Receipt(inpatient.getUserId(), priceForChamber, priceForMedicine);
 
-        if (receiptDao.getReceiptByUserId(inpatient.getUserId()) != null){
-            return receiptDao.updateReceipt(new Receipt(inpatient.getUserId(), priceForChamber, priceForMedicine));
-        } else {
-            return receiptDao.insertReceipt(new Receipt(inpatient.getUserId(), priceForChamber, priceForMedicine));
-        }
     }
 
     private boolean insuranceCheck(Inpatient inpatient){

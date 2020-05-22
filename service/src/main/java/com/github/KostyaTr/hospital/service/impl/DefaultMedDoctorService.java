@@ -22,10 +22,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
     private UserDao userDao = DefaultUserDao.getInstance();
     private TreatmentCourseDao treatmentCourseDao = DefaultTreatmentCourseDao.getInstance();
     private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
-    private com.github.KostyaTr.hospital.dao.display.TreatmentCourseDao treatmentCourseDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultTreatmentCourseDao.getInstance();
-    private com.github.KostyaTr.hospital.dao.display.InpatientDao inpatientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao.getInstance();
-    private com.github.KostyaTr.hospital.dao.display.PatientDao patientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultPatientDao.getInstance();
-    private com.github.KostyaTr.hospital.dao.display.GuestPatientDao guestPatientDaoDisp = com.github.KostyaTr.hospital.dao.impl.display.DefaultGuestPatientDao.getInstance();
+    private ReceiptDao receiptDao = DefaultReceiptDao.getInstance();
 
     private final int FREE_CHAMBER = 0;
     private final int LOAD = 1;
@@ -41,19 +38,19 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
 
     @Override
-    public List<com.github.KostyaTr.hospital.model.display.Patient> getPatientsByDoctorId(Long doctorId) {
-        return patientDaoDisp.getPatientsByDoctorId(doctorId);
+    public List<Patient> getPatientsByDoctorId(Long doctorId) {
+        return patientDao.getPatientsByDoctorId(doctorId);
     }
 
     @Override
-    public List<com.github.KostyaTr.hospital.model.display.GuestPatient> getGuestPatientsByDoctorId(Long doctorId) {
-        return guestPatientDaoDisp.getPatientsByDoctorId(doctorId);
+    public List<GuestPatient> getGuestPatientsByDoctorId(Long doctorId) {
+        return guestPatientDao.getPatientsByDoctorId(doctorId);
     }
 
     @Override
     public boolean takeThePatient(Long patientId, Status status) {
         if (status.equals(Status.BAD)){
-            if(putPatientInHospital(patientId, status) != null){
+            if(putPatientInHospital(patientId) != null){
                 return patientDao.removePatientById(patientId);
             }
         } else {
@@ -64,21 +61,26 @@ public class DefaultMedDoctorService implements MedDoctorService {
 
 
     @Override
-    public boolean updateDiagnose(Long patientId, String diagnose) {
-        return inpatientDao.updateDiagnose(patientId, diagnose);
+    public void updateDiagnose(Long inpatientId, String diagnose) {
+        final Inpatient inpatient = inpatientDao.getInpatientById(inpatientId);
+        inpatient.setDiagnose(diagnose);
+        inpatientDao.updateInpatient(inpatient);
     }
 
     @Override
-    public boolean prescribeTreatmentCourse(Long patientId, Long treatmentCourseId) {
-        if (inpatientDao.getInpatientById(patientId).getDiagnose() == null){
+    public boolean prescribeTreatmentCourse(Long inpatientId, Long treatmentCourseId) {
+        if (inpatientDao.getInpatientById(inpatientId).getDiagnose() == null){
             return false;
         }
-        return inpatientDao.updateTreatmentCourse(patientId, treatmentCourseId);
+        final Inpatient inpatient = inpatientDao.getInpatientById(inpatientId);
+        inpatient.setTreatmentCourse(treatmentCourseDao.getTreatmentCourseById(treatmentCourseId));
+        inpatientDao.updateInpatient(inpatient);
+        return true;
     }
 
     @Override
-    public boolean takeTheGuestPatient(Long guestPatientId) {
-        return guestPatientDao.removePatientById(guestPatientId);
+    public void takeTheGuestPatient(Long guestPatientId) {
+        guestPatientDao.removePatientById(guestPatientId);
     }
 
     @Override
@@ -92,16 +94,20 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public boolean updateStatus(Long patientId, Status status) {
-        return inpatientDao.updateStatus(patientId, status);
+    public void updateStatus(Long inpatientId, Status status) {
+        final Inpatient inpatient = inpatientDao.getInpatientById(inpatientId);
+        inpatient.setStatus(status);
+        inpatientDao.updateInpatient(inpatient);
     }
 
     @Override
-    public boolean dischargeInpatient(com.github.KostyaTr.hospital.model.display.Inpatient inpatientDisp) {
-        if(!inpatientDisp.getStatus().equals(Status.BAD)){
-            Inpatient inpatient = inpatientDao.getInpatientById(inpatientDisp.getInpatientId());
-            priceCalculationService.calculateReceipt(inpatient);
-            chamberDao.updateChamberLoad(inpatient.getDeptChamberId(), -LOAD);
+    public boolean dischargeInpatient(Inpatient inpatient) {
+        if(!inpatient.getStatus().equals(Status.BAD)){
+            final Receipt receipt = priceCalculationService.calculateReceipt(inpatient);
+            if (receipt != null){
+                receiptDao.insertOrUpdateReceipt(receipt);
+            }
+            chamberDao.updateChamberLoad(inpatient.getChamber().getChamberId(), -LOAD);
             String diagnose;
             if (inpatient.getDiagnose() == null){
                 cardDao.updateCardHistory(inpatient.getUserId(), "No diagnose" + inpatient.getStatus());
@@ -112,16 +118,16 @@ public class DefaultMedDoctorService implements MedDoctorService {
             }
             inpatientDao.removeInpatientById(inpatient.getInpatientId());
             String treatmentCourse;
-            if (inpatientDisp.getMedicineName() == null){
+            if (inpatient.getTreatmentCourse() == null){
                 treatmentCourse = "No treatment Course";
             } else {
-                treatmentCourseDao.removeTreatmentCourseById(inpatient.getTreatmentCourseId());
-                treatmentCourse = inpatientDisp.getMedicineName() +" "+ inpatientDisp.getMedicineDose();
+                treatmentCourseDao.removeTreatmentCourseById(inpatient.getTreatmentCourse().getTreatmentCourseId());
+                treatmentCourse = inpatient.getTreatmentCourse().getMedicineName() +" "+ inpatient.getTreatmentCourse().getMedicineDose();
             }
             final DischargedPatient dischargedPatient = new DischargedPatient(
                     null,
-                    inpatientDisp.getPatientName(),
-                    getDoctorName(inpatient.getDoctorId()),
+                    inpatient.getFirstName() + " " + inpatient.getLastName(),
+                    inpatient.getDoctor().getFirstName() + " " + inpatient.getDoctor().getLastName(),
                     diagnose,
                     cardDao.getCardByUserId(inpatient.getUserId()).getHistory(),
                     treatmentCourse,
@@ -142,19 +148,38 @@ public class DefaultMedDoctorService implements MedDoctorService {
     }
 
     @Override
-    public List<com.github.KostyaTr.hospital.model.display.Inpatient> getInpatientsByDoctorId(Long doctorId) {
-        return inpatientDaoDisp.getInpatientsByDoctorId(doctorId);
+    public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
+        return inpatientDao.getPatientsByDoctorId(doctorId);
     }
 
-    private Long putPatientInHospital(Long patientId, Status status) {
+    private Long putPatientInHospital(Long patientId) {
         Patient patient = patientDao.getPatientById(patientId);
-        final List<Long> chambers = freeChambers(patient);
+        final List<Chamber> chambers = freeChambers(patient);
         if (!chambers.isEmpty()){
-            chamberDao.updateChamberLoad(chambers.get(FREE_CHAMBER), LOAD);
-            Long id = chambers.get(FREE_CHAMBER);
+            Chamber chamber = new Chamber(
+                    chambers.get(FREE_CHAMBER).getChamberId(),
+                    chambers.get(FREE_CHAMBER).getChamberNum(),
+                    chambers.get(FREE_CHAMBER).getDepartment(),
+                    chambers.get(FREE_CHAMBER).getChamberLoad(),
+                    chambers.get(FREE_CHAMBER).getChamberCapacity(),
+                    chambers.get(FREE_CHAMBER).isVip(),
+                    chambers.get(FREE_CHAMBER).getPriceADay()
+            );
+            chamberDao.updateChamberLoad(chamber.getChamberId(), LOAD);
             Inpatient inpatient = new Inpatient(
-                    null, patient.getUserId(), patient.getDoctorId(), id,
-                    null, null, null, status, new Date());
+                    patient.getUserId(),
+                    patient.getFirstName(),
+                    patient.getLastName(),
+                    patient.getPhoneNumber(),
+                    patient.getEmail(),
+                    null,
+                    patient.getDoctor(),
+                    chamber,
+                    "",
+                    null,
+                    Status.BAD,
+                    new Date()
+            );
             return inpatientDao.addInpatient(inpatient);
         }
         else {
@@ -162,14 +187,13 @@ public class DefaultMedDoctorService implements MedDoctorService {
         }
     }
 
-    private List<Long> freeChambers(Patient patient){
-        return chamberDao.getEmptyChambersByDeptId(
-                medDoctorDao.getDoctorById(patient.getDoctorId()).getDeptNum());
+    private List<Chamber> freeChambers(Patient patient){
+        return chamberDao.getEmptyChambersByDeptId(patient.getDoctor().getDepartment().getDepartmentId());
     }
 
     @Override
-    public List<com.github.KostyaTr.hospital.model.display.TreatmentCourse> getTreatmentCourses() {
-        return treatmentCourseDaoDisp.getTreatmentCourses();
+    public List<TreatmentCourse> getTreatmentCourses() {
+        return treatmentCourseDao.getTreatmentCourses();
     }
 
     @Override

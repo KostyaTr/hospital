@@ -1,17 +1,8 @@
 package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.*;
-import com.github.KostyaTr.hospital.dao.display.AppointmentDao;
-import com.github.KostyaTr.hospital.dao.display.DoctorSpecialityDeptDao;
 import com.github.KostyaTr.hospital.dao.impl.*;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultAppointmentDao;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultDoctorSpecialityDeptDao;
-import com.github.KostyaTr.hospital.model.GuestPatient;
-import com.github.KostyaTr.hospital.model.MedicalService;
-import com.github.KostyaTr.hospital.model.Medicine;
-import com.github.KostyaTr.hospital.model.Patient;
-import com.github.KostyaTr.hospital.model.display.Appointment;
-import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
+import com.github.KostyaTr.hospital.model.*;
 import com.github.KostyaTr.hospital.service.UserService;
 
 import java.util.List;
@@ -20,9 +11,8 @@ public class DefaultUserService implements UserService {
     private PatientDao patientDao = DefaultPatientDao.getInstance();
     private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
     private MedicineDao medicineDao = DefaultMedicineDao.getInstance();
-    private DoctorSpecialityDeptDao doctorSpecialityDeptDao = DefaultDoctorSpecialityDeptDao.getInstance();
     private GuestPatientDao guestPatientDao = DefaultGuestPatientDao.getInstance();
-    private AppointmentDao appointmentDao = DefaultAppointmentDao.getInstance();
+    private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
 
     private static class SingletonHolder {
         static final UserService HOLDER_INSTANCE = new DefaultUserService();
@@ -33,8 +23,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<DoctorSpecialityDept> getDoctors() {
-        return doctorSpecialityDeptDao.getDoctors();
+    public List<MedDoctor> getDoctors() {
+        return medDoctorDao.getDoctors();
     }
 
 
@@ -49,8 +39,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<Appointment> getAppointmentsByUserId(Long userId) {
-        return appointmentDao.getAppointmentsByUserId(userId);
+    public List<Patient> getAppointmentsByUserId(Long userId) {
+        return patientDao.getPatientsByUserId(userId);
     }
 
     @Override
@@ -64,22 +54,22 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<DoctorSpecialityDept> getDoctorsBySpeciality(Long specialityId) {
-        return doctorSpecialityDeptDao.getDoctorsBySpeciality(specialityId);
+    public List<MedDoctor> getDoctorsBySpeciality(Long specialityId) {
+        return medDoctorDao.getDoctorBySpeciality(specialityId);
     }
 
     @Override
-    public DoctorSpecialityDept getDoctorById(Long doctorId) {
-        return doctorSpecialityDeptDao.getDoctorById(doctorId);
+    public MedDoctor getDoctorById(Long doctorId) {
+        return medDoctorDao.getDoctorById(doctorId);
     }
 
-    public List<DoctorSpecialityDept> getDoctorsByMedicalService(Long medicalServiceId) {
-        return getDoctorsBySpeciality(medicalServiceDao.getMedicalServiceById(medicalServiceId).getNeededSpecialityId());
+    public List<MedDoctor> getDoctorsByMedicalService(Long medicalServiceId) {
+        return getDoctorsBySpeciality(medicalServiceDao.getMedicalServiceById(medicalServiceId).getNeededSpeciality().getSpecialityId());
     }
 
     @Override
-    public boolean rescheduleAppointment(Patient patient) {
-        return patientDao.updateVisitDate(patient);
+    public void rescheduleAppointment(Patient patient) {
+        patientDao.updateVisitDate(patient);
     }
 
     @Override
