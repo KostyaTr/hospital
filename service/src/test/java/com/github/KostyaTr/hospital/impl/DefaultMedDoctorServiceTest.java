@@ -1,13 +1,7 @@
 package com.github.KostyaTr.hospital.impl;
 
-import com.github.KostyaTr.hospital.dao.ChamberDao;
-import com.github.KostyaTr.hospital.dao.InpatientDao;
-import com.github.KostyaTr.hospital.dao.MedDoctorDao;
-import com.github.KostyaTr.hospital.dao.PatientDao;
-import com.github.KostyaTr.hospital.model.Inpatient;
-import com.github.KostyaTr.hospital.model.MedDoctor;
-import com.github.KostyaTr.hospital.model.Patient;
-import com.github.KostyaTr.hospital.model.Status;
+import com.github.KostyaTr.hospital.dao.*;
+import com.github.KostyaTr.hospital.model.*;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -30,6 +25,8 @@ public class DefaultMedDoctorServiceTest {
     @Mock
     PatientDao patientDao;
     @Mock
+    TreatmentCourseDao treatmentCourseDao;
+    @Mock
     ChamberDao chamberDao;
     @Mock
     MedDoctorDao medDoctorDao;
@@ -40,15 +37,15 @@ public class DefaultMedDoctorServiceTest {
 
     @Test
     void prescribeTreatmentCourseWithoutDiagnoseTest(){
-        when(inpatientDao.getInpatientById(1L)).thenReturn(new Inpatient(null, null,null,null,null,null,null,null,null));
+        when(inpatientDao.getInpatientById(1L)).thenReturn(new Inpatient(null, null,null,null,null,null,null,null,null,null,null,null));
         boolean check = medDoctorService.prescribeTreatmentCourse(1L, 1L);
         assertFalse(check);
     }
 
     @Test
     void prescribeTreatmentCourseWithDiagnoseTest(){
-        when(inpatientDao.getInpatientById(1L)).thenReturn(new Inpatient(null, null,null,null,"diagnose",null,null,null,null));
-        when(inpatientDao.updateTreatmentCourse(1L, 1L)).thenReturn(true);
+        final Inpatient inpatient = new Inpatient(null, null,null,null,null,1L,null,null,"",null,null,null);
+        when(inpatientDao.getInpatientById(1L)).thenReturn(inpatient);
         boolean check = medDoctorService.prescribeTreatmentCourse(1L, 1L);
         assertTrue(check);
     }
@@ -60,25 +57,25 @@ public class DefaultMedDoctorServiceTest {
         assertTrue(check);
     }
 
-    /*@Test
+    @Test
     void takeThePatientWithBadAndEmptyChamberConditionTest(){
-        when(patientDao.getPatientById(1L)).thenReturn(new Patient(null,1L,1L,null,null, null));
-        when(medDoctorDao.getDoctorById(1L)).thenReturn(new MedDoctor(1L, null, 1L, false));
-        List<Long> list = new ArrayList<>();
-        list.add(1L);
-        when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(list);
-        *//*doReturn(1L).when(inpatientDao).addInpatient(argThat(new Inpatient(null, 1L, 1L, 1L, null,
-                null, null, "Bad",  new Date()))); question about comparing objects using mockito*//*
-         boolean check = medDoctorService.takeThePatient(1L, "Bad");
-        assertTrue(check);
+        Patient patient = new Patient(null,null,null,null,null,1L,
+                new MedDoctor(null,null,null,null,null,null, new Department(1L, null),null,true),
+                1,null, null);
+        when(patientDao.getPatientById(1L)).thenReturn(patient);
+        List<Chamber> chambers = Collections.singletonList(new Chamber(null,1,null,3,5,false, 20d));
+        when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(chambers);
+        boolean check = medDoctorService.takeThePatient(1L, Status.BAD);
+        assertFalse(check);
     }
-*/
+
     @Test
     void takeThePatientWithBadAndFullChamberConditionTest(){
-        when(patientDao.getPatientById(1L)).thenReturn(new Patient(null,1L,1L,0,null, null));
-        when(medDoctorDao.getDoctorById(1L)).thenReturn(new MedDoctor(1L, null, 1L, false));
-        List<Long> list = new ArrayList<>();
-        when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(list);
+        Patient patient = new Patient(null,null,null,null,null,1L,
+                new MedDoctor(null,null,null,null,null,null, new Department(1L, null),null,true),
+                1,null, null);
+        when(patientDao.getPatientById(1L)).thenReturn(patient);
+        when(chamberDao.getEmptyChambersByDeptId(1L)).thenReturn(new ArrayList<>());
         boolean check = medDoctorService.takeThePatient(1L, Status.BAD);
         assertFalse(check);
     }
@@ -86,18 +83,18 @@ public class DefaultMedDoctorServiceTest {
     @Test
     void dischargeBadInpatientTest(){
         boolean check = medDoctorService.dischargeInpatient(
-                new com.github.KostyaTr.hospital.model.display.Inpatient(
-                        null, null,null,null,null,
+                new Inpatient(
+                        null, null,null,null,null, null,null,null,null,
                         null,Status.BAD,null));
         assertFalse(check);
     }
 
-   /* @Test
+    /*@Test
     void dischargeGoodInpatientTest(){
         boolean check = medDoctorService.dischargeInpatient(
-                new com.github.KostyaTr.hospital.model.display.Inpatient(
-                        1L, null,null,null,null,
-                        null,"Good",null));
+                new Inpatient(
+                        1L, null,null,null,null,null,null,null,null,
+                        null,Status.GOOD,null));
         assertTrue(check);
     }*/
 }
