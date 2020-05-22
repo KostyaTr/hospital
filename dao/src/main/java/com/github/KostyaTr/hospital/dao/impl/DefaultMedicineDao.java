@@ -10,8 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.criteria.Root;
 
 public class DefaultMedicineDao implements MedicineDao {
     private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
@@ -27,16 +31,17 @@ public class DefaultMedicineDao implements MedicineDao {
     @Override
     public Medicine getMedicineByName(String medicineName) {
         Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<MedicineEntity> criteria = cb.createQuery(MedicineEntity.class);
+        Root<MedicineEntity> med = criteria.from(MedicineEntity.class);
+        criteria.select(med).where(cb.equal(med.get("medicineName"), medicineName));
         MedicineEntity medicineEntity;
         try {
-            medicineEntity = session.createQuery("From MedicineEntity where medicine_name = :medicine_name", MedicineEntity.class)
-                    .setParameter("medicine_name", medicineName).getSingleResult();
+            medicineEntity = session.createQuery(criteria).getSingleResult();
         } catch (NoResultException e){
             medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineName, e);
         }
-        session.getTransaction().commit();
         return MedicineConverter.fromEntity(medicineEntity);
     }
 
