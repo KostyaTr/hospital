@@ -53,7 +53,7 @@ public class DefaultChamberDao implements ChamberDao {
     public List<Chamber> getEmptyChambersByDeptId(Long deptId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<ChamberEntity> chambers = session.createQuery("select id from ChamberEntity c where dept_id = :dept_id " +
+        List<ChamberEntity> chambers = session.createQuery("select c from ChamberEntity c where dept_id = :dept_id " +
                 "and chamber_capacity > chamber_load", ChamberEntity.class)
                 .setParameter("dept_id", deptId).list();
         session.getTransaction().commit();
