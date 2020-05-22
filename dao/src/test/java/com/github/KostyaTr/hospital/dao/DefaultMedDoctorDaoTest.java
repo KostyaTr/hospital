@@ -1,5 +1,6 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.entity.SpecialityEntity;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.dao.entity.DepartmentEntity;
 import com.github.KostyaTr.hospital.dao.entity.MedDoctorEntity;
@@ -7,6 +8,9 @@ import com.github.KostyaTr.hospital.dao.entity.UserEntity;
 import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,5 +66,31 @@ public class DefaultMedDoctorDaoTest {
 
         assertNotNull(medDoctorDao.getDoctorByUserId(user.getUserId()));
         assertNull(medDoctorDao.getDoctorByUserId(0L));
+    }
+
+    @Test
+    void getDoctorsBySpeciality(){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        final DepartmentEntity departmentCheck = new DepartmentEntity(null, "departmentCheckDoctorsBySpeciality", 1, 1, null, null);
+        session.save(departmentCheck);
+        final UserEntity user = new UserEntity(null, "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", null, null, null);
+        session.save(user);
+        final UserEntity user1 = new UserEntity(null, "doctorsGetCheckBySpeciality2", "doctorsGetCheckBySpeciality2", "doctorsGetCheckBySpeciality2", "doctorsGetCheckBySpeciality2", null, null, null);
+        session.save(user1);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "doctorsGetCheckBySpeciality", null, null);
+        final MedDoctorEntity medDoctorEntity = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
+        final MedDoctorEntity medDoctorEntity1 = new MedDoctorEntity(null, user1, departmentCheck, false, null, null, null, null);
+        speciality.setDoctors(Arrays.asList(medDoctorEntity, medDoctorEntity1));
+        medDoctorEntity.setSpecialities(Collections.singletonList(speciality));
+        medDoctorEntity1.setSpecialities(Collections.singletonList(speciality));
+        session.save(medDoctorEntity);
+        Long doctorId = (Long) session.save(medDoctorEntity1);
+        Long specialityId = (Long) session.save(speciality);
+        session.getTransaction().commit();
+
+        List<MedDoctor> doctors = medDoctorDao.getDoctorBySpeciality(specialityId);
+        assertFalse(doctors.isEmpty());
+        assertEquals(doctors.get(doctors.size() - 1).getDoctorId(), doctorId);
     }
 }

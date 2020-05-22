@@ -3,6 +3,7 @@ package com.github.KostyaTr.hospital.dao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultChamberDao;
 import com.github.KostyaTr.hospital.dao.entity.ChamberEntity;
 import com.github.KostyaTr.hospital.dao.entity.DepartmentEntity;
+import com.github.KostyaTr.hospital.model.Chamber;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
@@ -55,9 +56,9 @@ public class DefaultChamberDaoTest {
         Long chamberId = (Long) session.save (new ChamberEntity(null, 3, department, true, 5, 1, 5, null));
         session.getTransaction().commit();
 
-        final List<Long> emptyChambersByDeptId = chamberDao.getEmptyChambersByDeptId(deptId);
+        final List<Chamber> emptyChambersByDeptId = chamberDao.getEmptyChambersByDeptId(deptId);
         assertFalse(emptyChambersByDeptId.isEmpty());
-        final Long chamberNum = emptyChambersByDeptId.get(emptyChambersByDeptId.size() - 1);
+        final Long chamberNum = emptyChambersByDeptId.get(emptyChambersByDeptId.size() - 1).getChamberId();
         assertEquals(chamberId, chamberNum);
     }
 }

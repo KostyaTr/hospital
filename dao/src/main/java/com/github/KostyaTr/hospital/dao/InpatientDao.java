@@ -9,6 +9,8 @@ public interface InpatientDao {
 
     boolean removeInpatientById(Long patientId);
 
+    List<Inpatient> getPatientsByDoctorId(Long doctorId);
+
     Inpatient getInpatientById(Long patientId);
 
     Long addInpatient(Inpatient inpatient);

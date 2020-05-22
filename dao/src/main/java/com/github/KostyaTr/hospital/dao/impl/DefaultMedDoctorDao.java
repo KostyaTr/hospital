@@ -1,5 +1,6 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
+import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
@@ -8,6 +9,11 @@ import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,5 +65,19 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
         }
         session.getTransaction().commit();
         return MedDoctorConverter.fromEntity(doctorEntity);
+    }
+
+    @Override
+    public List<MedDoctor> getDoctorBySpeciality(Long specialityId) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<MedDoctorEntity> doctorEntities = session.createQuery("select doctor from MedDoctorEntity doctor" +
+                " join doctor.specialities s " +
+                " where s.id = :speciality_id", MedDoctorEntity.class)
+                    .setParameter("speciality_id", specialityId).list();
+        session.getTransaction().commit();
+        return doctorEntities.stream()
+                .map(MedDoctorConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 }

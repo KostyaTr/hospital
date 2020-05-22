@@ -2,12 +2,17 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
+import com.github.KostyaTr.hospital.dao.converter.InpatientConverter;
 import com.github.KostyaTr.hospital.dao.converter.TreatmentCourseConverter;
+import com.github.KostyaTr.hospital.dao.entity.InpatientEntity;
 import com.github.KostyaTr.hospital.dao.entity.TreatmentCourseEntity;
+import com.github.KostyaTr.hospital.model.Inpatient;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
 
@@ -25,6 +30,18 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
         session.save(treatmentCourseEntity);
         session.getTransaction().commit();
         return treatmentCourseEntity.getTreatmentCourseId();
+    }
+
+    @Override
+    public List<TreatmentCourse> getTreatmentCourses() {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<TreatmentCourseEntity> treatmentCourseEntities = session.createQuery("select tr from TreatmentCourseEntity tr", TreatmentCourseEntity.class)
+                .list();
+        session.getTransaction().commit();
+        return treatmentCourseEntities.stream()
+                .map(TreatmentCourseConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override

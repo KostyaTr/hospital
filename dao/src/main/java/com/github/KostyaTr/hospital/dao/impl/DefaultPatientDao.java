@@ -38,6 +38,20 @@ public class DefaultPatientDao implements PatientDao {
     }
 
     @Override
+    public List<Patient> getPatientsByUserId(Long userId) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<PatientEntity> patients = session.createQuery("select p from PatientEntity p where user_id = :user_id",
+                PatientEntity.class)
+                .setParameter("user_id", userId)
+                .list();
+        session.getTransaction().commit();
+        return patients.stream()
+                .map(PatientConverter::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public int getLatestCouponToDoctorByDay(Long doctorId, int day) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();

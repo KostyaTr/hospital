@@ -2,10 +2,14 @@ package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.ChamberDao;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
+import com.github.KostyaTr.hospital.dao.converter.ChamberConverter;
+import com.github.KostyaTr.hospital.dao.entity.ChamberEntity;
+import com.github.KostyaTr.hospital.model.Chamber;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultChamberDao implements ChamberDao {
 
@@ -46,13 +50,15 @@ public class DefaultChamberDao implements ChamberDao {
     }
 
     @Override
-    public List<Long> getEmptyChambersByDeptId(Long deptId) {
+    public List<Chamber> getEmptyChambersByDeptId(Long deptId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        List<Long> chambers = session.createQuery("select id from ChamberEntity c where dept_id = :dept_id " +
-                "and chamber_capacity > chamber_load", Long.class)
+        List<ChamberEntity> chambers = session.createQuery("select id from ChamberEntity c where dept_id = :dept_id " +
+                "and chamber_capacity > chamber_load", ChamberEntity.class)
                 .setParameter("dept_id", deptId).list();
         session.getTransaction().commit();
-        return chambers;
+        return chambers.stream()
+                .map(ChamberConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 }

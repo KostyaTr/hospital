@@ -33,6 +33,20 @@ public class DefaultInpatientDao implements InpatientDao {
     }
 
     @Override
+    public List<Inpatient> getPatientsByDoctorId(Long doctorId) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        List<InpatientEntity> inpatients = session.createQuery("select p from InpatientEntity p " +
+                "where doctor_id = :doctor_id", InpatientEntity.class)
+                .setParameter("doctor_id", doctorId)
+                .list();
+        session.getTransaction().commit();
+        return inpatients.stream()
+                .map(InpatientConverter::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Inpatient getInpatientById(Long patientId) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();

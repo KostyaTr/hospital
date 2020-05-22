@@ -16,6 +16,8 @@ public interface PatientDao {
 
     Patient getPatientById(Long patientId);
 
+    List<Patient> getPatientsByUserId(Long userId);
+
     int getLatestCouponToDoctorByDay(Long doctorId, int day);
 
     Date getLatestTimeToDoctorByDay(Long doctorId, int day);
