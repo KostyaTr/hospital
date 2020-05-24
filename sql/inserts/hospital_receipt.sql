@@ -1,1 +1,1 @@
-INSERT INTO hospital.receipt (user_id, price_for_chamber, price_for_medicine) VALUES (1, 1000, 24150);
+INSERT INTO hospital.receipt (user_id, price_for_chamber, price_for_medicine) VALUES (1, 0, 21000);

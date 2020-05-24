@@ -1,2 +1,2 @@
 INSERT INTO hospital.inpatient (id, user_id, doctor_id, dept_chamber_id, diagnose, treatment_course_id, operation_service_id, patient_status, enrollment_date) VALUES (2, 10, 2, 3, null, null, null, 'BAD', '2020-04-10');
-INSERT INTO hospital.inpatient (id, user_id, doctor_id, dept_chamber_id, diagnose, treatment_course_id, operation_service_id, patient_status, enrollment_date) VALUES (11, 1, 1, 4, null, null, null, 'DEAD', '2020-04-26');
+INSERT INTO hospital.inpatient (id, user_id, doctor_id, dept_chamber_id, diagnose, treatment_course_id, operation_service_id, patient_status, enrollment_date) VALUES (14, 1, 5, 1, null, null, null, 'BAD', '2020-05-24');

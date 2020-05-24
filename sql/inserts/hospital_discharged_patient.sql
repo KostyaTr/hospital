@@ -62,3 +62,12 @@ Wed May 06 17:25:20 MSK 2020 Heart Failure GOOD
 Wed May 06 17:43:08 MSK 2020 Heart Failure CURED', 'Beta-blocker 23.0', null, 'CURED', '2020-04-26', '2020-05-06');
 INSERT INTO hospital.discharged_patient (id, patient_name, doctor_name, diagnose, card_history, treatment_course, operation_name, patient_status, enrollment_date, discharge_date) VALUES (39, 'ProTester TesterPro', 'Michael Kurd', 'Heart Failure', 'M
 Thu May 07 13:20:42 MSK 2020 Heart Failure CURED', 'Beta-blocker 23.0', null, 'CURED', '2020-05-07', '2020-05-07');
+INSERT INTO hospital.discharged_patient (id, patient_name, doctor_name, diagnose, card_history, treatment_course, operation_name, patient_status, enrollment_date, discharge_date) VALUES (40, 'Paul McCarbine', 'Virus Savir', 'COVID', 'Height = 180 cm, weight = 78kg.Sex = M. Had chicken pox
+
+Thu Apr 23 19:22:54 MSK 2020 Heart Failure CURED
+Wed May 06 13:37:20 MSK 2020 Heart Failure GOOD
+Wed May 06 17:15:44 MSK 2020 Heart Failure GOOD
+Wed May 06 17:25:20 MSK 2020 Heart Failure GOOD
+Wed May 06 17:43:08 MSK 2020 Heart Failure CURED COVID CURED', 'Antiviral EIDD-2801 90.0', null, 'CURED', '2020-05-24', '2020-05-24');
+INSERT INTO hospital.discharged_patient (id, patient_name, doctor_name, diagnose, card_history, treatment_course, operation_name, patient_status, enrollment_date, discharge_date) VALUES (41, 'ProTester TesterPro', 'Virus Savir', 'COVID', 'M
+Thu May 07 13:20:42 MSK 2020 Heart Failure CURED COVID CURED at 2020-05-24T19:55:52.942', 'Antiviral EIDD-2801 90.0', null, 'CURED', '2020-05-24', '2020-05-24');
