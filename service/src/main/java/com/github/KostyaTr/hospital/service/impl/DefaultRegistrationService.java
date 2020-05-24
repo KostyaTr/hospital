@@ -11,6 +11,10 @@ import com.github.KostyaTr.hospital.model.Card;
 import com.github.KostyaTr.hospital.model.User;
 import com.github.KostyaTr.hospital.service.RegistrationService;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class DefaultRegistrationService implements RegistrationService {
     private UserDao userDao = DefaultUserDao.getInstance();
     private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
@@ -32,6 +36,7 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     public Long saveAuthUser(AuthUser authUser) {
+        authUser.setPassword(hashPassword(authUser.getPassword()));
         return authUserDao.saveAuthUser(authUser);
     }
 
@@ -48,5 +53,18 @@ public class DefaultRegistrationService implements RegistrationService {
     @Override
     public boolean passwordCheck(String password, String passwordRepeat) {
         return password.equals(passwordRepeat);
+    }
+
+    private String hashPassword(String password){
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        String hashedPassword = DatatypeConverter.printHexBinary(digest).toLowerCase();
+        return hashedPassword;
     }
 }

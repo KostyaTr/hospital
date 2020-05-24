@@ -6,6 +6,8 @@ import com.github.KostyaTr.hospital.model.*;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.PriceCalculationService;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -114,7 +116,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
                 diagnose = "No diagnose";
             } else {
                 diagnose = inpatient.getDiagnose();
-                cardDao.updateCardHistory(inpatient.getUserId(), inpatient.getDiagnose() +" "+ inpatient.getStatus());
+                cardDao.updateCardHistory(inpatient.getUserId(),  diagnose +" "+ inpatient.getStatus() + " at " + LocalDateTime.now());
             }
             inpatientDao.removeInpatientById(inpatient.getInpatientId());
             String treatmentCourse;
@@ -142,11 +144,6 @@ public class DefaultMedDoctorService implements MedDoctorService {
         return false;
     }
 
-    private String getDoctorName(Long doctorId){
-        return userDao.getUserById(medDoctorDao.getDoctorById(doctorId).getUserId()).getFirstName() +
-                " " + userDao.getUserById(medDoctorDao.getDoctorById(doctorId).getUserId()).getLastName();
-    }
-
     @Override
     public List<Inpatient> getInpatientsByDoctorId(Long doctorId) {
         return inpatientDao.getPatientsByDoctorId(doctorId);
@@ -166,6 +163,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
                     chambers.get(FREE_CHAMBER).getPriceADay()
             );
             chamberDao.updateChamberLoad(chamber.getChamberId(), LOAD);
+            patientDao.removePatientByUserId(patient.getUserId()); //removing appointments
             Inpatient inpatient = new Inpatient(
                     patient.getUserId(),
                     patient.getFirstName(),
@@ -175,7 +173,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
                     null,
                     patient.getDoctor(),
                     chamber,
-                    "",
+                    null,
                     null,
                     Status.BAD,
                     new Date()
