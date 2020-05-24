@@ -162,9 +162,11 @@ public class DefaultPatientDaoTest {
         final UserEntity user = new UserEntity(null, "getPatientLatestCoupon", "getPatientLatestCoupon", "getPatientLatestCoupon", "getPatientLatestCoupon", null, null, null);
         final UserEntity userPatient1 = new UserEntity(null, "getPatientLatestCoupon1", "getPatientLatestCoupon1", "getPatientLatestCoupon1", "getPatientLatestCoupon1", null, null, null);
         final UserEntity userPatient2 = new UserEntity(null, "getPatientLatestCoupon2", "getPatientLatestCoupon2", "getPatientLatestCoupon2", "getPatientLatestCoupon2", null, null, null);
+        final UserEntity userPatient3 = new UserEntity(null, "getPatientLatestCoupon2", "getPatientLatestCoupon2", "getPatientLatestCoupon2", "getPatientLatestCoupon2", null, null, null);
         session.save(user);
         session.save(userPatient1);
         session.save(userPatient2);
+        session.save(userPatient3);
         final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
         final SpecialityEntity speciality = new SpecialityEntity(null, "getPatientLatestCoupon", Collections.singletonList(doctor), null);
         speciality.setDoctors(Collections.singletonList(doctor));
@@ -176,7 +178,7 @@ public class DefaultPatientDaoTest {
         session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, new Date()));
         session.save(new PatientEntity(null, userPatient2, doctor, 20, medicalService, new Date()));
         session.getTransaction().commit();
-
+        assertEquals(patientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth() - 1), 0);
         assertEquals(patientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()), 20);
     }
 }

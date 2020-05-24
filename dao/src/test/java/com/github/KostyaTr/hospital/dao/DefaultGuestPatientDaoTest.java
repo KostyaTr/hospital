@@ -111,7 +111,7 @@ public class DefaultGuestPatientDaoTest {
         session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon", doctor, 1, medicalService, new Date()));
         session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2", doctor, 20, medicalService, new Date()));
         session.getTransaction().commit();
-
+        assertEquals(guestPatientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth() - 1), 0);
         assertEquals(guestPatientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()), 20);
     }
 
