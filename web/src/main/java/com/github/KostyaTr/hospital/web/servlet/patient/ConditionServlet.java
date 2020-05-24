@@ -1,13 +1,13 @@
 package com.github.KostyaTr.hospital.web.servlet.patient;
 
 import com.github.KostyaTr.hospital.dao.UserDao;
-import com.github.KostyaTr.hospital.dao.display.PatientDao;
+import com.github.KostyaTr.hospital.dao.PatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultPatientDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Status;
 import com.github.KostyaTr.hospital.model.User;
-import com.github.KostyaTr.hospital.model.display.Patient;
+import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;

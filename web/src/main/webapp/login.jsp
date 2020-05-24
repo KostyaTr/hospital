@@ -45,7 +45,7 @@
 
     <label for="password">password</label>
     <input id="password" type="password" name="password"><br/>
-    <input type="submit">
+    <input type="submit" value="Login">
 </form>
 
 <p style="color: red">${error}</p>

@@ -1,10 +1,8 @@
 package com.github.KostyaTr.hospital.web.servlet.personal;
 
-import com.github.KostyaTr.hospital.dao.MedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.PatientDao;
 import com.github.KostyaTr.hospital.dao.ReceiptDao;
 import com.github.KostyaTr.hospital.dao.UserDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultReceiptDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
@@ -44,7 +42,7 @@ public class PersonalUserAccount extends HttpServlet {
         AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
         User user = userDao.getUserById(authUser.getUserId());
         int appointmentId = Integer.parseInt(req.getParameter("appointmentId"));
-        Long patientId = userService.getAppointmentsByUserId(user.getUserId()).get(appointmentId - 1).getAppointmentId();
+        Long patientId = userService.getAppointmentsByUserId(user.getUserId()).get(appointmentId - 1).getPatientId();
         String cancelAppointment = req.getParameter("cancel");
         if (cancelAppointment != null){
             userService.cancelAppointment(patientId);
@@ -55,8 +53,8 @@ public class PersonalUserAccount extends HttpServlet {
             }
         } else {
             Patient patient = patientDao.getPatientById(patientId);
-            req.getSession().setAttribute("doctorId", patient.getDoctorId());
-            req.getSession().setAttribute("medicalServiceId", patient.getMedicalServiceId());
+            req.getSession().setAttribute("doctorId", patient.getDoctor().getDoctorId());
+            req.getSession().setAttribute("medicalServiceId", patient.getMedicalService().getMedicalServiceId());
             req.getSession().setAttribute("patientId", patientId);
             try {
                 resp.sendRedirect(req.getContextPath() + "/appointment");

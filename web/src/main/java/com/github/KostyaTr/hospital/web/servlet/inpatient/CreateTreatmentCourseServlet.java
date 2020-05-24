@@ -1,16 +1,13 @@
 package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedicineDao;
-import com.github.KostyaTr.hospital.dao.TreatmentCourseDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicineDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultTreatmentCourseDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Medicine;
 import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
-import com.github.KostyaTr.hospital.web.servlet.appointment.AppointmentServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,16 +45,21 @@ public class CreateTreatmentCourseServlet extends HttpServlet {
             req.setAttribute("medicine", medicines);
             WebUtils.forwardToJsp("createTreatmentCourse", req, resp);
         } else {
-            Medicine medicine = medicineDao.getMedicineByName(medicineName);
-            if (medicine.getCriticalDose() <= Double.parseDouble(drugDose) && !overdose){
+            final Medicine medicineByName = medicineDao.getMedicineByName(medicineName);
+            if (medicineByName.getCriticalDose() <= Double.parseDouble(drugDose) && !overdose){
                 req.setAttribute("overdose", "Are you sure you want to overdose your patient?");
-                req.setAttribute("medicineDose", medicine.getCriticalDose());
+                req.setAttribute("medicineDose", medicineByName.getCriticalDose());
                 req.setAttribute("medicine", medicines);
                 WebUtils.forwardToJsp("createTreatmentCourse", req, resp);
             } else {
                 Long treatmentCourseId = medDoctorService.createTreatmentCourse(new TreatmentCourse(
+                        medicineByName.getMedicineId(),
+                        medicineByName.getMedicineName(),
+                        medicineByName.getNormalDose(),
+                        medicineByName.getCriticalDose(),
+                        medicineByName.getPackageAmount(),
+                        medicineByName.getPrice(),
                         null,
-                        medicine.getMedicineId(),
                         Double.parseDouble(drugDose),
                         receptionDesc,
                         Integer.parseInt(timesPerDay),

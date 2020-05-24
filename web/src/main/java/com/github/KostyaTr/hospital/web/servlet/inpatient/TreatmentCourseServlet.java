@@ -1,12 +1,12 @@
 package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
-import com.github.KostyaTr.hospital.dao.display.InpatientDao;
+import com.github.KostyaTr.hospital.dao.InpatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultInpatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
-import com.github.KostyaTr.hospital.model.display.Inpatient;
-import com.github.KostyaTr.hospital.model.display.TreatmentCourse;
+import com.github.KostyaTr.hospital.model.Inpatient;
+import com.github.KostyaTr.hospital.model.TreatmentCourse;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
@@ -34,8 +34,7 @@ public class TreatmentCourseServlet extends HttpServlet {
         final Long doctorId = medDoctorDao.getDoctorByUserId(authUser.getUserId())
                 .getDoctorId();
         final List<Inpatient> inpatientsByDoctorId = medDoctorService
-                .getInpatientsByDoctorId(
-                        doctorId);
+                .getInpatientsByDoctorId(doctorId);
         if (inpatient == null){
             req.setAttribute("inpatients", inpatientsByDoctorId);
             req.setAttribute("error", "Please Select Inpatient First");

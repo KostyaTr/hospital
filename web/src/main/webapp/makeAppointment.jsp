@@ -62,7 +62,11 @@
         <li>Your email: ${user.email}</li>
         <li>Medical Service: ${medicalService.serviceName}</li>
         <li>Service COST: ${medicalService.serviceCost} bel.rub.</li>
-        <li>Appointed Doctor: ${doctor.firstName} ${doctor.lastName}, specialities: ${doctor.specialities}</li>
+        <li>Appointed Doctor: ${doctor.firstName} ${doctor.lastName}, specialities:
+            <c:forEach items="${doctor.specialityList}" var="speciality">
+                ${speciality.specialityName},
+            </c:forEach>
+        </li>
     </ol>
 
     <form action="${pageContext.request.contextPath}/appointment" method="post">

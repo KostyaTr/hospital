@@ -74,8 +74,8 @@
         <c:forEach items="${guestPatients}" var="guestPatient">
             <tr>
                 <td></td>
-                <td>${guestPatient.patientName}</td>
-                <td>${guestPatient.medicalService}</td>
+                <td>${guestPatient.firstName} ${guestPatient.lastName}</td>
+                <td>${guestPatient.medicalService.serviceName}</td>
                 <td>${guestPatient.visitDate}</td>
             </tr>
         </c:forEach>

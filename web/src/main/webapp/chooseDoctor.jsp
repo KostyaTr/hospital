@@ -93,8 +93,12 @@
                 <td>${doctor.firstName} ${doctor.lastName} </td>
                 <td>${doctor.phoneNumber}</td>
                 <td>${doctor.email}</td>
-                <td>${doctor.specialities}</td>
-                <td>${doctor.department}</td>
+                <td>
+                    <c:forEach items="${doctor.specialityList}" var="speciality">
+                        ${speciality.specialityName},
+                    </c:forEach>
+                </td>
+                <td>${doctor.department.departmentName}</td>
             </tr>
         </c:forEach>
     </table>

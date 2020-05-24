@@ -62,29 +62,35 @@
             <th>¹</th>
             <th>Patient Name</th>
             <th>Chamber Num</th>
+            <th>Department</th>
             <th>Diagnose</th>
-            <th>Medicine Name</th>
-            <th>Medicine Dose</th>
+            <c:if test="${inpatient.treatmentCourse != null}">
+                <th>Medicine Name</th>
+                <th>Medicine Dose</th>
+            </c:if>
+            <c:if test="${inpatient.treatmentCourse == null}">
+                <th>Treatment Course</th>
+            </c:if>
             <th>Status</th>
             <th>Enrollment Date</th>
         </tr>
             <tr>
                 <td></td>
-                <td>${inpatient.patientName}</td>
-                <td>${inpatient.chamberId}</td>
+                <td>${inpatient.firstName} ${inpatient.lastName}</td>
+                <td>${inpatient.chamber.chamberNum}</td>
+                <td>${inpatient.chamber.department.departmentName}</td>
                 <c:if test="${inpatient.diagnose == null}">
                     <td>No diagnose</td>
                 </c:if>
                 <c:if test="${inpatient.diagnose != null}">
                     <td>${inpatient.diagnose}</td>
                 </c:if>
-                <c:if test="${inpatient.medicineName != null}">
-                    <td>${inpatient.medicineName}</td>
-                    <td>${inpatient.medicineDose}</td>
+                <c:if test="${inpatient.treatmentCourse != null}">
+                    <td>${inpatient.treatmentCourse.medicineName}</td>
+                    <td>${inpatient.treatmentCourse.medicineDose}</td>
                 </c:if>
-                <c:if test="${inpatient.medicineName == null}">
-                    <td>No medicine</td>
-                    <td>No medicine</td>
+                <c:if test="${inpatient.treatmentCourse == null}">
+                    <td>No Treatment Course</td>
                 </c:if>
                 <td>${inpatient.status}</td>
                 <td>${inpatient.enrollmentDate}</td>

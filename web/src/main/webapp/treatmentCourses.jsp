@@ -6,6 +6,16 @@
 <head>
     <title>Hospital</title>
     <style>
+        table {
+            width: 50%;
+            counter-reset: row-num -1;
+        }
+        table  tr  {
+            counter-increment: row-num;
+        }
+        table tr td:first-child::before {
+            content: counter(row-num) ". ";
+        }
         ul {
             list-style-type: none;
             margin: 0;
@@ -61,7 +71,7 @@
         </tr>
         <c:forEach items="${treatmentCourse}" var="treatmentCourse">
             <tr>
-                <td>${treatmentCourse.treatmentCourseId}</td>
+                <td></td>
                 <td>${treatmentCourse.medicineName}</td>
                 <td>${treatmentCourse.medicineDose}</td>
                 <td>${treatmentCourse.receptionDesc}</td>

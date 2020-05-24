@@ -1,12 +1,12 @@
 package com.github.KostyaTr.hospital.web.servlet.inpatient;
 
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
-import com.github.KostyaTr.hospital.dao.display.InpatientDao;
+import com.github.KostyaTr.hospital.dao.InpatientDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
-import com.github.KostyaTr.hospital.dao.impl.display.DefaultInpatientDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultInpatientDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.Status;
-import com.github.KostyaTr.hospital.model.display.Inpatient;
+import com.github.KostyaTr.hospital.model.Inpatient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;
@@ -48,7 +48,7 @@ public class StatusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         Status status = Status.valueOf(req.getParameter("status"));
         Inpatient inpatient = (Inpatient) req.getSession().getAttribute("inpatient");
-        if ((status.equals(Status.GOOD) || status.equals(Status.CURED)) && inpatient.getMedicineName() == null){
+        if ((status.equals(Status.GOOD) || status.equals(Status.CURED)) && inpatient.getTreatmentCourse() == null){
             req.setAttribute("error", "It Can't Be That Inpatient Got Better Without Any Treatment");
             WebUtils.forwardToJsp("inpatientStatus", req, resp);
         } else {

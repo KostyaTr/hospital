@@ -6,7 +6,7 @@ import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.model.User;
-import com.github.KostyaTr.hospital.model.display.GuestPatient;
+import com.github.KostyaTr.hospital.model.GuestPatient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;

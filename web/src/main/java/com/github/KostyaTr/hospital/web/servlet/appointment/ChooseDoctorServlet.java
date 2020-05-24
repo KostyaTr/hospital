@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.web.servlet.appointment;
 
-import com.github.KostyaTr.hospital.model.display.DoctorSpecialityDept;
+import com.github.KostyaTr.hospital.model.MedDoctor;
 import com.github.KostyaTr.hospital.service.UserService;
 import com.github.KostyaTr.hospital.service.impl.DefaultUserService;
 import com.github.KostyaTr.hospital.web.WebUtils;
@@ -50,7 +50,7 @@ public class ChooseDoctorServlet extends HttpServlet {
             WebUtils.forwardToJsp("chooseDoctor", req, resp);
         } else {
             int doctorId = Integer.parseInt(doctor);
-            final List<DoctorSpecialityDept> doctors = userService.getDoctorsByMedicalService((Long) req.getSession().getAttribute("medicalServiceId"));
+            final List<MedDoctor> doctors = userService.getDoctorsByMedicalService((Long) req.getSession().getAttribute("medicalServiceId"));
             if (doctorId > doctors.size() || doctorId < 1){
                 req.setAttribute("error", "incorrect input");
                 req.setAttribute("doctors",

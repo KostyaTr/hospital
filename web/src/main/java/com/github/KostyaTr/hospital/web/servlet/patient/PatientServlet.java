@@ -3,7 +3,7 @@ package com.github.KostyaTr.hospital.web.servlet.patient;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
-import com.github.KostyaTr.hospital.model.display.Patient;
+import com.github.KostyaTr.hospital.model.Patient;
 import com.github.KostyaTr.hospital.service.MedDoctorService;
 import com.github.KostyaTr.hospital.service.impl.DefaultMedDoctorService;
 import com.github.KostyaTr.hospital.web.WebUtils;

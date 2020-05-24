@@ -61,7 +61,7 @@
 <ol>
     <c:forEach items="${appointments}" var="item">
         <li>
-           <h3><c:out value="Number in line: ${item.couponNum} to ${item.doctorName} at ${item.visitDate}"/></h3>
+           <h3><c:out value="Number in line: ${item.couponNum} to ${item.doctor.firstName} ${item.doctor.lastName} at ${item.visitDate}"/></h3>
        </li>
     </c:forEach>
 </ol>

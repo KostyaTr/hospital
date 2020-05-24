@@ -1,7 +1,9 @@
 package com.github.KostyaTr.hospital.web.servlet.appointment;
 
+import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.dao.MedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.UserDao;
+import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultMedicalServiceDao;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
@@ -33,6 +35,7 @@ import java.util.Locale;
 public class AppointmentServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(AppointmentServlet.class);
     private UserService userService = DefaultUserService.getInstance();
+    private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
     private QueueService queueService = DefaultQueueService.getInstance();
     private UserDao userDao = DefaultUserDao.getInstance();
     private MedicalServiceDao medicalServiceDao = DefaultMedicalServiceDao.getInstance();
@@ -127,21 +130,26 @@ public class AppointmentServlet extends HttpServlet {
                     user.getLastName(),
                     user.getPhoneNumber(),
                     user.getEmail(),
-                    doctorId,
+                    medDoctorDao.getDoctorById(doctorId),
                     couponNum,
-                    medicalServiceId,
+                    medicalServiceDao.getMedicalServiceById(medicalServiceId),
                     Date.from(visitTime.atZone( ZoneId.systemDefault()).toInstant())));
             req.setAttribute("coupon", couponNum);
             log.info("Guest User {} made appointment to Doctor {}", id, doctorId);
             WebUtils.forwardToJsp("guest's", req, resp);
         } else {
             AuthUser authUser = (AuthUser) req.getSession().getAttribute("authUser");
+            User user = userDao.getUserById(authUser.getUserId());
             final Patient patient = new Patient(
+                    user.getUserId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getPhoneNumber(),
+                    user.getEmail(),
                     null,
-                    authUser.getUserId(),
-                    doctorId,
+                    medDoctorDao.getDoctorById(doctorId),
                     couponNum,
-                    medicalServiceId,
+                    medicalServiceDao.getMedicalServiceById(medicalServiceId),
                     Date.from(visitTime.atZone(ZoneId.systemDefault()).toInstant()));
             if (req.getSession().getAttribute("patientId") != null){
                 patient.setPatientId((Long) req.getSession().getAttribute("patientId"));
