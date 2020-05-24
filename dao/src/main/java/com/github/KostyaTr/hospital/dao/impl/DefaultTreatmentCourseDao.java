@@ -39,9 +39,11 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
         List<TreatmentCourseEntity> treatmentCourseEntities = session.createQuery("select tr from TreatmentCourseEntity tr", TreatmentCourseEntity.class)
                 .list();
         session.getTransaction().commit();
-        return treatmentCourseEntities.stream()
+        final List<TreatmentCourse> treatmentCourses = treatmentCourseEntities.stream()
                 .map(TreatmentCourseConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return treatmentCourses;
     }
 
     @Override
@@ -51,6 +53,7 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
         session.createQuery("delete TreatmentCourseEntity where id = :id")
                 .setParameter("id", treatmentCourseId).executeUpdate();
         session.getTransaction().commit();
+        session.close();
         return getTreatmentCourseById(treatmentCourseId) == null;
     }
 
@@ -65,6 +68,8 @@ public class DefaultTreatmentCourseDao implements TreatmentCourseDao {
             treatmentCourseEntity = null;
         }
         session.getTransaction().commit();
-        return TreatmentCourseConverter.fromEntity(treatmentCourseEntity);
+        final TreatmentCourse treatmentCourse = TreatmentCourseConverter.fromEntity(treatmentCourseEntity);
+        session.close();
+        return treatmentCourse;
     }
 }

@@ -1,6 +1,5 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.DataSource;
 import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedDoctorDao;
 import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
@@ -9,11 +8,6 @@ import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +27,11 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
         session.beginTransaction();
         List<MedDoctorEntity> doctorsEntity = session.createQuery("From MedDoctorEntity", MedDoctorEntity.class).list();
         session.getTransaction().commit();
-        return doctorsEntity.stream()
+        final List<MedDoctor> medDoctors = doctorsEntity.stream()
                 .map(MedDoctorConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return medDoctors;
     }
 
     @Override
@@ -49,7 +45,9 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
             doctorEntity = null;
         }
         session.getTransaction().commit();
-        return MedDoctorConverter.fromEntity(doctorEntity);
+        final MedDoctor medDoctor = MedDoctorConverter.fromEntity(doctorEntity);
+        session.close();
+        return medDoctor;
     }
 
     @Override
@@ -64,7 +62,9 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
             doctorEntity = null;
         }
         session.getTransaction().commit();
-        return MedDoctorConverter.fromEntity(doctorEntity);
+        final MedDoctor medDoctor = MedDoctorConverter.fromEntity(doctorEntity);
+        session.close();
+        return medDoctor;
     }
 
     @Override
@@ -76,8 +76,10 @@ public class DefaultMedDoctorDao implements MedDoctorDao {
                 " where s.id = :speciality_id", MedDoctorEntity.class)
                     .setParameter("speciality_id", specialityId).list();
         session.getTransaction().commit();
-        return doctorEntities.stream()
+        final List<MedDoctor> medDoctors = doctorEntities.stream()
                 .map(MedDoctorConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return medDoctors;
     }
 }

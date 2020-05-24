@@ -37,7 +37,9 @@ public class DefaultCardDao implements CardDao {
         }
         session.getTransaction().commit();
         session.close();
-        return CardConverter.fromEntity(cardEntity);
+        final Card card = CardConverter.fromEntity(cardEntity);
+        session.close();
+        return card;
     }
 
     @Override
@@ -51,13 +53,14 @@ public class DefaultCardDao implements CardDao {
     }
 
     @Override
-    public void updateCardHistory(Long userId, String diagnose) {
+    public void updateCardHistory(Long userId, String history) {
         Card card = getInstance().getCardByUserId(userId);
         CardEntity cardEntity = CardConverter.toEntity(card);
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        cardEntity.setHistory(card.getHistory() + " " + diagnose);
+        cardEntity.setHistory(card.getHistory() + " " + history);
         session.update(cardEntity);
         session.getTransaction().commit();
+        session.close();
     }
 }

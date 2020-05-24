@@ -31,6 +31,7 @@ public class DefaultChamberDao implements ChamberDao {
                     .setParameter("load", load)
                     .executeUpdate();
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -46,6 +47,7 @@ public class DefaultChamberDao implements ChamberDao {
             priceADay = 0;
         }
         session.getTransaction().commit();
+        session.close();
         return priceADay;
     }
 
@@ -57,8 +59,10 @@ public class DefaultChamberDao implements ChamberDao {
                 "and chamber_capacity > chamber_load", ChamberEntity.class)
                 .setParameter("dept_id", deptId).list();
         session.getTransaction().commit();
-        return chambers.stream()
+        final List<Chamber> chamberList = chambers.stream()
                 .map(ChamberConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return chamberList;
     }
 }

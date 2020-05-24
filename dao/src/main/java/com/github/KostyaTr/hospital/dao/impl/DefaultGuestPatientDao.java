@@ -30,9 +30,11 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
         List<GuestPatientEntity> guestPatients = session.createQuery("select gu from GuestPatientEntity gu where doctor_id = :doctor_id", GuestPatientEntity.class)
                 .setParameter("doctor_id", doctorId).list();
         session.getTransaction().commit();
-        return guestPatients.stream()
+        final List<GuestPatient> patients = guestPatients.stream()
                 .map(GuestPatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patients;
     }
 
     @Override
@@ -42,9 +44,11 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
         List<GuestPatientEntity> guestPatients = session.createQuery("select gu from GuestPatientEntity gu", GuestPatientEntity.class)
                 .list();
         session.getTransaction().commit();
-        return guestPatients.stream()
+        final List<GuestPatient> patients = guestPatients.stream()
                 .map(GuestPatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patients;
     }
 
     @Override
@@ -61,14 +65,14 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
     public int getLatestCouponToDoctorByDay(Long doctorId, int day) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        int coupon;
-        try {
-            coupon = session.createQuery("select max(couponNum) from GuestPatientEntity " +
+        Integer coupon = session.createQuery("select max(couponNum) from GuestPatientEntity " +
                     "where doctor_id = :doctor_id and  day(visit_date) = :day", Integer.class)
                     .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
-        } catch (NoResultException e){
+        if (coupon == null){
             coupon = 0;
         }
+        session.getTransaction().commit();
+        session.close();
         return coupon;
     }
 
@@ -80,6 +84,7 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
                 .setParameter("id", patientId)
                 .executeUpdate();
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -94,6 +99,8 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
         } catch (NoResultException e){
             date = null;
         }
+        session.getTransaction().commit();
+        session.close();
         return date;
     }
 }

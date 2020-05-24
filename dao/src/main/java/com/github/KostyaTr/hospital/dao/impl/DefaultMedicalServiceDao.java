@@ -32,9 +32,11 @@ public class DefaultMedicalServiceDao implements MedicalServiceDao {
         List<MedicalServiceEntity> medicalServices = session.createQuery("From MedicalServiceEntity", MedicalServiceEntity.class)
                 .list();
         session.getTransaction().commit();
-        return medicalServices.stream()
+        final List<MedicalService> serviceList = medicalServices.stream()
                 .map(MedicalServiceConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return serviceList;
     }
 
     @Override
@@ -49,6 +51,8 @@ public class DefaultMedicalServiceDao implements MedicalServiceDao {
             log.info("No medical service was found by {} id", medicalServiceId, e);
         }
         session.getTransaction().commit();
-        return MedicalServiceConverter.fromEntity(medicalServiceEntity);
+        final MedicalService medicalService = MedicalServiceConverter.fromEntity(medicalServiceEntity);
+        session.close();
+        return medicalService;
     }
 }

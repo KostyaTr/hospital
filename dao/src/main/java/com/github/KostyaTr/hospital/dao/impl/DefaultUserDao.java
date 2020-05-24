@@ -34,6 +34,7 @@ public class DefaultUserDao implements UserDao {
                 .setParameter("id", userId)
                 .executeUpdate();
         session.getTransaction().commit();
+        session.close();
         return getUserById(userId) == null;
     }
 
@@ -43,6 +44,8 @@ public class DefaultUserDao implements UserDao {
        session.beginTransaction();
         UserEntity userEntity = session.get(UserEntity.class, userId);
        session.getTransaction().commit();
-       return UserConverter.fromEntity(userEntity);
+        final User user = UserConverter.fromEntity(userEntity);
+        session.close();
+        return user;
     }
 }

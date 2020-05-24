@@ -32,9 +32,11 @@ public class DefaultPatientDao implements PatientDao {
                 .setParameter("doctor_id", doctorId)
                 .list();
         session.getTransaction().commit();
-        return patients.stream()
+        final List<Patient> patientList = patients.stream()
                 .map(PatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patientList;
     }
 
     @Override
@@ -46,23 +48,25 @@ public class DefaultPatientDao implements PatientDao {
                 .setParameter("user_id", userId)
                 .list();
         session.getTransaction().commit();
-        return patients.stream()
+        final List<Patient> patientList = patients.stream()
                 .map(PatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patientList;
     }
 
     @Override
     public int getLatestCouponToDoctorByDay(Long doctorId, int day) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        int coupon;
-        try {
-            coupon = session.createQuery("select max(couponNum) from PatientEntity " +
+        Integer coupon = session.createQuery("select max(couponNum) from PatientEntity " +
                     "where doctor_id = :doctor_id and  day(visit_date) = :day", Integer.class)
                     .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
-        } catch (NoResultException e){
+        if (coupon == null){
             coupon = 0;
         }
+        session.getTransaction().commit();
+        session.close();
         return coupon;
     }
 
@@ -73,9 +77,11 @@ public class DefaultPatientDao implements PatientDao {
         List<PatientEntity> patients = session.createQuery("select p from PatientEntity p", PatientEntity.class)
                 .list();
         session.getTransaction().commit();
-        return patients.stream()
+        final List<Patient> patientList = patients.stream()
                 .map(PatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patientList;
     }
 
     @Override
@@ -96,7 +102,19 @@ public class DefaultPatientDao implements PatientDao {
                 .setParameter("id", patientId)
                 .executeUpdate();
         session.getTransaction().commit();
+        session.close();
         return getPatientById(patientId) == null;
+    }
+
+    @Override
+    public void removePatientByUserId(Long userId) {
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("delete PatientEntity where user_id = :id")
+                .setParameter("id", userId)
+                .executeUpdate();
+        session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -105,7 +123,9 @@ public class DefaultPatientDao implements PatientDao {
         session.beginTransaction();
         PatientEntity patientEntity = session.get(PatientEntity.class, patientId);
         session.getTransaction().commit();
-        return PatientConverter.fromEntity(patientEntity);
+        final Patient patient = PatientConverter.fromEntity(patientEntity);
+        session.close();
+        return patient;
     }
 
     @Override
@@ -115,6 +135,7 @@ public class DefaultPatientDao implements PatientDao {
         session.beginTransaction();
         session.update(patientEntity);
         session.getTransaction().commit();
+        session.close();
     }
 
     @Override
@@ -129,6 +150,8 @@ public class DefaultPatientDao implements PatientDao {
         } catch (NoResultException e){
             date = null;
         }
+        session.getTransaction().commit();
+        session.close();
         return date;
     }
 }

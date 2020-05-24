@@ -40,9 +40,11 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
                 .setMaxResults(PAGE_SIZE)
                 .list();
         session.getTransaction().commit();
-        return dischargedPatients.stream()
+        final List<DischargedPatient> patientList = dischargedPatients.stream()
                 .map(DischargedPatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return patientList;
     }
 
     @Override
@@ -52,6 +54,7 @@ public class DefaultDischargedPatientDao implements DischargedPatientDao {
         Long count = session.createQuery("select count(dischargedPatientId) from DischargedPatientEntity", Long.class)
                 .getSingleResult();
         session.getTransaction().commit();
+        session.close();
         return count;
     }
 }

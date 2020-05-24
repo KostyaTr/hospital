@@ -27,9 +27,11 @@ public class DefaultInpatientDao implements InpatientDao {
         List<InpatientEntity> inpatients = session.createQuery("select p from InpatientEntity p", InpatientEntity.class)
                 .list();
         session.getTransaction().commit();
-        return inpatients.stream()
+        final List<Inpatient> inpatientList = inpatients.stream()
                 .map(InpatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return inpatientList;
     }
 
     @Override
@@ -41,9 +43,11 @@ public class DefaultInpatientDao implements InpatientDao {
                 .setParameter("doctor_id", doctorId)
                 .list();
         session.getTransaction().commit();
-        return inpatients.stream()
+        final List<Inpatient> inpatientList = inpatients.stream()
                 .map(InpatientConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return inpatientList;
     }
 
     @Override
@@ -52,7 +56,9 @@ public class DefaultInpatientDao implements InpatientDao {
         session.beginTransaction();
         InpatientEntity inpatientEntity = session.get(InpatientEntity.class, patientId);
         session.getTransaction().commit();
-        return InpatientConverter.fromEntity(inpatientEntity);
+        final Inpatient inpatient = InpatientConverter.fromEntity(inpatientEntity);
+        session.close();
+        return inpatient;
     }
 
     @Override
@@ -73,6 +79,7 @@ public class DefaultInpatientDao implements InpatientDao {
                 .setParameter("id", patientId)
                 .executeUpdate();
         session.getTransaction().commit();
+        session.close();
         return getInpatientById(patientId) == null;
     }
 
@@ -83,5 +90,6 @@ public class DefaultInpatientDao implements InpatientDao {
         session.beginTransaction();
         session.update(inpatientEntity);
         session.getTransaction().commit();
+        session.close();
     }
 }

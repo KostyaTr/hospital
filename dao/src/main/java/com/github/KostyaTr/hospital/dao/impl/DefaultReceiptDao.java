@@ -30,7 +30,9 @@ public class DefaultReceiptDao implements ReceiptDao {
             receiptEntity = null;
         }
         session.getTransaction().commit();
-        return ReceiptConverter.fromEntity(receiptEntity);
+        final Receipt receipt = ReceiptConverter.fromEntity(receiptEntity);
+        session.close();
+        return receipt;
     }
 
     @Override

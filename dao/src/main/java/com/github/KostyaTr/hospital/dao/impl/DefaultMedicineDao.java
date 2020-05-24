@@ -15,7 +15,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.criteria.Root;
 
 public class DefaultMedicineDao implements MedicineDao {
     private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
@@ -42,7 +41,9 @@ public class DefaultMedicineDao implements MedicineDao {
             medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineName, e);
         }
-        return MedicineConverter.fromEntity(medicineEntity);
+        final Medicine medicine = MedicineConverter.fromEntity(medicineEntity);
+        session.close();
+        return medicine;
     }
 
     @Override
@@ -57,7 +58,9 @@ public class DefaultMedicineDao implements MedicineDao {
             log.info("Medicine {} wasn't found", medicineId, e);
         }
         session.getTransaction().commit();
-        return MedicineConverter.fromEntity(medicineEntity);
+        final Medicine medicine = MedicineConverter.fromEntity(medicineEntity);
+        session.close();
+        return medicine;
     }
 
     @Override
@@ -66,8 +69,10 @@ public class DefaultMedicineDao implements MedicineDao {
         session.beginTransaction();
         List<MedicineEntity> medicines = session.createQuery("From MedicineEntity").list();
         session.getTransaction().commit();
-        return medicines.stream()
+        final List<Medicine> medicineList = medicines.stream()
                 .map(MedicineConverter::fromEntity)
                 .collect(Collectors.toList());
+        session.close();
+        return medicineList;
     }
 }
