@@ -7,5 +7,5 @@ public interface CardDao {
 
     Long addCard(Card card);
 
-    void updateCardHistory(Long userId, String diagnose);
+    void updateCardHistory(Long userId, String history);
 }
