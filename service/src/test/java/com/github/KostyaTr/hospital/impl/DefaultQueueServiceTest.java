@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +30,7 @@ public class DefaultQueueServiceTest {
     DefaultQueueService queueService;
 
     @Test
-    void couponNumPatientTest(){
+    void couponNumPatientTest() {
         final LocalDate date = LocalDate.now();
         int day = date.getDayOfMonth();
 
@@ -42,7 +41,7 @@ public class DefaultQueueServiceTest {
     }
 
     @Test
-    void couponNumGuestPatientTest(){
+    void couponNumGuestPatientTest() {
         final LocalDate date = LocalDate.now();
         int day = date.getDayOfMonth();
 
@@ -54,68 +53,69 @@ public class DefaultQueueServiceTest {
     }
 
     @Test
-    void getAvailableDaysGuestPatientNull(){
-        final LocalDateTime currentTime = LocalDateTime.now();
-        int day = currentTime.getDayOfMonth();
-
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
-
-        List<LocalDate> availableDays = queueService.getAvailableDays(1L);
-        assertFalse(availableDays.isEmpty());
-        if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SATURDAY)){
-            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(2).getDayOfMonth());
-        } else if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SUNDAY)){
-            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-        } else {
-            if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
-            } else {
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-            }
-        }
-    }
-
-    @Test
-    void getAvailableDaysPatientNull(){
-        final LocalDate date = LocalDate.now();
-        int day = date.getDayOfMonth();
-
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
-
-        List<LocalDate> availableDays = queueService.getAvailableDays(1L);
-        assertFalse(availableDays.isEmpty());
+    void getAvailableDaysGuestPatientNull() {
         LocalDateTime currentTime = LocalDateTime.now();
-        if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SATURDAY)){
-            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(2).getDayOfMonth());
-        } else if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SUNDAY)){
-            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-        } else {
-            if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
-            } else {
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-            }
+
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+            currentTime = currentTime.plusDays(2);
+        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            currentTime = currentTime.plusDays(1);
         }
+        int day = currentTime.getDayOfMonth();
+
+        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
+
+        List<LocalDate> availableDays = queueService.getAvailableDays(1L);
+        assertFalse(availableDays.isEmpty());
+        assertEquals(availableDays.size(), 5);
+
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
+            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
+        } else {
+            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
+        }
+
     }
 
     @Test
-    void getAvailableDaysBothNull(){
-        final LocalDateTime currentTime = LocalDateTime.now();
+    void getAvailableDaysPatientNull() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+            currentTime = currentTime.plusDays(2);
+        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            currentTime = currentTime.plusDays(1);
+        }
         int day = currentTime.getDayOfMonth();
 
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
         when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
 
         List<LocalDate> availableDays = queueService.getAvailableDays(1L);
         assertFalse(availableDays.isEmpty());
-        if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SATURDAY)){
+        assertEquals(availableDays.size(), 5);
+
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
+            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
+        } else {
+            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
+        }
+    }
+
+    @Test
+    void getAvailableDaysBothNull() {
+        final LocalDateTime currentTime = LocalDateTime.now();
+
+        List<LocalDate> availableDays = queueService.getAvailableDays(1L);
+        assertFalse(availableDays.isEmpty());
+        assertEquals(5, availableDays.size());
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
             assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(2).getDayOfMonth());
-        } else if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
             assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
         } else {
-            if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
+            if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
                 assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
             } else {
                 assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
@@ -124,8 +124,14 @@ public class DefaultQueueServiceTest {
     }
 
     @Test
-    void getAvailableDaysNoneNull(){
-        final LocalDateTime currentTime = LocalDateTime.now();
+    void getAvailableDaysNoneNull() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY)) {
+            currentTime = currentTime.plusDays(2);
+        } else if (currentTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+            currentTime = currentTime.plusDays(1);
+        }
         int day = currentTime.getDayOfMonth();
 
         when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
@@ -133,21 +139,17 @@ public class DefaultQueueServiceTest {
 
         List<LocalDate> availableDays = queueService.getAvailableDays(1L);
         assertFalse(availableDays.isEmpty());
-        if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SATURDAY)){
-            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(2).getDayOfMonth());
-        } else if (LocalDateTime.now().withDayOfMonth(day).getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+        assertEquals(availableDays.size(), 5);
+
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
+            assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
+        } else {
             assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-        } else {
-            if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.getDayOfMonth());
-            } else {
-                assertEquals(availableDays.get(0).getDayOfMonth(), currentTime.plusDays(1).getDayOfMonth());
-            }
         }
     }
 
     @Test
-    void getVisitTimeNoneNull(){
+    void getVisitTimeNoneNull() {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
@@ -156,14 +158,15 @@ public class DefaultQueueServiceTest {
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
-        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
             assertEquals(visitTime.getMinute(), currentTime.plusMinutes(20).getMinute());
         } else {
-            assertEquals(visitTime, currentTime.toLocalDate().atStartOfDay().withHour(9).withMinute(0));
+            assertNull(visitTime);
         }
     }
+
     @Test
-    void getVisitTimeGuestPatientNull(){
+    void getVisitTimeGuestPatientNull() {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
@@ -172,14 +175,15 @@ public class DefaultQueueServiceTest {
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
-        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
             assertEquals(visitTime.getMinute(), currentTime.plusMinutes(20).getMinute());
         } else {
-            assertEquals(visitTime, currentTime.toLocalDate().atStartOfDay().withHour(9).withMinute(0));
+            assertNull(visitTime);
         }
     }
+
     @Test
-    void getVisitTimeBothNull(){
+    void getVisitTimeBothNull() {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
@@ -188,14 +192,15 @@ public class DefaultQueueServiceTest {
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
-        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
             assertEquals(visitTime.getMinute(), currentTime.plusMinutes(20).getMinute());
         } else {
-            assertEquals(visitTime, currentTime.toLocalDate().atStartOfDay().withHour(9).withMinute(0));
+            assertNull(visitTime);
         }
     }
+
     @Test
-    void getVisitTimePatientNull(){
+    void getVisitTimePatientNull() {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
@@ -204,10 +209,10 @@ public class DefaultQueueServiceTest {
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
-        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)){
+        if (currentTime.getHour() <= 16 && (currentTime.getHour() != 16 || currentTime.getMinute() <= 20)) {
             assertEquals(visitTime.getMinute(), currentTime.plusMinutes(20).getMinute());
         } else {
-            assertEquals(visitTime, currentTime.toLocalDate().atStartOfDay().withHour(9).withMinute(0));
+            assertNull(visitTime);
         }
     }
 }
