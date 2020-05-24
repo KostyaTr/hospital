@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -29,8 +30,8 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private MedDoctorEntity doctor;
 
-    @OneToOne (mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private PatientEntity patient;
+    @OneToMany (mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    private List<PatientEntity> patient;
 
     @OneToOne (mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private InpatientEntity inpatient;
