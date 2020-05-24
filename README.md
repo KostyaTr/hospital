@@ -1,5 +1,6 @@
 # hospital
 MySQL 8.0.15 version was used (it can display russian symbols without any additional adjustments)
+
 md5 method was used to hash passwords
 
 проект примерно описывает больницу
@@ -26,5 +27,3 @@ md5 method was used to hash passwords
 при регистрации есть проверка на повторный пароль
 а также есть проверка на логин, что не может существовать два одинаковых
 нужно составить сведения для карточки больного
-
-дополнительные таблицы(не задействованные на данный момент) были созданы для последующих расширений проекта
