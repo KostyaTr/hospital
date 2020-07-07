@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter @Setter
@@ -25,7 +25,7 @@ public class CardEntity {
     @Column(name = "address") @Access(AccessType.PROPERTY)
     private String address;
     @Column(name = "date_of_birth") @Access(AccessType.PROPERTY)
-    private Date birthday;
+    private LocalDate birthday;
     @Column(name = "insurance") @Access(AccessType.PROPERTY)
     private boolean insurance;
 }

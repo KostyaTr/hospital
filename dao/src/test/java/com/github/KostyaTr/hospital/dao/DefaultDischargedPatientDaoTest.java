@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ public class DefaultDischargedPatientDaoTest {
 
     @Test
     void addDischargedPatient(){
-        final DischargedPatient dischargedPatient = new DischargedPatient(null, "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", Status.CURED, new Date(), new Date());
+        final DischargedPatient dischargedPatient = new DischargedPatient(null, "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", "addDischargedPatient", Status.CURED, LocalDate.now(), LocalDate.now());
         assertNotNull(dischargedPatientDao.addDischargedPatient(dischargedPatient));
     }
 
@@ -36,7 +36,7 @@ public class DefaultDischargedPatientDaoTest {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         for (int i = 0; i < 21; i++) {
-            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
+            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, LocalDate.now(), LocalDate.now()));
         }
         session.getTransaction().commit();
         final List<DischargedPatient> firstTen = dischargedPatientDao.getDischargedPatients(1);
@@ -63,7 +63,7 @@ public class DefaultDischargedPatientDaoTest {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         for (int i = 0; i < 21; i++) {
-            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, new Date(), new Date()));
+            session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, LocalDate.now(), LocalDate.now()));
         }
         session.getTransaction().commit();
 

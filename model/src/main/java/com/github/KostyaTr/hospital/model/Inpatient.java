@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +13,12 @@ public class Inpatient extends User {
     private String diagnose;
     private TreatmentCourse treatmentCourse;
     private Status status;
-    private Date enrollmentDate;
+    private LocalDate enrollmentDate;
 
     public Inpatient(Long userId, String firstName, String lastName,
                      String phoneNumber, String email, Long inpatientId,
                      MedDoctor doctor, Chamber chamber, String diagnose,
-                     TreatmentCourse treatmentCourse, Status status, Date enrollmentDate) {
+                     TreatmentCourse treatmentCourse, Status status, LocalDate enrollmentDate) {
 
         super(userId, firstName, lastName, phoneNumber, email);
         this.inpatientId = inpatientId;

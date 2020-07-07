@@ -8,7 +8,7 @@ import com.github.KostyaTr.hospital.model.GuestPatient;
 import org.hibernate.Session;
 
 import javax.persistence.NoResultException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -88,13 +88,13 @@ public class DefaultGuestPatientDao implements GuestPatientDao {
     }
 
     @Override
-    public Date getLatestTimeToDoctorByDay(Long doctorId, int day) {
+    public LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day) {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Date date;
+        LocalDateTime date;
         try {
             date = session.createQuery("select max(visitDate) from GuestPatientEntity " +
-                    "where doctor_id = :doctor_id and day(visit_date) = :day", Date.class)
+                    "where doctor_id = :doctor_id and day(visit_date) = :day", LocalDateTime.class)
                     .setParameter("doctor_id", doctorId).setParameter("day", day).getSingleResult();
         } catch (NoResultException e){
             date = null;

@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +16,6 @@ public class DischargedPatient {
     private String cardHistory;
     private String treatmentCourse;
     private Status status;
-    private Date enrollmentDate;
-    private Date dischargeDate;
+    private LocalDate enrollmentDate;
+    private LocalDate dischargeDate;
 }

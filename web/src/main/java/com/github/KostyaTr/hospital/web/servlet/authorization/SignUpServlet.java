@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @WebServlet("/signUp")
@@ -66,12 +67,8 @@ public class SignUpServlet extends HttpServlet {
         } else {
             Long userId = registrationService.saveUser(new User(null, firstName, lastName, phoneNumber, email));
             registrationService.saveAuthUser(new AuthUser(null, login, password, Role.AuthorizedUser, userId));
-            try {
-                registrationService.saveCard(new Card(null, userId, sex, address,
-                        new SimpleDateFormat("yyyy-MM-dd").parse(birthday), insurance));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            registrationService.saveCard(new Card(null, userId, sex, address,
+                    LocalDate.parse(birthday), insurance));
             log.info("user created:{} at {}", userId, LocalDateTime.now());
             try {
                 resp.sendRedirect(req.getContextPath() + "/login");

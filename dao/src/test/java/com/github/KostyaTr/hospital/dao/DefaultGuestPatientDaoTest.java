@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,8 +35,8 @@ public class DefaultGuestPatientDaoTest {
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientsCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
-        session.save(new GuestPatientEntity(null, "getGuestPatients1","getGuestPatients1","getGuestPatients1","getGuestPatients1", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatientEntity(null, "getGuestPatients2","getGuestPatients2","getGuestPatients2","getGuestPatients2", doctor, 2, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatients1","getGuestPatients1","getGuestPatients1","getGuestPatients1", doctor, 1, medicalService, LocalDateTime.now()));
+        session.save(new GuestPatientEntity(null, "getGuestPatients2","getGuestPatients2","getGuestPatients2","getGuestPatients2", doctor, 2, medicalService, LocalDateTime.now()));
         session.getTransaction().commit();
 
 
@@ -67,7 +67,7 @@ public class DefaultGuestPatientDaoTest {
         assertNotNull(guestPatientDao.addPatient(new GuestPatient(null, "addGuestPatients",
                 "addGuestPatients","addGuestPatients", "addGuestPatients",
                 MedDoctorConverter.fromEntity(doctorEntity), 2,
-                MedicalServiceConverter.fromEntity(medicalServiceEntity), new Date())));
+                MedicalServiceConverter.fromEntity(medicalServiceEntity), LocalDateTime.now())));
     }
 
     @Test
@@ -84,8 +84,8 @@ public class DefaultGuestPatientDaoTest {
         session.save(speciality);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientByDoctorId", speciality, 1d, null, null);
         session.save(medicalService);
-        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2", doctor, 2, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId","getGuestPatientByDoctorId", doctor, 1, medicalService, LocalDateTime.now()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2","getGuestPatientByDoctorId2", doctor, 2, medicalService, LocalDateTime.now()));
         session.getTransaction().commit();
 
         final List<GuestPatient> patients = guestPatientDao.getPatientsByDoctorId(doctorId);
@@ -108,8 +108,8 @@ public class DefaultGuestPatientDaoTest {
         session.save(speciality);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getGuestPatientLatestCoupon", speciality, 1d, null, null);
         session.save(medicalService);
-        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon", doctor, 1, medicalService, new Date()));
-        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2", doctor, 20, medicalService, new Date()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon","getGuestPatientLatestCoupon", doctor, 1, medicalService, LocalDateTime.now()));
+        session.save(new GuestPatientEntity(null, "getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2","getGuestPatientLatestCoupon2", doctor, 20, medicalService, LocalDateTime.now()));
         session.getTransaction().commit();
         assertEquals(guestPatientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth() - 1), 0);
         assertEquals(guestPatientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()), 20);

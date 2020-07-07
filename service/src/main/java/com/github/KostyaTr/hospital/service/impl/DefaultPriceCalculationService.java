@@ -7,8 +7,6 @@ import com.github.KostyaTr.hospital.model.Receipt;
 import com.github.KostyaTr.hospital.service.PriceCalculationService;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -29,9 +27,7 @@ public class DefaultPriceCalculationService implements PriceCalculationService {
         if (insuranceCheck(inpatient)){
           return null;
         }
-        LocalDate enrollmentDate;
-        enrollmentDate = new Date(inpatient.getEnrollmentDate().getTime())
-                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate enrollmentDate = inpatient.getEnrollmentDate();
 
         long timeAtChamber = DAYS.between(enrollmentDate, LocalDate.now());
         // get price a day from database to have actual price for chamber at the moment

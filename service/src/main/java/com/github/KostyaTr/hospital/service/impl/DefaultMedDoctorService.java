@@ -8,7 +8,6 @@ import com.github.KostyaTr.hospital.service.PriceCalculationService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public class DefaultMedDoctorService implements MedDoctorService {
@@ -135,7 +134,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
                     treatmentCourse,
                     inpatient.getStatus(),
                     inpatient.getEnrollmentDate(),
-                    new Date());
+                    LocalDate.now());
             if (inpatient.getStatus().equals(Status.DEAD)){
                 userDao.removeUser(inpatient.getUserId()); //cascade delete
             }
@@ -176,7 +175,7 @@ public class DefaultMedDoctorService implements MedDoctorService {
                     null,
                     null,
                     Status.BAD,
-                    new Date()
+                    LocalDate.now()
             );
             return inpatientDao.addInpatient(inpatient);
         }

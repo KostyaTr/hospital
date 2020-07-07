@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +13,6 @@ public class Card {
     private Long userId;
     private String history;
     private String address;
-    private Date birthday;
+    private LocalDate birthday;
     private boolean insurance;
 }

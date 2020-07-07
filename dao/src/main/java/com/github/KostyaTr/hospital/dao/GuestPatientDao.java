@@ -2,7 +2,7 @@ package com.github.KostyaTr.hospital.dao;
 
 import com.github.KostyaTr.hospital.model.GuestPatient;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface GuestPatientDao {
@@ -16,5 +16,5 @@ public interface GuestPatientDao {
 
     int getLatestCouponToDoctorByDay(Long doctorId, int day);
 
-    Date getLatestTimeToDoctorByDay(Long doctorId, int day);
+    LocalDateTime getLatestTimeToDoctorByDay(Long doctorId, int day);
 }

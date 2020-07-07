@@ -1,6 +1,6 @@
 package com.github.KostyaTr.hospital.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +17,5 @@ public class GuestPatient {
     private MedDoctor doctor;
     private int couponNum;
     private MedicalService medicalService;
-    private Date visitDate;
+    private LocalDateTime visitDate;
 }

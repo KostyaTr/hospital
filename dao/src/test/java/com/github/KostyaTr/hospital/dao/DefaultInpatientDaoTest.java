@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class DefaultInpatientDaoTest {
@@ -39,8 +39,8 @@ public class DefaultInpatientDaoTest {
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getInpatientsCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
-        session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null ,Status.GOOD, new Date()));
-        session.save(new InpatientEntity(null, userInpatient2, doctor, chamber, "", null, Status.BAD, new Date()));
+        session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null ,Status.GOOD,  LocalDate.now()));
+        session.save(new InpatientEntity(null, userInpatient2, doctor, chamber, "", null, Status.BAD,  LocalDate.now()));
         session.getTransaction().commit();
 
         final List<Inpatient> patients = inpatientDao.getPatients();
@@ -67,7 +67,7 @@ public class DefaultInpatientDaoTest {
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "removeInpatientCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
-        Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, new Date()));
+        Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now()));
         session.getTransaction().commit();
 
         assertNotNull(inpatientDao.getInpatientById(patientId));
@@ -92,7 +92,7 @@ public class DefaultInpatientDaoTest {
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getInpatientCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
-        Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, new Date()));
+        Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now()));
         session.getTransaction().commit();
 
         assertNotNull(inpatientDao.getInpatientById(patientId));
@@ -128,7 +128,7 @@ public class DefaultInpatientDaoTest {
                         userId, "addInpatientCheck1", "addInpatientCheck1",
                         "addInpatientCheck1", "addInpatientCheck1", null,
                         MedDoctorConverter.fromEntity(doctor), ChamberConverter.fromEntity(chamber),
-                        "", null, Status.BAD, new Date()
+                        "", null, Status.BAD, LocalDate.now()
                 )
                 )
         );
@@ -157,7 +157,7 @@ public class DefaultInpatientDaoTest {
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "updateInpatient", speciality, 1d, null, null);
         session.save(medicalService);
 
-        final InpatientEntity inpatient = new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, new Date());
+        final InpatientEntity inpatient = new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now());
         Long inpatientId = (Long) session.save(inpatient);
         session.getTransaction().commit();
 

@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class CardDaoTest {
     private CardDao cardDao = DefaultCardDao.getInstance();
@@ -19,7 +19,7 @@ public class CardDaoTest {
         session.beginTransaction();
         UserEntity user = new UserEntity(null, "cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate","cardHistoryUpdate", null, null, null);
         Long userId = (Long) session.save(user);
-        CardEntity card = new CardEntity(null, userId, "history", "address", new Date(), true);
+        CardEntity card = new CardEntity(null, userId, "history", "address", LocalDate.now(), true);
         session.save(card);
         session.getTransaction().commit();
 
@@ -34,7 +34,7 @@ public class CardDaoTest {
         session.beginTransaction();
         UserEntity user = new UserEntity(null, "cardHistoryGet","cardHistoryGet","cardHistoryGet","cardHistoryGet", null, null,null);
         Long userId = (Long) session.save(user);
-        CardEntity card = new CardEntity(null, userId, "history", "address", new Date(), true);
+        CardEntity card = new CardEntity(null, userId, "history", "address", LocalDate.now(), true);
         session.save(card);
         session.getTransaction().commit();
 
@@ -50,7 +50,7 @@ public class CardDaoTest {
         UserEntity user = new UserEntity(null, "cardHistoryAdd","cardHistoryAdd","cardHistoryAdd","cardHistoryAdd", null, null, null);
         Long userId = (Long) session.save(user);
         session.getTransaction().commit();
-        final Long cardId = cardDao.addCard(new Card(null, userId, "history", "address", new Date(), true));
+        final Long cardId = cardDao.addCard(new Card(null, userId, "history", "address", LocalDate.now(), true));
         assertNotNull(cardId);
     }
 }

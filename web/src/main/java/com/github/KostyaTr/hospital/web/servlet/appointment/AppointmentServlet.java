@@ -133,7 +133,7 @@ public class AppointmentServlet extends HttpServlet {
                     medDoctorDao.getDoctorById(doctorId),
                     couponNum,
                     medicalServiceDao.getMedicalServiceById(medicalServiceId),
-                    Date.from(visitTime.atZone( ZoneId.systemDefault()).toInstant())));
+                    visitTime));
             req.setAttribute("coupon", couponNum);
             log.info("Guest User {} made appointment to Doctor {}", id, doctorId);
             WebUtils.forwardToJsp("guest's", req, resp);
@@ -150,7 +150,7 @@ public class AppointmentServlet extends HttpServlet {
                     medDoctorDao.getDoctorById(doctorId),
                     couponNum,
                     medicalServiceDao.getMedicalServiceById(medicalServiceId),
-                    Date.from(visitTime.atZone(ZoneId.systemDefault()).toInstant()));
+                    visitTime);
             if (req.getSession().getAttribute("patientId") != null){
                 patient.setPatientId((Long) req.getSession().getAttribute("patientId"));
                 req.getSession().removeAttribute("patientId");

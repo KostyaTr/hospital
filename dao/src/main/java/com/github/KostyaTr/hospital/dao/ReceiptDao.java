@@ -6,6 +6,4 @@ public interface ReceiptDao {
     Receipt getReceiptByUserId(Long userId);
 
     boolean insertOrUpdateReceipt(Receipt receipt);
-
-    //boolean insertReceipt(Receipt receipt);
 }
