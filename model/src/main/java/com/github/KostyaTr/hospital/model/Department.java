@@ -1,20 +1,12 @@
 package com.github.KostyaTr.hospital.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+@AllArgsConstructor
 public class Department {
     private Long departmentId;
     private String departmentName;
-
-
-    public Department(Long departmentId, String departmentName) {
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
-    }
-
-    public Long getDepartmentId() {
-        return departmentId;
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
 }

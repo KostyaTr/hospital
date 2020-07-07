@@ -2,6 +2,10 @@ package com.github.KostyaTr.hospital.model;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class Inpatient extends User {
     private Long inpatientId;
     private MedDoctor doctor;
@@ -24,45 +28,5 @@ public class Inpatient extends User {
         this.treatmentCourse = treatmentCourse;
         this.status = status;
         this.enrollmentDate = enrollmentDate;
-    }
-
-    public Long getInpatientId() {
-        return inpatientId;
-    }
-
-    public MedDoctor getDoctor() {
-        return doctor;
-    }
-
-    public Chamber getChamber() {
-        return chamber;
-    }
-
-    public String getDiagnose() {
-        return diagnose;
-    }
-
-    public TreatmentCourse getTreatmentCourse() {
-        return treatmentCourse;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public Date getEnrollmentDate() {
-        return enrollmentDate;
-    }
-
-    public void setDiagnose(String diagnose) {
-        this.diagnose = diagnose;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public void setTreatmentCourse(TreatmentCourse treatmentCourse) {
-        this.treatmentCourse = treatmentCourse;
     }
 }

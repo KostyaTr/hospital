@@ -3,6 +3,10 @@ package com.github.KostyaTr.hospital.model;
 
 import java.util.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class Patient extends User {
     private Long patientId;
     private MedDoctor medDoctor;
@@ -20,29 +24,5 @@ public class Patient extends User {
         this.couponNum = couponNum;
         this.medicalService = medicalService;
         this.visitDate = visitDate;
-    }
-
-    public Long getPatientId() {
-        return patientId;
-    }
-
-    public MedDoctor getDoctor() {
-        return medDoctor;
-    }
-
-    public int getCouponNum() {
-        return couponNum;
-    }
-
-    public MedicalService getMedicalService() {
-        return medicalService;
-    }
-
-    public Date getVisitDate() {
-        return visitDate;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
     }
 }

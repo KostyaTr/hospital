@@ -2,6 +2,10 @@ package com.github.KostyaTr.hospital.model;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class MedDoctor extends User {
     private Long doctorId;
     private Department department;
@@ -18,21 +22,5 @@ public class MedDoctor extends User {
         this.department = department;
         this.specialityList = specialityList;
         this.headOfDept = headOfDept;
-    }
-
-    public Long getDoctorId() {
-        return doctorId;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public List<Speciality> getSpecialityList() {
-        return specialityList;
-    }
-
-    public boolean isHeadOfDept() {
-        return headOfDept;
     }
 }
