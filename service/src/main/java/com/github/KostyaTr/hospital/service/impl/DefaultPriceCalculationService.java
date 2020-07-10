@@ -1,37 +1,31 @@
 package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.*;
-import com.github.KostyaTr.hospital.dao.impl.*;
 import com.github.KostyaTr.hospital.model.Inpatient;
 import com.github.KostyaTr.hospital.model.Receipt;
 import com.github.KostyaTr.hospital.service.PriceCalculationService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DefaultPriceCalculationService implements PriceCalculationService {
-    private ChamberDao chamberDao = DefaultChamberDao.getInstance();
-    private CardDao cardDao = DefaultCardDao.getInstance();
+    private final ChamberDao chamberDao;
+    private final CardDao cardDao;
 
-    public static PriceCalculationService getInstance() {
-        return DefaultPriceCalculationService.SingletonHolder.HOLDER_INSTANCE;
-    }
-
-    private static class SingletonHolder {
-        static final PriceCalculationService HOLDER_INSTANCE = new DefaultPriceCalculationService();
+    public DefaultPriceCalculationService(ChamberDao chamberDao, CardDao cardDao) {
+        this.chamberDao = chamberDao;
+        this.cardDao = cardDao;
     }
 
     @Override
+    @Transactional
     public Receipt calculateReceipt(Inpatient inpatient) {
         if (insuranceCheck(inpatient)){
           return null;
         }
-        LocalDate enrollmentDate;
-        enrollmentDate = new Date(inpatient.getEnrollmentDate().getTime())
-                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate enrollmentDate = inpatient.getEnrollmentDate();
 
         long timeAtChamber = DAYS.between(enrollmentDate, LocalDate.now());
         // get price a day from database to have actual price for chamber at the moment
@@ -43,7 +37,6 @@ public class DefaultPriceCalculationService implements PriceCalculationService {
         double priceForMedicine = inpatient.getTreatmentCourse().getPrice() * medicineAmount;
 
         return new Receipt(inpatient.getUserId(), priceForChamber, priceForMedicine);
-
     }
 
     private boolean insuranceCheck(Inpatient inpatient){

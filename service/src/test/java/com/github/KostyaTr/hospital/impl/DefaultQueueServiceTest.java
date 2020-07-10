@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,7 +62,7 @@ public class DefaultQueueServiceTest {
         }
         int day = currentTime.getDayOfMonth();
 
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
         when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
 
         List<LocalDate> availableDays = queueService.getAvailableDays(1L);
@@ -89,7 +88,7 @@ public class DefaultQueueServiceTest {
         }
         int day = currentTime.getDayOfMonth();
 
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
         when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
 
         List<LocalDate> availableDays = queueService.getAvailableDays(1L);
@@ -134,8 +133,8 @@ public class DefaultQueueServiceTest {
         }
         int day = currentTime.getDayOfMonth();
 
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
+        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
 
         List<LocalDate> availableDays = queueService.getAvailableDays(1L);
         assertFalse(availableDays.isEmpty());
@@ -153,8 +152,8 @@ public class DefaultQueueServiceTest {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
+        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
@@ -171,7 +170,7 @@ public class DefaultQueueServiceTest {
         int day = currentTime.getDayOfMonth();
 
         when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
-        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());
 
@@ -204,7 +203,7 @@ public class DefaultQueueServiceTest {
         final LocalDateTime currentTime = LocalDateTime.now();
         int day = currentTime.getDayOfMonth();
 
-        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(new Date());
+        when(guestPatientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(LocalDateTime.now());
         when(patientDao.getLatestTimeToDoctorByDay(1L, day)).thenReturn(null);
 
         LocalDateTime visitTime = queueService.getVisitTime(1L, currentTime.toLocalDate());

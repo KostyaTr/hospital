@@ -1,47 +1,41 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.ReceiptDao;
 import com.github.KostyaTr.hospital.dao.converter.ReceiptConverter;
 import com.github.KostyaTr.hospital.dao.entity.ReceiptEntity;
 import com.github.KostyaTr.hospital.model.Receipt;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.NoResultException;
 
 public class DefaultReceiptDao implements ReceiptDao {
-    private static class SingletonHolder{
-        static final ReceiptDao HOLDER_INSTANCE = new DefaultReceiptDao();
-    }
 
-    public static ReceiptDao getInstance(){
-        return DefaultReceiptDao.SingletonHolder.HOLDER_INSTANCE;
-    }
-
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
     public Receipt getReceiptByUserId(Long userId) {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         ReceiptEntity receiptEntity;
         try {
             receiptEntity = session.get(ReceiptEntity.class, userId);
         } catch (NoResultException e){
             receiptEntity = null;
         }
-        session.getTransaction().commit();
-        final Receipt receipt = ReceiptConverter.fromEntity(receiptEntity);
-        session.close();
-        return receipt;
+        return ReceiptConverter.fromEntity(receiptEntity);
     }
 
     @Override
     public boolean insertOrUpdateReceipt(Receipt receipt) {
         ReceiptEntity receiptEntity = ReceiptConverter.toEntity(receipt);
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
-        session.saveOrUpdate(receiptEntity);
-        session.getTransaction().commit();
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            session.saveOrUpdate(receiptEntity);
+        } catch (org.hibernate.NonUniqueObjectException e) {
+            session.merge(receiptEntity);
+        }
         return receiptEntity.getUserId() != null;
     }
 }

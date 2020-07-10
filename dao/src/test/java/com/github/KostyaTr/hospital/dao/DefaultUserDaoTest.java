@@ -1,14 +1,28 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.config.DaoConfig;
 import com.github.KostyaTr.hospital.dao.impl.DefaultUserDao;
 import com.github.KostyaTr.hospital.model.User;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoConfig.class)
+@Transactional
 public class DefaultUserDaoTest {
-    private UserDao userDao = DefaultUserDao.getInstance();
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private UserDao userDao;
 
     @Test
     void insertUser() {

@@ -26,4 +26,12 @@ public interface UserService {
     MedDoctor getDoctorById(Long doctorId);
 
     List<MedDoctor> getDoctorsByMedicalService(Long medicalServiceId);
+
+    User getUserById(Long userId);
+
+    MedicalService getMedicalServiceById(Long medicalServiceId);
+
+    Patient getAppointment(Long patientId);
+
+    Receipt getReceipt(Long userId);
 }

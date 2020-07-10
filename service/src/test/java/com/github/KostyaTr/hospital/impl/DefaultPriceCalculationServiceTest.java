@@ -10,10 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
-import static java.util.Date.from;
 import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,13 +38,12 @@ public class DefaultPriceCalculationServiceTest {
 
     @Test
     void withoutInsurance(){
-        LocalDate date = LocalDate.now().plusDays(-2);
-        Date enrollmentDate = from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        LocalDate enrollmentDate = LocalDate.now().plusDays(-2);
         Inpatient inpatient = new Inpatient(1L, null,null,null,null,null,
                 null, new Chamber(1L, 1,null,1,1, true, 1d),
                 null,
                 new TreatmentCourse(null, null,null,null,2, 20d, null, 10d,null, 1,3),
-                null,enrollmentDate);
+                null, enrollmentDate);
 
         when(cardDao.getCardByUserId(1L)).thenReturn(new Card(null, null,null, null,null, false));
         when(chamberDao.getPriceForChamber(1L)).thenReturn(200d);

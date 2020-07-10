@@ -1,5 +1,9 @@
 package com.github.KostyaTr.hospital.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class TreatmentCourse extends Medicine {
     private Long treatmentCourseId;
     private Double medicineDose;
@@ -18,27 +22,5 @@ public class TreatmentCourse extends Medicine {
         this.receptionDesc = receptionDesc;
         this.timesPerDay = timesPerDay;
         this.durationInDays = durationInDays;
-    }
-
-    public Long getTreatmentCourseId() {
-        return treatmentCourseId;
-    }
-
-
-
-    public Double getMedicineDose() {
-        return medicineDose;
-    }
-
-    public String getReceptionDesc() {
-        return receptionDesc;
-    }
-
-    public Integer getTimesPerDay() {
-        return timesPerDay;
-    }
-
-    public Integer getDurationInDays() {
-        return durationInDays;
     }
 }

@@ -1,13 +1,19 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.config.DaoConfig;
 import com.github.KostyaTr.hospital.dao.entity.SpecialityEntity;
-import com.github.KostyaTr.hospital.dao.impl.DefaultMedDoctorDao;
 import com.github.KostyaTr.hospital.dao.entity.DepartmentEntity;
 import com.github.KostyaTr.hospital.dao.entity.MedDoctorEntity;
 import com.github.KostyaTr.hospital.dao.entity.UserEntity;
 import com.github.KostyaTr.hospital.model.MedDoctor;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,22 +21,31 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoConfig.class)
+@Transactional
 public class DefaultMedDoctorDaoTest {
-    private MedDoctorDao medDoctorDao = DefaultMedDoctorDao.getInstance();
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private MedDoctorDao medDoctorDao;
 
     @Test
     void getDoctors(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "departmentCheckDoctors", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "doctorsGetCheck", "doctorsGetCheck", "doctorsGetCheck", "doctorsGetCheck", null, null, null);
         session.save(user);
         final UserEntity user1 = new UserEntity(null, "doctors1GetCheck", "doctors2GetCheck", "doctors2GetCheck", "doctors2GetCheck", null, null, null);
         session.save(user1);
-        session.save(new MedDoctorEntity(null, user,departmentCheck,false, null, null, null, null));
-        Long doctorId = (Long) session.save(new MedDoctorEntity(null, user1,departmentCheck,false, null, null, null, null));
-        session.getTransaction().commit();
+        MedDoctorEntity medDoctorEntity = new MedDoctorEntity(null, user1, departmentCheck, false, null, null, null, null);
+
+        final SpecialityEntity speciality = new SpecialityEntity(null, "doctors1GetCheck", Collections.singletonList(medDoctorEntity), null);
+        session.save(speciality);
+        medDoctorEntity.setSpecialities(Collections.singletonList(speciality));
+        Long doctorId = (Long) session.save(medDoctorEntity);
 
         List<MedDoctor> doctors = medDoctorDao.getDoctors();
         assertFalse(doctors.isEmpty());
@@ -39,14 +54,16 @@ public class DefaultMedDoctorDaoTest {
 
     @Test
     public void getDoctorById() {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "departmentCheckDoctorById", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "doctorGetCheck", "doctorGetCheck", "doctorGetCheck", "doctorGetCheck", null, null, null);
         session.save(user);
-        Long doctorId = (Long) session.save(new MedDoctorEntity(null, user,departmentCheck,false, null, null, null, null));
-        session.getTransaction().commit();
+        MedDoctorEntity medDoctorEntity = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "doctorGetCheck", Collections.singletonList(medDoctorEntity), null);
+        session.save(speciality);
+        medDoctorEntity.setSpecialities(Collections.singletonList(speciality));
+        Long doctorId = (Long) session.save(medDoctorEntity);
 
         final MedDoctor doctorById = medDoctorDao.getDoctorById(doctorId);
         assertNotNull(doctorById);
@@ -55,14 +72,17 @@ public class DefaultMedDoctorDaoTest {
 
     @Test
     public void getDoctorByUserId(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "departmentCheckDoctorByUserId", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "doctorGetByUserCheck", "doctorGetByUserCheck", "doctorGetByUserCheck", "doctorGetByUserCheck", null, null, null);
         session.save(user);
-        session.save(new MedDoctorEntity(null, user,departmentCheck,false, null, null, null, null));
-        session.getTransaction().commit();
+
+        MedDoctorEntity medDoctorEntity = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
+        final SpecialityEntity speciality = new SpecialityEntity(null, "doctorGetByUserCheck", Collections.singletonList(medDoctorEntity), null);
+        session.save(speciality);
+        medDoctorEntity.setSpecialities(Collections.singletonList(speciality));
+        session.save(medDoctorEntity);
 
         assertNotNull(medDoctorDao.getDoctorByUserId(user.getUserId()));
         assertNull(medDoctorDao.getDoctorByUserId(0L));
@@ -70,8 +90,7 @@ public class DefaultMedDoctorDaoTest {
 
     @Test
     void getDoctorsBySpeciality(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "departmentCheckDoctorsBySpeciality", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", "doctorsGetCheckBySpeciality", null, null, null);
@@ -87,7 +106,6 @@ public class DefaultMedDoctorDaoTest {
         session.save(medDoctorEntity);
         Long doctorId = (Long) session.save(medDoctorEntity1);
         Long specialityId = (Long) session.save(speciality);
-        session.getTransaction().commit();
 
         List<MedDoctor> doctors = medDoctorDao.getDoctorBySpeciality(specialityId);
         assertFalse(doctors.isEmpty());

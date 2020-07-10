@@ -88,13 +88,4 @@ public class DefaultMedDoctorServiceTest {
                         null,Status.BAD,null));
         assertFalse(check);
     }
-
-    /*@Test
-    void dischargeGoodInpatientTest(){
-        boolean check = medDoctorService.dischargeInpatient(
-                new Inpatient(
-                        1L, null,null,null,null,null,null,null,null,
-                        null,Status.GOOD,null));
-        assertTrue(check);
-    }*/
 }

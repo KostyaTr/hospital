@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import com.github.KostyaTr.hospital.model.Status;
 
 
@@ -47,5 +47,5 @@ public class InpatientEntity {
     @Column(name = "patient_status") @Access(AccessType.PROPERTY)
     private Status status;
     @Column(name = "enrollment_date") @Access(AccessType.PROPERTY)
-    private Date enrollmentDate;
+    private LocalDate enrollmentDate;
 }

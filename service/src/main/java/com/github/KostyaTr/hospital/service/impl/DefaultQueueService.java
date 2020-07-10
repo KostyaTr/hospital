@@ -2,32 +2,27 @@ package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.GuestPatientDao;
 import com.github.KostyaTr.hospital.dao.PatientDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultGuestPatientDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.service.QueueService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DefaultQueueService implements QueueService {
-    private PatientDao patientDao = DefaultPatientDao.getInstance();
-    private GuestPatientDao guestPatientDao = DefaultGuestPatientDao.getInstance();
+    private final PatientDao patientDao;
+    private final GuestPatientDao guestPatientDao;
 
-    private static class SingletonHolder {
-        static final QueueService HOLDER_INSTANCE = new DefaultQueueService();
-    }
-
-    public static QueueService getInstance() {
-        return DefaultQueueService.SingletonHolder.HOLDER_INSTANCE;
+    public DefaultQueueService(PatientDao patientDao, GuestPatientDao guestPatientDao) {
+        this.patientDao = patientDao;
+        this.guestPatientDao = guestPatientDao;
     }
 
 
     @Override
+    @Transactional
     public int getCouponNum(Long doctorId, LocalDate visitDate) {
         int day = visitDate.getDayOfMonth();
         int patientCoupon = patientDao.getLatestCouponToDoctorByDay(doctorId, day);
@@ -40,6 +35,7 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Override
+    @Transactional
     public List<LocalDate> getAvailableDays(Long doctorId) {
         int workdays = 5;
         List<LocalDate> availableDays = new ArrayList<>(5);
@@ -51,27 +47,10 @@ public class DefaultQueueService implements QueueService {
                 now = now.plusDays(1);
             }
             int day = now.getDayOfMonth();
-            final Date latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day);
-            LocalDateTime latestPatientVisitDate;
-            if (latestTimeToDoctorByDay != null) {
-                latestPatientVisitDate = latestTimeToDoctorByDay.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime();
-            } else {
-                latestPatientVisitDate = null;
-            }
+            final LocalDateTime latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day);
+            final LocalDateTime latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day);
 
-            final Date latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day);
-            LocalDateTime latestGuestPatientVisitDate;
-            if (latestGuestTimeToDoctorByDay != null) {
-                latestGuestPatientVisitDate = latestGuestTimeToDoctorByDay.toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime();
-            } else {
-                latestGuestPatientVisitDate = null;
-            }
-
-            if (latestGuestPatientVisitDate == null && latestPatientVisitDate == null) {
+            if (latestGuestTimeToDoctorByDay == null && latestTimeToDoctorByDay == null) {
                 if (LocalDateTime.now().getDayOfMonth() == day) {
                     if (workday(LocalDateTime.now().withDayOfMonth(day))) {
                         availableDays.add(getAvailableDay(day));
@@ -81,20 +60,20 @@ public class DefaultQueueService implements QueueService {
                 } else {
                     availableDays.add(getAvailableDay(day));
                 }
-            } else if (latestGuestPatientVisitDate == null) {
-                if (workday(latestPatientVisitDate)) {
+            } else if (latestGuestTimeToDoctorByDay == null) {
+                if (workday(latestTimeToDoctorByDay)) {
                     availableDays.add(getAvailableDay(day));
                 } else {
                     workdays++;
                 }
-            } else if (latestPatientVisitDate == null || latestGuestPatientVisitDate.compareTo(latestPatientVisitDate) < 0) {
-                if (workday(latestGuestPatientVisitDate)) {
+            } else if (latestTimeToDoctorByDay == null || latestGuestTimeToDoctorByDay.compareTo(latestTimeToDoctorByDay) < 0) {
+                if (workday(latestGuestTimeToDoctorByDay)) {
                     availableDays.add(getAvailableDay(day));
                 } else {
                     workdays++;
                 }
             } else {
-                if (workday(latestPatientVisitDate)) {
+                if (workday(latestTimeToDoctorByDay)) {
                     availableDays.add(getAvailableDay(day));
                 } else {
                     workdays++;
@@ -106,28 +85,13 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Override
+    @Transactional
     public LocalDateTime getVisitTime(Long doctorId, LocalDate day) {
-        final Date latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
-        LocalDateTime latestPatientVisitDate;
-        if (latestTimeToDoctorByDay != null) {
-            latestPatientVisitDate = latestTimeToDoctorByDay.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-        } else {
-            latestPatientVisitDate = null;
-        }
+        final LocalDateTime latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
 
-        final Date latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
-        LocalDateTime latestGuestPatientVisitDate;
-        if (latestGuestTimeToDoctorByDay != null) {
-            latestGuestPatientVisitDate = latestGuestTimeToDoctorByDay.toInstant()
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime();
-        } else {
-            latestGuestPatientVisitDate = null;
-        }
+        final LocalDateTime latestGuestTimeToDoctorByDay = guestPatientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
 
-        if (latestGuestPatientVisitDate == null && latestPatientVisitDate == null) {
+        if (latestGuestTimeToDoctorByDay == null && latestTimeToDoctorByDay == null) {
             if (day.getDayOfMonth() == LocalDate.now().getDayOfMonth() && day.getMonthValue() == LocalDate.now().getMonthValue()) {
                 if (workday(LocalDateTime.now().withDayOfMonth(day.getDayOfMonth()).withMonth(day.getMonthValue()))) {
                     return LocalDateTime.now().plusMinutes(20);
@@ -137,17 +101,17 @@ public class DefaultQueueService implements QueueService {
             } else {
                 return day.atStartOfDay().withHour(9).withMinute(0);
             }
-        } else if (latestGuestPatientVisitDate == null) {
-            if (workday(latestPatientVisitDate)) {
-                return latestPatientVisitDate.plusMinutes(20);
+        } else if (latestGuestTimeToDoctorByDay == null) {
+            if (workday(latestTimeToDoctorByDay)) {
+                return latestTimeToDoctorByDay.plusMinutes(20);
             }
-        } else if (latestPatientVisitDate == null || latestGuestPatientVisitDate.compareTo(latestPatientVisitDate) > 0) {
-            if (workday(latestGuestPatientVisitDate)) {
-                return latestGuestPatientVisitDate.plusMinutes(20);
+        } else if (latestTimeToDoctorByDay == null || latestGuestTimeToDoctorByDay.compareTo(latestTimeToDoctorByDay) > 0) {
+            if (workday(latestGuestTimeToDoctorByDay)) {
+                return latestGuestTimeToDoctorByDay.plusMinutes(20);
             }
         } else {
-            if (workday(latestPatientVisitDate)) {
-                return latestPatientVisitDate.plusMinutes(20);
+            if (workday(latestTimeToDoctorByDay)) {
+                return latestTimeToDoctorByDay.plusMinutes(20);
             }
         }
         return null;
