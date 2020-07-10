@@ -1,7 +1,7 @@
 # hospital
 MySQL 8.0.15 version was used (it can display russian symbols without any additional adjustments)
 
-md5 method was used to hash passwords
+BCryptPasswordEncoder was used to hash passwords
 
 проект примерно описывает больницу
 заходить /hospital/login
