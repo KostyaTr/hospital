@@ -1,0 +1,13 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:sec="http://www.springframework.org/security/tags">
+    <html>
+    <body>
+    <sec:authorize access="hasRole('ROLE_DOCTOR')">
+        <jsp:include page="jsp/doctorAccount.jsp"/>
+    </sec:authorize>
+    <sec:authorize access="hasRole('ROLE_USER')">
+        <jsp:include page="jsp/user's.jsp"/>
+    </sec:authorize>
+    </body>
+    </html>
+</jsp:root>

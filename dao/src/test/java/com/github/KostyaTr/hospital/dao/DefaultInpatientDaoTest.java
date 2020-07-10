@@ -1,13 +1,19 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.config.DaoConfig;
 import com.github.KostyaTr.hospital.dao.converter.ChamberConverter;
 import com.github.KostyaTr.hospital.dao.converter.InpatientConverter;
 import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
 import com.github.KostyaTr.hospital.dao.entity.*;
-import com.github.KostyaTr.hospital.dao.impl.DefaultInpatientDao;
 import com.github.KostyaTr.hospital.model.*;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,13 +21,19 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoConfig.class)
+@Transactional
 public class DefaultInpatientDaoTest {
-    private InpatientDao inpatientDao = DefaultInpatientDao.getInstance();
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private InpatientDao inpatientDao;
 
     @Test
     void getInpatients(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getInpatientsCheck", 1, 1, null, null);
         session.save(departmentCheck);
         final ChamberEntity chamber = new ChamberEntity(null, 1, departmentCheck, true, 5, 1, 5, null);
@@ -33,15 +45,15 @@ public class DefaultInpatientDaoTest {
         session.save(userInpatient1);
         session.save(userInpatient2);
         final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
-        session.save(doctor);
         final SpecialityEntity speciality = new SpecialityEntity(null, "getInpatientsCheck", Collections.singletonList(doctor), null);
         session.save(speciality);
+        doctor.setSpecialities(Collections.singletonList(speciality));
+        session.save(doctor);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getInpatientsCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
         session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null ,Status.GOOD,  LocalDate.now()));
         session.save(new InpatientEntity(null, userInpatient2, doctor, chamber, "", null, Status.BAD,  LocalDate.now()));
-        session.getTransaction().commit();
 
         final List<Inpatient> patients = inpatientDao.getPatients();
         assertFalse(patients.isEmpty());
@@ -50,8 +62,7 @@ public class DefaultInpatientDaoTest {
 
     @Test
     void removeInpatient(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "removeInpatientCheck", 1, 1, null, null);
         session.save(departmentCheck);
         final ChamberEntity chamber = new ChamberEntity(null, 1, departmentCheck, true, 5, 1, 5, null);
@@ -61,22 +72,21 @@ public class DefaultInpatientDaoTest {
         session.save(user);
         session.save(userInpatient1);
         final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
-        session.save(doctor);
         final SpecialityEntity speciality = new SpecialityEntity(null, "removeInpatientCheck", Collections.singletonList(doctor), null);
         session.save(speciality);
+        doctor.setSpecialities(Collections.singletonList(speciality));
+        session.save(doctor);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "removeInpatientCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
         Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now()));
-        session.getTransaction().commit();
 
         assertNotNull(inpatientDao.getInpatientById(patientId));
     }
 
     @Test
     void getInpatientById(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getInpatientCheck", 1, 1, null, null);
         session.save(departmentCheck);
         final ChamberEntity chamber = new ChamberEntity(null, 1, departmentCheck, true, 5, 1, 5, null);
@@ -86,14 +96,15 @@ public class DefaultInpatientDaoTest {
         session.save(user);
         session.save(userInpatient1);
         final MedDoctorEntity doctor = new MedDoctorEntity(null, user, departmentCheck, false, null, null, null, null);
-        session.save(doctor);
         final SpecialityEntity speciality = new SpecialityEntity(null, "getInpatientCheck", Collections.singletonList(doctor), null);
         session.save(speciality);
+        doctor.setSpecialities(Collections.singletonList(speciality));
+        session.save(doctor);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "getInpatientCheck", speciality, 1d, null, null);
         session.save(medicalService);
 
         Long patientId = (Long) session.save(new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now()));
-        session.getTransaction().commit();
+
 
         assertNotNull(inpatientDao.getInpatientById(patientId));
         assertEquals(inpatientDao.getInpatientById(patientId).getLastName(), "getInpatientCheck1");
@@ -102,8 +113,7 @@ public class DefaultInpatientDaoTest {
 
     @Test
     void addInpatient(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "addInpatientCheck", 1, 1, null, null);
         session.save(departmentCheck);
         final ChamberEntity chamber = new ChamberEntity(null, 1, departmentCheck, true, 5, 1, 5, null);
@@ -121,7 +131,6 @@ public class DefaultInpatientDaoTest {
         final UserEntity user1 = new UserEntity(null, "addInpatientCheck1", "addInpatientCheck1",
                 "addInpatientCheck1", "addInpatientCheck1", null, null, null);
         Long userId = (Long) session.save(user1);
-        session.getTransaction().commit();
 
         assertNotNull(inpatientDao.addInpatient(
                 new Inpatient(
@@ -136,8 +145,7 @@ public class DefaultInpatientDaoTest {
 
     @Test
     void updateInpatient(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "updateInpatient", 1, 1, null, null);
         session.save(departmentCheck);
         final ChamberEntity chamber = new ChamberEntity(null, 1, departmentCheck, true, 5, 1, 5, null);
@@ -159,7 +167,6 @@ public class DefaultInpatientDaoTest {
 
         final InpatientEntity inpatient = new InpatientEntity(null, userInpatient1, doctor, chamber, "", null, Status.BAD, LocalDate.now());
         Long inpatientId = (Long) session.save(inpatient);
-        session.getTransaction().commit();
 
         inpatient.setDiagnose("new Diagnose");
         inpatient.setStatus(Status.GOOD);

@@ -1,28 +1,38 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.config.DaoConfig;
 import com.github.KostyaTr.hospital.dao.entity.DischargedPatientEntity;
-import com.github.KostyaTr.hospital.dao.impl.DefaultDischargedPatientDao;
 import com.github.KostyaTr.hospital.model.DischargedPatient;
 import com.github.KostyaTr.hospital.model.Status;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoConfig.class)
+@Transactional
 public class DefaultDischargedPatientDaoTest {
-    private DischargedPatientDao dischargedPatientDao = DefaultDischargedPatientDao.getInstance();
+    @Autowired
+    private DischargedPatientDao dischargedPatientDao;
+
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @BeforeEach
     void delete() {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         session.createQuery("delete DischargedPatientEntity").executeUpdate();
-        session.getTransaction().commit();
-        session.close();
     }
 
     @Test
@@ -33,12 +43,10 @@ public class DefaultDischargedPatientDaoTest {
 
     @Test
     void getDischargedPatients(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         for (int i = 0; i < 21; i++) {
             session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, LocalDate.now(), LocalDate.now()));
         }
-        session.getTransaction().commit();
         final List<DischargedPatient> firstTen = dischargedPatientDao.getDischargedPatients(1);
         final List<DischargedPatient> secondTen = dischargedPatientDao.getDischargedPatients(2);
         final List<DischargedPatient> thirdTen = dischargedPatientDao.getDischargedPatients(3);
@@ -60,13 +68,10 @@ public class DefaultDischargedPatientDaoTest {
 
     @Test
     void getDischargedPatientCount(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         for (int i = 0; i < 21; i++) {
             session.save(new DischargedPatientEntity(null,  "#" + i, "DischargedPatient", "DischargedPatient", "DischargedPatient", "DischargedPatient", Status.CURED, LocalDate.now(), LocalDate.now()));
         }
-        session.getTransaction().commit();
-
         assertEquals(dischargedPatientDao.getDischargedPatientsCount(), 21);
     }
 }

@@ -1,11 +1,12 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
 import com.github.KostyaTr.hospital.dao.DischargedPatientDao;
-import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.converter.DischargedPatientConverter;
 import com.github.KostyaTr.hospital.dao.entity.DischargedPatientEntity;
 import com.github.KostyaTr.hospital.model.DischargedPatient;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,48 +14,33 @@ import java.util.stream.Collectors;
 public class DefaultDischargedPatientDao implements DischargedPatientDao {
     private int PAGE_SIZE = 10;
 
-    private static class SingletonHolder {
-        static final DischargedPatientDao HOLDER_INSTANCE = new DefaultDischargedPatientDao();
-    }
-
-    public static DischargedPatientDao getInstance() {
-        return DefaultDischargedPatientDao.SingletonHolder.HOLDER_INSTANCE;
-    }
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
     public Long addDischargedPatient(DischargedPatient dischargedPatient) {
         DischargedPatientEntity dischargedPatientEntity = DischargedPatientConverter.toEntity(dischargedPatient);
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         session.save(dischargedPatientEntity);
-        session.getTransaction().commit();
         return dischargedPatientEntity.getDischargedPatientId();
     }
 
     @Override
     public List<DischargedPatient> getDischargedPatients(int page) {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         List<DischargedPatientEntity> dischargedPatients = session.createQuery("select dp from DischargedPatientEntity dp", DischargedPatientEntity.class)
                 .setFirstResult((page - 1) * PAGE_SIZE)
                 .setMaxResults(PAGE_SIZE)
                 .list();
-        session.getTransaction().commit();
-        final List<DischargedPatient> patientList = dischargedPatients.stream()
+        return dischargedPatients.stream()
                 .map(DischargedPatientConverter::fromEntity)
                 .collect(Collectors.toList());
-        session.close();
-        return patientList;
     }
 
     @Override
     public double getDischargedPatientsCount() {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
-        Long count = session.createQuery("select count(dischargedPatientId) from DischargedPatientEntity", Long.class)
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("select count(dischargedPatientId) from DischargedPatientEntity", Long.class)
                 .getSingleResult();
-        session.getTransaction().commit();
-        session.close();
-        return count;
     }
 }

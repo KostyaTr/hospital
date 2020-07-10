@@ -2,9 +2,8 @@ package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.GuestPatientDao;
 import com.github.KostyaTr.hospital.dao.PatientDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultGuestPatientDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.service.QueueService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -13,19 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultQueueService implements QueueService {
-    private PatientDao patientDao = DefaultPatientDao.getInstance();
-    private GuestPatientDao guestPatientDao = DefaultGuestPatientDao.getInstance();
+    private final PatientDao patientDao;
+    private final GuestPatientDao guestPatientDao;
 
-    private static class SingletonHolder {
-        static final QueueService HOLDER_INSTANCE = new DefaultQueueService();
-    }
-
-    public static QueueService getInstance() {
-        return DefaultQueueService.SingletonHolder.HOLDER_INSTANCE;
+    public DefaultQueueService(PatientDao patientDao, GuestPatientDao guestPatientDao) {
+        this.patientDao = patientDao;
+        this.guestPatientDao = guestPatientDao;
     }
 
 
     @Override
+    @Transactional
     public int getCouponNum(Long doctorId, LocalDate visitDate) {
         int day = visitDate.getDayOfMonth();
         int patientCoupon = patientDao.getLatestCouponToDoctorByDay(doctorId, day);
@@ -38,6 +35,7 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Override
+    @Transactional
     public List<LocalDate> getAvailableDays(Long doctorId) {
         int workdays = 5;
         List<LocalDate> availableDays = new ArrayList<>(5);
@@ -87,6 +85,7 @@ public class DefaultQueueService implements QueueService {
     }
 
     @Override
+    @Transactional
     public LocalDateTime getVisitTime(Long doctorId, LocalDate day) {
         final LocalDateTime latestTimeToDoctorByDay = patientDao.getLatestTimeToDoctorByDay(doctorId, day.getDayOfMonth());
 

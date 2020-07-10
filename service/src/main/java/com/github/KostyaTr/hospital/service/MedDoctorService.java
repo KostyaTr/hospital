@@ -30,4 +30,16 @@ public interface MedDoctorService {
     List<TreatmentCourse> getTreatmentCourses();
 
     Card getCardInfo(Long inpatientId);
+
+    double getDischargedPatientsCount();
+
+    List<DischargedPatient> getDischargedPatients(int page);
+
+    MedDoctor getDoctorByUserId(Long userId);
+
+    Medicine getMedicineByName(String medicineName);
+
+    Inpatient getInpatientById(Long inpatientId);
+
+    Patient getPatientById(Long patientId);
 }

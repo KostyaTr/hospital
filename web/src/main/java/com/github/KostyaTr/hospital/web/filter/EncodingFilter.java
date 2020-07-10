@@ -7,23 +7,12 @@ import java.io.IOException;
 @WebFilter("/*")
 public class EncodingFilter implements Filter {
 
-    private static final String CP1251 = "Cp1251";
+    private static final String UTF_8 = "UTF-8";
 
     @Override
     public void doFilter(ServletRequest rq, ServletResponse rs, FilterChain filterChain) throws IOException, ServletException {
-        rq.setCharacterEncoding(CP1251);
+        rq.setCharacterEncoding(UTF_8);
         filterChain.doFilter(rq, rs);
-        rs.setCharacterEncoding(CP1251);
+        rs.setCharacterEncoding(UTF_8);
     }
-
-    @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
 }

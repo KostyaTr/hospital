@@ -1,12 +1,18 @@
 package com.github.KostyaTr.hospital.dao;
 
+import com.github.KostyaTr.hospital.dao.config.DaoConfig;
 import com.github.KostyaTr.hospital.dao.converter.MedDoctorConverter;
 import com.github.KostyaTr.hospital.dao.converter.MedicalServiceConverter;
 import com.github.KostyaTr.hospital.dao.entity.*;
-import com.github.KostyaTr.hospital.dao.impl.DefaultPatientDao;
 import com.github.KostyaTr.hospital.model.*;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
@@ -16,13 +22,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = DaoConfig.class)
+@Transactional
 public class DefaultPatientDaoTest {
-    private PatientDao patientDao = DefaultPatientDao.getInstance();
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    private PatientDao patientDao;
 
     @Test
     void getPatients(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getPatientsCheck", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "getPatientsCheck", "getPatientsCheck", "getPatientsCheck", "getPatientsCheck", null, null, null);
@@ -42,7 +54,6 @@ public class DefaultPatientDaoTest {
 
         session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, LocalDateTime.now()));
         session.save(new PatientEntity(null, userPatient2, doctor, 2, medicalService, LocalDateTime.now()));
-        session.getTransaction().commit();
 
         final List<Patient> patients = patientDao.getPatients();
         assertFalse(patients.isEmpty());
@@ -51,8 +62,8 @@ public class DefaultPatientDaoTest {
 
     @Test
     void getPatientById(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getPatientById", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "getPatientById", "getPatientById", "getPatientById", "getPatientById", null, null, null);
@@ -69,7 +80,6 @@ public class DefaultPatientDaoTest {
         session.save(medicalService);
 
         Long patientId = (Long) session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, LocalDateTime.now()));
-        session.getTransaction().commit();
 
         assertNotNull(patientDao.getPatientById(patientId));
         assertNull(patientDao.getPatientById(0L));
@@ -78,8 +88,8 @@ public class DefaultPatientDaoTest {
 
     @Test
     void removePatientById(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "removePatientById", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "removePatientById", "removePatientById", "removePatientById", "removePatientById", null, null, null);
@@ -96,7 +106,6 @@ public class DefaultPatientDaoTest {
         session.save(medicalService);
 
         Long patientId = (Long) session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, LocalDateTime.now()));
-        session.getTransaction().commit();
 
         assertNotNull(patientDao.getPatientById(patientId));
         assertTrue(patientDao.removePatientById(patientId));
@@ -104,8 +113,8 @@ public class DefaultPatientDaoTest {
 
     @Test
     void addPatient(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "addPatient", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "addPatient", "addPatient", "addPatient", "addPatient", null, null, null);
@@ -120,7 +129,6 @@ public class DefaultPatientDaoTest {
         session.save(speciality);
         final MedicalServiceEntity medicalService = new MedicalServiceEntity(null, "addPatient", speciality, 1d, null, null);
         session.save(medicalService);
-        session.getTransaction().commit();
 
         assertNotNull(patientDao.addPatient(new Patient(userId,"addPatient1", "addPatient1", "addPatient1", "addPatient1", null,
                 MedDoctorConverter.fromEntity(doctor), 1, MedicalServiceConverter.fromEntity(medicalService), LocalDateTime.now())));
@@ -128,8 +136,8 @@ public class DefaultPatientDaoTest {
 
     @Test
     void getPatientsByDoctorId(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getPatientByDoctorId", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "getPatientByDoctorId", "getPatientByDoctorId", "getPatientByDoctorId", "getPatientByDoctorId", null, null, null);
@@ -145,7 +153,6 @@ public class DefaultPatientDaoTest {
         final UserEntity userPatient1 = new UserEntity(null, "getPatientByDoctorId1", "getPatientByDoctorId1", "getPatientByDoctorId1", "getPatientByDoctorId1", null, null, null);
         session.save(userPatient1);
         session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, LocalDateTime.now()));
-        session.getTransaction().commit();
 
         final List<Patient> patientsByDoctorId = patientDao.getPatientsByDoctorId(doctorId);
         assertFalse(patientsByDoctorId.isEmpty());
@@ -155,8 +162,8 @@ public class DefaultPatientDaoTest {
 
     @Test
     void getLatestCoupon(){
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
         final DepartmentEntity departmentCheck = new DepartmentEntity(null, "getPatientLatestCoupon", 1, 1, null, null);
         session.save(departmentCheck);
         final UserEntity user = new UserEntity(null, "getPatientLatestCoupon", "getPatientLatestCoupon", "getPatientLatestCoupon", "getPatientLatestCoupon", null, null, null);
@@ -177,7 +184,7 @@ public class DefaultPatientDaoTest {
         session.save(medicalService);
         session.save(new PatientEntity(null, userPatient1, doctor, 1, medicalService, LocalDateTime.now()));
         session.save(new PatientEntity(null, userPatient2, doctor, 20, medicalService, LocalDateTime.now()));
-        session.getTransaction().commit();
+
         assertEquals(patientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth() - 1), 0);
         assertEquals(patientDao.getLatestCouponToDoctorByDay(doctorId, LocalDate.now().getDayOfMonth()), 20);
     }

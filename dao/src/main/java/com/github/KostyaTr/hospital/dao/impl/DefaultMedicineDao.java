@@ -1,13 +1,14 @@
 package com.github.KostyaTr.hospital.dao.impl;
 
-import com.github.KostyaTr.hospital.dao.HibernateUtil;
 import com.github.KostyaTr.hospital.dao.MedicineDao;
 import com.github.KostyaTr.hospital.dao.converter.MedicineConverter;
 import com.github.KostyaTr.hospital.dao.entity.MedicineEntity;
 import com.github.KostyaTr.hospital.model.Medicine;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,17 +20,12 @@ import java.util.stream.Collectors;
 public class DefaultMedicineDao implements MedicineDao {
     private static final Logger log = LoggerFactory.getLogger(DefaultMedicineDao.class);
 
-    private static class SingletonHolder{
-        static final MedicineDao HOLDER_INSTANCE = new DefaultMedicineDao();
-    }
-
-    public static MedicineDao getInstance(){
-        return DefaultMedicineDao.SingletonHolder.HOLDER_INSTANCE;
-    }
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
     public Medicine getMedicineByName(String medicineName) {
-        Session session = HibernateUtil.getSession();
+        Session session = sessionFactory.getCurrentSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<MedicineEntity> criteria = cb.createQuery(MedicineEntity.class);
         Root<MedicineEntity> med = criteria.from(MedicineEntity.class);
@@ -41,15 +37,12 @@ public class DefaultMedicineDao implements MedicineDao {
             medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineName, e);
         }
-        final Medicine medicine = MedicineConverter.fromEntity(medicineEntity);
-        session.close();
-        return medicine;
+        return MedicineConverter.fromEntity(medicineEntity);
     }
 
     @Override
     public Medicine getMedicineById(Long medicineId) {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         MedicineEntity medicineEntity;
         try {
             medicineEntity = session.get(MedicineEntity.class, medicineId);
@@ -57,22 +50,15 @@ public class DefaultMedicineDao implements MedicineDao {
             medicineEntity = null;
             log.info("Medicine {} wasn't found", medicineId, e);
         }
-        session.getTransaction().commit();
-        final Medicine medicine = MedicineConverter.fromEntity(medicineEntity);
-        session.close();
-        return medicine;
+        return MedicineConverter.fromEntity(medicineEntity);
     }
 
     @Override
     public List<Medicine> getMedicine() {
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
         List<MedicineEntity> medicines = session.createQuery("From MedicineEntity").list();
-        session.getTransaction().commit();
-        final List<Medicine> medicineList = medicines.stream()
+        return medicines.stream()
                 .map(MedicineConverter::fromEntity)
                 .collect(Collectors.toList());
-        session.close();
-        return medicineList;
     }
 }

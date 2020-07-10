@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,9 @@ import static org.mockito.Mockito.when;
 public class DefaultAuthorizationServiceTest {
     @Mock
     AuthUserDao authUserDao;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @InjectMocks
     DefaultAuthorizationService authorizationService;
@@ -32,8 +36,9 @@ public class DefaultAuthorizationServiceTest {
     void passwordHashAndLoginCheck(){
         when(authUserDao.getByLogin("login")).thenReturn(
                 new AuthUser(null, "login",
-                        "a94d4950bba6053ab0fa6feb2ebe04ec", Role.Doctor,null));
-        AuthUser authUser = authorizationService.login("login", "Virus");
+                        "encodedPass", Role.Doctor,null));
+        when(passwordEncoder.encode("pass")).thenReturn("encodedPass");
+        AuthUser authUser = authorizationService.login("login", "pass");
         assertNotNull(authUser);
         assertEquals("login", authUser.getLogin());
     }
@@ -42,7 +47,8 @@ public class DefaultAuthorizationServiceTest {
     void wrongPasswordCheck(){
         when(authUserDao.getByLogin("existingLogin")).thenReturn(
                 new AuthUser(null, "existingLogin",
-                        "existingPassword", Role.AuthorizedUser, null));
+                        "passEncoded", Role.AuthorizedUser, null));
+        when(passwordEncoder.encode("pass")).thenReturn("encodedPass");
 
         AuthUser authUser = authorizationService.login("existingLogin", "pass");
         assertNull(authUser);

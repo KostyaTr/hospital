@@ -1,48 +1,31 @@
 package com.github.KostyaTr.hospital.service.impl;
 
 import com.github.KostyaTr.hospital.dao.AuthUserDao;
-import com.github.KostyaTr.hospital.dao.impl.DefaultAuthUserDao;
 import com.github.KostyaTr.hospital.model.AuthUser;
 import com.github.KostyaTr.hospital.service.AuthorizationService;
-
-import javax.xml.bind.DatatypeConverter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class DefaultAuthorizationService implements AuthorizationService {
-    private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
 
-    private static class SingletonHolder {
-        static final AuthorizationService HOLDER_INSTANCE = new DefaultAuthorizationService();
+    private final AuthUserDao authUserDao;
+    private final PasswordEncoder passwordEncoder;
+
+    public DefaultAuthorizationService(AuthUserDao authUserDao, PasswordEncoder passwordEncoder) {
+        this.authUserDao = authUserDao;
+        this.passwordEncoder = passwordEncoder;
     }
-
-    public static AuthorizationService getInstance() {
-        return DefaultAuthorizationService.SingletonHolder.HOLDER_INSTANCE;
-    }
-
 
     @Override
+    @Transactional
     public AuthUser login(String login, String password) {
         AuthUser user = authUserDao.getByLogin(login);
         if (user == null){
             return null;
         }
-        if (hashPassword(password).equals(user.getPassword())){
+        if (passwordEncoder.matches(password, user.getPassword())){
             return user;
         }
         return null;
-    }
-
-    private String hashPassword(String password){
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        String hashedPassword = DatatypeConverter.printHexBinary(digest).toLowerCase();
-        return hashedPassword;
     }
 }
